@@ -87,7 +87,7 @@ A tested GPX processing module that converts GPX files to structured data ready 
 
 ---
 
-## Phase 3: File Upload & State Management
+## [DONE] Phase 3: File Upload & State Management
 
 **Goal:** Allow users to upload GPX files and manage application state.
 
@@ -124,7 +124,7 @@ A working file upload that parses GPX and stores the data, with visual feedback 
 
 ---
 
-## Phase 4: Map Rendering
+## [DONE] Phase 4: Map Rendering
 
 **Goal:** Display the route on an interactive map within the poster preview.
 

@@ -4,6 +4,7 @@
 	import { formatDistance, formatDate } from '$lib/utils/format.js';
 	import FileUpload from '$lib/components/FileUpload.svelte';
 	import ErrorMessage from '$lib/components/ErrorMessage.svelte';
+	import PosterMap from '$lib/components/PosterMap.svelte';
 
 	let currentView = $state<AppView>('landing');
 	let uploadError = $state<UploadError | null>(null);
@@ -81,20 +82,24 @@
 			</div>
 		</main>
 	{:else if currentView === 'editor'}
-		<main class="flex-1 flex flex-col items-center justify-center px-4 py-12">
-			<div class="max-w-2xl mx-auto text-center">
+		<main class="flex-1 flex flex-col items-center px-4 py-8">
+			<div class="w-full max-w-4xl mx-auto">
 				<h1
-					class="text-3xl md:text-4xl font-semibold tracking-tight mb-6"
+					class="text-3xl md:text-4xl font-semibold tracking-tight mb-6 text-center"
 					style="font-family: var(--font-heading);"
 				>
-					GPX Loaded Successfully
+					Your Race Route
 				</h1>
 
-				<div class="bg-gray-50 rounded-xl p-6 mb-8 text-left">
+				<div class="mb-8 rounded-xl overflow-hidden shadow-lg" style="aspect-ratio: 4/3;">
+					<PosterMap />
+				</div>
+
+				<div class="bg-gray-50 rounded-xl p-6 mb-8">
 					<h2 class="text-lg font-medium mb-4" style="font-family: var(--font-heading);">
 						Race Details
 					</h2>
-					<dl class="grid grid-cols-2 gap-4 text-sm">
+					<dl class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
 						{#if posterStore.data.raceName}
 							<div>
 								<dt class="text-gray-500">Race Name</dt>
@@ -135,17 +140,19 @@
 					</dl>
 				</div>
 
-				<p class="text-gray-500 mb-6">
+				<p class="text-gray-500 mb-6 text-center">
 					Full editor coming in Phase 6. For now, you can start over to upload a different file.
 				</p>
 
-				<button
-					onclick={handleStartOver}
-					class="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
-					style="font-family: var(--font-heading);"
-				>
-					Start Over
-				</button>
+				<div class="text-center">
+					<button
+						onclick={handleStartOver}
+						class="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+						style="font-family: var(--font-heading);"
+					>
+						Start Over
+					</button>
+				</div>
 			</div>
 		</main>
 	{/if}
