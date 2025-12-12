@@ -26,3 +26,10 @@ export interface PosterData {
 	theme: Theme;
 	routeColor: RouteColor;
 }
+
+export type AppView = 'landing' | 'editor';
+
+export interface UploadError {
+	message: string;
+	type: 'invalid-file-type' | 'parse-error' | 'empty-file';
+}
