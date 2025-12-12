@@ -1,10 +1,10 @@
-# Race Portrait Generator — Product Requirements Document
+# RaceFrame — Product Requirements Document
 
 ## Overview
 
 A free, static web application that generates printable race portrait posters from GPX files. Users upload their race data, customize the design, and download a high-resolution image ready for DIY printing and framing.
 
-**Target URL:** `https://cesdperez.github.io/race-portrait`
+**Target URL:** `https://cesdperez.github.io/raceframe`
 
 ## Problem Statement
 
@@ -296,7 +296,7 @@ const dataUrl = await domToPng(posterElement, {
 ## Project Structure
 
 ```
-race-portrait/
+raceframe/
 ├── src/
 │   ├── lib/
 │   │   ├── components/
@@ -333,11 +333,11 @@ race-portrait/
 
 ### GitHub Pages Setup
 
-1. Repository: `cesdperez/race-portrait`
-2. Build command: `npm run build`
+1. Repository: `cesdperez/raceframe`
+2. Build command: `pnpm build`
 3. Output directory: `build/`
 4. SvelteKit adapter: `@sveltejs/adapter-static`
-5. Base path config for GitHub Pages subdirectory
+5. Base path config: `/raceframe` for GitHub Pages subdirectory
 
 ### CI/CD
 
