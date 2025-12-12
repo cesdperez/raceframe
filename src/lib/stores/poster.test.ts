@@ -129,7 +129,7 @@ describe('PosterStore', () => {
 	describe('reset', () => {
 		it('clears all data to defaults', () => {
 			posterStore.loadFromGPX(mockGpxData);
-			posterStore.data.runnerName = 'John Doe';
+			posterStore.setRunnerName('John Doe');
 			posterStore.setTheme('dark');
 			posterStore.setRouteColor('cyan');
 

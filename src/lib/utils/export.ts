@@ -1,4 +1,5 @@
 import { domToPng } from 'modern-screenshot';
+import { POSTER_WIDTH, POSTER_HEIGHT } from '$lib/constants/poster';
 
 export type ExportScale = 2 | 4;
 
@@ -31,9 +32,6 @@ export interface ExportOptions {
 	raceName: string;
 	date: Date | null;
 }
-
-const POSTER_WIDTH = 1600;
-const POSTER_HEIGHT = 2240;
 
 export async function exportPoster(options: ExportOptions): Promise<void> {
 	const { scale, raceName, date } = options;

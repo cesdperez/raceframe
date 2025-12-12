@@ -12,8 +12,6 @@ function createDefaultPosterData(): PosterData {
 		distance: 0,
 		unit: 'km',
 		bibNumber: '',
-		city: '',
-		qrCodeUrl: '',
 		theme: 'light',
 		routeColor: 'orange'
 	};
@@ -82,14 +80,6 @@ class PosterStore {
 
 	setBibNumber(bib: string): void {
 		this.data.bibNumber = bib;
-	}
-
-	setCity(city: string): void {
-		this.data.city = city;
-	}
-
-	setQrCodeUrl(url: string): void {
-		this.data.qrCodeUrl = url;
 	}
 
 	setFinishTime(time: string): void {

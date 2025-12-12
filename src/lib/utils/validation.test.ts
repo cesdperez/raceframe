@@ -49,7 +49,7 @@ describe('validateGpxFile', () => {
 		const file = createMockFile('race.gpx', tenMB + 1);
 		const error = validateGpxFile(file);
 		expect(error).not.toBeNull();
-		expect(error?.type).toBe('invalid-file-type');
+		expect(error?.type).toBe('file-too-large');
 		expect(error?.message).toContain('10MB');
 	});
 

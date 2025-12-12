@@ -21,8 +21,6 @@ export interface PosterData {
 	distance: number; // in user's selected unit
 	unit: Unit;
 	bibNumber: string;
-	city: string;
-	qrCodeUrl: string;
 	theme: Theme;
 	routeColor: RouteColor;
 }
@@ -31,5 +29,5 @@ export type AppView = 'landing' | 'editor';
 
 export interface UploadError {
 	message: string;
-	type: 'invalid-file-type' | 'parse-error' | 'empty-file';
+	type: 'invalid-file-type' | 'file-too-large' | 'parse-error' | 'empty-file';
 }

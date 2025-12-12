@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { posterStore } from '$lib/stores/poster.svelte';
+	import { POSTER_WIDTH, POSTER_HEIGHT } from '$lib/constants/poster';
 	import PosterMap from './PosterMap.svelte';
-
-	const POSTER_WIDTH = 1600;
-	const POSTER_HEIGHT = 2240;
 
 	let containerEl: HTMLDivElement;
 	let scale = $state(1);

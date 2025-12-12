@@ -1,23 +1,7 @@
 <script lang="ts">
 	import { posterStore } from '../stores/poster.svelte.js';
-	import type { Theme, RouteColor, Unit } from '../types/index.js';
+	import { THEMES, ROUTE_COLOR_OPTIONS } from '$lib/constants/themes';
 	import ExportButton from './ExportButton.svelte';
-
-	const themes: { value: Theme; label: string; bg: string; text: string }[] = [
-		{ value: 'light', label: 'Light', bg: '#ffffff', text: '#1a1a1a' },
-		{ value: 'dark', label: 'Dark', bg: '#1a1a2e', text: '#ffffff' },
-		{ value: 'midnight', label: 'Midnight', bg: '#0f0f1a', text: '#e0e0e0' },
-		{ value: 'forest', label: 'Forest', bg: '#1a2e1a', text: '#e8f5e8' }
-	];
-
-	const routeColors: { value: RouteColor; label: string; color: string }[] = [
-		{ value: 'orange', label: 'Orange', color: '#fc5200' },
-		{ value: 'yellow', label: 'Yellow', color: '#ffd700' },
-		{ value: 'cyan', label: 'Cyan', color: '#00ced1' },
-		{ value: 'pink', label: 'Pink', color: '#ff69b4' },
-		{ value: 'green', label: 'Green', color: '#32cd32' },
-		{ value: 'white', label: 'White', color: '#ffffff' }
-	];
 
 	function handleDateChange(e: Event) {
 		const input = e.target as HTMLInputElement;
@@ -91,17 +75,6 @@
 					class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
 				/>
 			</div>
-			<div>
-				<label for="city" class="mb-1 block text-sm font-medium text-gray-700">City</label>
-				<input
-					type="text"
-					id="city"
-					value={posterStore.data.city}
-					oninput={(e) => posterStore.setCity((e.target as HTMLInputElement).value)}
-					placeholder="e.g. Berlin"
-					class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-				/>
-			</div>
 		</div>
 	</section>
 
@@ -161,7 +134,7 @@
 	<section class="mb-6">
 		<h3 id="theme-label" class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Theme</h3>
 		<div class="grid grid-cols-2 gap-2" role="radiogroup" aria-labelledby="theme-label">
-			{#each themes as theme}
+			{#each THEMES as theme}
 				<button
 					type="button"
 					onclick={() => posterStore.setTheme(theme.value)}
@@ -194,7 +167,7 @@
 	<section class="mb-6">
 		<h3 id="route-color-label" class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Route Color</h3>
 		<div class="flex flex-wrap gap-1" role="radiogroup" aria-labelledby="route-color-label">
-			{#each routeColors as color}
+			{#each ROUTE_COLOR_OPTIONS as color}
 				<button
 					type="button"
 					onclick={() => posterStore.setRouteColor(color.value)}

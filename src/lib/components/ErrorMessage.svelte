@@ -11,7 +11,7 @@
 
 	function getErrorHint(type: string): string {
 		switch (type) {
-			case 'invalid-type':
+			case 'invalid-file-type':
 				return 'Make sure your file has a .gpx extension.';
 			case 'empty-file':
 				return 'The file appears to be empty. Try exporting your activity again.';

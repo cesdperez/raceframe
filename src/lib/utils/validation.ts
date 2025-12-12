@@ -20,7 +20,7 @@ export function validateGpxFile(file: File): UploadError | null {
 	if (file.size > MAX_FILE_SIZE) {
 		return {
 			message: 'File too large (max 10MB)',
-			type: 'invalid-file-type'
+			type: 'file-too-large'
 		};
 	}
 
