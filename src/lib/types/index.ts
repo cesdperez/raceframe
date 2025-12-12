@@ -23,6 +23,9 @@ export interface PosterData {
 	bibNumber: string;
 	theme: Theme;
 	routeColor: RouteColor;
+	customBgColor: string | null;
+	customTextColor: string | null;
+	customRouteColor: string | null;
 }
 
 export type AppView = 'landing' | 'editor';

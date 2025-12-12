@@ -1,7 +1,9 @@
 import { domToPng } from 'modern-screenshot';
 import { POSTER_WIDTH, POSTER_HEIGHT } from '$lib/constants/poster';
+import { posterStore } from '$lib/stores/poster.svelte';
 
 export type ExportScale = 2 | 4;
+export type ExportFormat = 'png' | 'pdf';
 
 export function sanitizeForFilename(input: string): string {
 	return input
@@ -33,15 +35,18 @@ export interface ExportOptions {
 	date: Date | null;
 }
 
-export async function exportPoster(options: ExportOptions): Promise<void> {
-	const { scale, raceName, date } = options;
+export interface ClonedPoster {
+	clone: HTMLElement;
+	container: HTMLElement;
+	cleanup: () => void;
+}
 
+export function clonePosterElement(): ClonedPoster {
 	const element = document.querySelector('[data-poster-export]');
 	if (!element) {
 		throw new Error('Poster element not found');
 	}
 
-	// Clone the poster to an off-screen container to avoid viewport clipping
 	const clone = element.cloneNode(true) as HTMLElement;
 	const container = document.createElement('div');
 
@@ -55,17 +60,26 @@ export async function exportPoster(options: ExportOptions): Promise<void> {
 		pointer-events: none;
 	`;
 
-	// Copy computed styles from original poster to ensure theme colors work
-	const computedStyle = window.getComputedStyle(element);
-	clone.style.setProperty('--color-bg', computedStyle.getPropertyValue('--color-bg'));
-	clone.style.setProperty('--color-text', computedStyle.getPropertyValue('--color-text'));
-	clone.style.setProperty('--color-route', computedStyle.getPropertyValue('--color-route'));
+	// Apply effective colors (uses custom colors if set, otherwise theme defaults)
+	clone.style.setProperty('--color-bg', posterStore.effectiveBgColor);
+	clone.style.setProperty('--color-text', posterStore.effectiveTextColor);
+	clone.style.setProperty('--color-route', posterStore.effectiveRouteColor);
 
 	container.appendChild(clone);
 	document.body.appendChild(container);
 
+	return {
+		clone,
+		container,
+		cleanup: () => document.body.removeChild(container)
+	};
+}
+
+export async function renderPosterToPng(scale: ExportScale): Promise<string> {
+	const { clone, cleanup } = clonePosterElement();
+
 	try {
-		const dataUrl = await domToPng(clone, {
+		return await domToPng(clone, {
 			scale,
 			quality: 1,
 			width: POSTER_WIDTH,
@@ -76,12 +90,18 @@ export async function exportPoster(options: ExportOptions): Promise<void> {
 				}
 			}
 		});
-
-		const link = document.createElement('a');
-		link.download = generateFilename(raceName, date, scale);
-		link.href = dataUrl;
-		link.click();
 	} finally {
-		document.body.removeChild(container);
+		cleanup();
 	}
+}
+
+export async function exportPoster(options: ExportOptions): Promise<void> {
+	const { scale, raceName, date } = options;
+
+	const dataUrl = await renderPosterToPng(scale);
+
+	const link = document.createElement('a');
+	link.download = generateFilename(raceName, date, scale);
+	link.href = dataUrl;
+	link.click();
 }

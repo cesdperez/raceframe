@@ -104,16 +104,16 @@ pnpm preview                   # Preview production build
 ### MVP (v1.0)
 
 #### GPX Processing
-- [ ] Parse GPX file to extract coordinates
-- [ ] Calculate total distance from coordinates
-- [ ] Extract date/time from GPX metadata
-- [ ] Calculate elapsed time and average pace
-- [ ] Handle GPX files with multiple tracks/segments
+- [x] Parse GPX file to extract coordinates
+- [x] Calculate total distance from coordinates
+- [x] Extract date/time from GPX metadata
+- [x] Calculate elapsed time and average pace
+- [x] Handle GPX files with multiple tracks/segments
 
 #### Poster Editor
-- [ ] Live preview of poster (scaled to fit viewport)
-- [ ] Map rendering with route overlay
-- [ ] Start/finish markers on route
+- [x] Live preview of poster (scaled to fit viewport)
+- [x] Map rendering with route overlay
+- [x] Start/finish markers on route
 
 #### Input Fields (with live preview updates)
 
@@ -130,19 +130,19 @@ pnpm preview                   # Preview production build
 | QR Code URL | URL | No | Manual input |
 
 #### Themes & Customization
-- [ ] Theme selector (Light, Dark, Midnight, Forest)
-- [ ] Route color picker (Orange, Yellow, Cyan, Pink, Green, White)
-- [ ] Unit toggle (km / miles)
+- [x] Theme selector (Light, Dark, Midnight, Forest)
+- [x] Route color picker (Orange, Yellow, Cyan, Pink, Green, White)
+- [x] Unit toggle (km / miles)
 
 #### Export
-- [ ] PNG export at 2x resolution
-- [ ] PNG export at 4x resolution (300 DPI for print)
-- [ ] Filename includes race name and date
+- [x] PNG export at 2x resolution
+- [x] PNG export at 4x resolution (300 DPI for print)
+- [x] Filename includes race name and date
 
 ### Future Enhancements (v2.0+)
 
-- [ ] PDF export with bleed margins for professional printing
-- [ ] More themes and custom color pickers
+- [x] PDF export with bleed margins for professional printing
+- [x] More themes and custom color pickers
 - [ ] Elevation profile visualization
 - [ ] Multiple poster aspect ratios (A4, A3, square, etc.)
 - [ ] QR code rendered on poster

@@ -1,6 +1,7 @@
 import type { GPXData, PosterData, Theme, RouteColor, Unit } from '../types/index.js';
 import { formatTime, formatDistance, formatPace, formatDate, metersToKm, metersToMiles } from '../utils/format.js';
 import { calculatePace } from '../utils/geo.js';
+import { THEMES, ROUTE_COLORS } from '../constants/themes.js';
 
 function createDefaultPosterData(): PosterData {
 	return {
@@ -13,7 +14,10 @@ function createDefaultPosterData(): PosterData {
 		unit: 'km',
 		bibNumber: '',
 		theme: 'light',
-		routeColor: 'orange'
+		routeColor: 'orange',
+		customBgColor: null,
+		customTextColor: null,
+		customRouteColor: null
 	};
 }
 
@@ -59,6 +63,35 @@ class PosterStore {
 
 	setRouteColor(color: RouteColor): void {
 		this.data.routeColor = color;
+	}
+
+	setCustomBgColor(color: string | null): void {
+		this.data.customBgColor = color;
+	}
+
+	setCustomTextColor(color: string | null): void {
+		this.data.customTextColor = color;
+	}
+
+	setCustomRouteColor(color: string | null): void {
+		this.data.customRouteColor = color;
+	}
+
+	get effectiveBgColor(): string {
+		if (this.data.customBgColor) return this.data.customBgColor;
+		const themeConfig = THEMES.find((t) => t.value === this.data.theme);
+		return themeConfig?.bg ?? '#ffffff';
+	}
+
+	get effectiveTextColor(): string {
+		if (this.data.customTextColor) return this.data.customTextColor;
+		const themeConfig = THEMES.find((t) => t.value === this.data.theme);
+		return themeConfig?.text ?? '#1a1a1a';
+	}
+
+	get effectiveRouteColor(): string {
+		if (this.data.customRouteColor) return this.data.customRouteColor;
+		return ROUTE_COLORS[this.data.routeColor];
 	}
 
 	setUnit(unit: Unit): void {

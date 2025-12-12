@@ -28,7 +28,7 @@
 	}
 
 	function getRouteColor(): string {
-		return ROUTE_COLORS[posterStore.data.routeColor];
+		return posterStore.effectiveRouteColor;
 	}
 
 	function initializeMap() {
@@ -140,6 +140,7 @@
 
 	$effect(() => {
 		const _ = posterStore.data.routeColor;
+		const __ = posterStore.data.customRouteColor;
 		updateRouteStyle();
 	});
 

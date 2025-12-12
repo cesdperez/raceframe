@@ -165,20 +165,73 @@
 	</section>
 
 	<section class="mb-6">
+		<h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Customize Colors</h3>
+		<div class="space-y-3">
+			<div class="flex items-center gap-3">
+				<label for="customBg" class="w-24 text-sm font-medium text-gray-700">Background</label>
+				<div class="flex flex-1 items-center gap-2">
+					<input
+						type="color"
+						id="customBg"
+						value={posterStore.effectiveBgColor}
+						oninput={(e) => posterStore.setCustomBgColor((e.target as HTMLInputElement).value)}
+						class="h-8 w-10 cursor-pointer rounded border border-gray-300 p-0.5"
+					/>
+					<span class="flex-1 text-xs font-mono text-gray-500">{posterStore.effectiveBgColor}</span>
+					{#if posterStore.data.customBgColor}
+						<button
+							type="button"
+							onclick={() => posterStore.setCustomBgColor(null)}
+							class="text-xs text-blue-600 hover:text-blue-800 hover:underline"
+						>
+							Reset
+						</button>
+					{/if}
+				</div>
+			</div>
+			<div class="flex items-center gap-3">
+				<label for="customText" class="w-24 text-sm font-medium text-gray-700">Text</label>
+				<div class="flex flex-1 items-center gap-2">
+					<input
+						type="color"
+						id="customText"
+						value={posterStore.effectiveTextColor}
+						oninput={(e) => posterStore.setCustomTextColor((e.target as HTMLInputElement).value)}
+						class="h-8 w-10 cursor-pointer rounded border border-gray-300 p-0.5"
+					/>
+					<span class="flex-1 text-xs font-mono text-gray-500">{posterStore.effectiveTextColor}</span>
+					{#if posterStore.data.customTextColor}
+						<button
+							type="button"
+							onclick={() => posterStore.setCustomTextColor(null)}
+							class="text-xs text-blue-600 hover:text-blue-800 hover:underline"
+						>
+							Reset
+						</button>
+					{/if}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="mb-6">
 		<h3 id="route-color-label" class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Route Color</h3>
 		<div class="flex flex-wrap gap-1" role="radiogroup" aria-labelledby="route-color-label">
 			{#each ROUTE_COLOR_OPTIONS as color}
 				<button
 					type="button"
-					onclick={() => posterStore.setRouteColor(color.value)}
+					onclick={() => {
+						posterStore.setRouteColor(color.value);
+						posterStore.setCustomRouteColor(null);
+					}}
 					class="group relative p-1.5"
 					role="radio"
-					aria-checked={posterStore.data.routeColor === color.value}
+					aria-checked={posterStore.data.routeColor === color.value && !posterStore.data.customRouteColor}
 					aria-label="{color.label} route color"
 				>
 					<span
 						class="block h-8 w-8 md:h-7 md:w-7 rounded-full border-2 transition-transform {posterStore.data.routeColor ===
-						color.value
+							color.value && !posterStore.data.customRouteColor
 							? 'scale-110 border-blue-500'
 							: 'border-gray-300 hover:scale-105'}"
 						style="background-color: {color.color}"
@@ -186,6 +239,28 @@
 					></span>
 				</button>
 			{/each}
+		</div>
+		<div class="mt-3 flex items-center gap-3">
+			<label for="customRoute" class="text-sm font-medium text-gray-700">Custom</label>
+			<div class="flex flex-1 items-center gap-2">
+				<input
+					type="color"
+					id="customRoute"
+					value={posterStore.effectiveRouteColor}
+					oninput={(e) => posterStore.setCustomRouteColor((e.target as HTMLInputElement).value)}
+					class="h-8 w-10 cursor-pointer rounded border border-gray-300 p-0.5"
+				/>
+				<span class="flex-1 text-xs font-mono text-gray-500">{posterStore.effectiveRouteColor}</span>
+				{#if posterStore.data.customRouteColor}
+					<button
+						type="button"
+						onclick={() => posterStore.setCustomRouteColor(null)}
+						class="text-xs text-blue-600 hover:text-blue-800 hover:underline"
+					>
+						Reset
+					</button>
+				{/if}
+			</div>
 		</div>
 	</section>
 

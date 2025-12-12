@@ -36,6 +36,8 @@
 	const unit = $derived(posterStore.data.unit);
 	const paceLabel = $derived(posterStore.paceLabel);
 	const theme = $derived(posterStore.data.theme);
+	const customBgColor = $derived(posterStore.data.customBgColor);
+	const customTextColor = $derived(posterStore.data.customTextColor);
 </script>
 
 <div class="poster-viewport" bind:this={containerEl}>
@@ -43,7 +45,13 @@
 		class="poster-scale-wrapper"
 		style="transform: scale({scale}); transform-origin: center center;"
 	>
-		<div class="poster" data-theme={theme} data-poster-export>
+		<div
+			class="poster"
+			data-theme={theme}
+			data-poster-export
+			style:--color-bg={customBgColor}
+			style:--color-text={customTextColor}
+		>
 			<header class="poster-header">
 				<h1 class="race-name">{raceName.toUpperCase()}</h1>
 				<p class="race-date">{formattedDate}</p>
