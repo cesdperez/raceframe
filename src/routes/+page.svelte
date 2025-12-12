@@ -1,10 +1,9 @@
 <script lang="ts">
 	import type { AppView, UploadError, GPXData } from '$lib/types/index.js';
 	import { posterStore } from '$lib/stores/poster.svelte.js';
-	import { formatDistance, formatDate } from '$lib/utils/format.js';
 	import FileUpload from '$lib/components/FileUpload.svelte';
 	import ErrorMessage from '$lib/components/ErrorMessage.svelte';
-	import PosterMap from '$lib/components/PosterMap.svelte';
+	import PosterPreview from '$lib/components/PosterPreview.svelte';
 
 	let currentView = $state<AppView>('landing');
 	let uploadError = $state<UploadError | null>(null);
@@ -82,78 +81,26 @@
 			</div>
 		</main>
 	{:else if currentView === 'editor'}
-		<main class="flex-1 flex flex-col items-center px-4 py-8">
-			<div class="w-full max-w-4xl mx-auto">
-				<h1
-					class="text-3xl md:text-4xl font-semibold tracking-tight mb-6 text-center"
+		<main class="flex-1 flex flex-col lg:flex-row min-h-0">
+			<div class="flex-1 min-h-[60vh] lg:min-h-0 bg-gray-100 relative">
+				<PosterPreview />
+			</div>
+
+			<aside
+				class="w-full lg:w-80 p-4 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0"
+			>
+				<h2 class="text-lg font-medium mb-4" style="font-family: var(--font-heading);">
+					Customize
+				</h2>
+				<p class="text-gray-500 text-sm mb-6">Full editor coming in Phase 6.</p>
+				<button
+					onclick={handleStartOver}
+					class="w-full px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
 					style="font-family: var(--font-heading);"
 				>
-					Your Race Route
-				</h1>
-
-				<div class="mb-8 rounded-xl overflow-hidden shadow-lg" style="aspect-ratio: 4/3;">
-					<PosterMap />
-				</div>
-
-				<div class="bg-gray-50 rounded-xl p-6 mb-8">
-					<h2 class="text-lg font-medium mb-4" style="font-family: var(--font-heading);">
-						Race Details
-					</h2>
-					<dl class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-						{#if posterStore.data.raceName}
-							<div>
-								<dt class="text-gray-500">Race Name</dt>
-								<dd class="font-medium">{posterStore.data.raceName}</dd>
-							</div>
-						{/if}
-						{#if posterStore.data.date}
-							<div>
-								<dt class="text-gray-500">Date</dt>
-								<dd class="font-medium">{formatDate(posterStore.data.date)}</dd>
-							</div>
-						{/if}
-						<div>
-							<dt class="text-gray-500">Distance</dt>
-							<dd class="font-medium">
-								{formatDistance(posterStore.data.gpxData?.totalDistance ?? 0, posterStore.data.unit)}
-								{posterStore.data.unit}
-							</dd>
-						</div>
-						{#if posterStore.data.finishTime}
-							<div>
-								<dt class="text-gray-500">Finish Time</dt>
-								<dd class="font-medium">{posterStore.data.finishTime}</dd>
-							</div>
-						{/if}
-						{#if posterStore.data.gpxData?.coordinates}
-							<div>
-								<dt class="text-gray-500">Track Points</dt>
-								<dd class="font-medium">{posterStore.data.gpxData.coordinates.length}</dd>
-							</div>
-						{/if}
-						{#if posterStore.data.gpxData?.elevationGain}
-							<div>
-								<dt class="text-gray-500">Elevation Gain</dt>
-								<dd class="font-medium">{Math.round(posterStore.data.gpxData.elevationGain)} m</dd>
-							</div>
-						{/if}
-					</dl>
-				</div>
-
-				<p class="text-gray-500 mb-6 text-center">
-					Full editor coming in Phase 6. For now, you can start over to upload a different file.
-				</p>
-
-				<div class="text-center">
-					<button
-						onclick={handleStartOver}
-						class="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
-						style="font-family: var(--font-heading);"
-					>
-						Start Over
-					</button>
-				</div>
-			</div>
+					Start Over
+				</button>
+			</aside>
 		</main>
 	{/if}
 

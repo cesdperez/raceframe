@@ -163,7 +163,7 @@ A map component that displays the GPX route with correct styling, ready to be em
 
 ---
 
-## Phase 5: Poster Layout & Preview
+## [DONE] Phase 5: Poster Layout & Preview
 
 **Goal:** Create the full poster layout with live preview.
 

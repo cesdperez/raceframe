@@ -1,5 +1,6 @@
 import type { GPXData, PosterData, Theme, RouteColor, Unit } from '../types/index.js';
-import { formatTime, metersToKm, metersToMiles } from '../utils/format.js';
+import { formatTime, formatDistance, formatPace, formatDate, metersToKm, metersToMiles } from '../utils/format.js';
+import { calculatePace } from '../utils/geo.js';
 
 function createDefaultPosterData(): PosterData {
 	return {
@@ -23,6 +24,26 @@ class PosterStore {
 
 	get hasGpxData(): boolean {
 		return this.data.gpxData !== null;
+	}
+
+	get formattedDistance(): string {
+		return formatDistance(this.data.gpxData?.totalDistance ?? 0, this.data.unit);
+	}
+
+	get formattedPace(): string {
+		const gpx = this.data.gpxData;
+		if (!gpx?.totalDistance || !gpx?.elapsedTime) return "--'--\"";
+		const paceSecondsPerKm = calculatePace(gpx.totalDistance, gpx.elapsedTime);
+		if (paceSecondsPerKm === null) return "--'--\"";
+		return formatPace(paceSecondsPerKm, this.data.unit);
+	}
+
+	get paceLabel(): string {
+		return this.data.unit === 'km' ? '/KM' : '/MI';
+	}
+
+	get formattedDate(): string {
+		return this.data.date ? formatDate(this.data.date) : '';
 	}
 
 	loadFromGPX(gpxData: GPXData): void {
