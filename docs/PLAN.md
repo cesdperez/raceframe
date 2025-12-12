@@ -246,7 +246,7 @@ A fully functional editor that allows customization of all poster elements with 
 
 ---
 
-## Phase 7: Export Functionality
+## [DONE] Phase 7: Export Functionality
 
 **Goal:** Export the poster as a high-resolution PNG.
 

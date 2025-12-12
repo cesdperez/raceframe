@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { posterStore } from '../stores/poster.svelte.js';
 	import type { Theme, RouteColor, Unit } from '../types/index.js';
+	import ExportButton from './ExportButton.svelte';
 
 	const themes: { value: Theme; label: string; bg: string; text: string }[] = [
 		{ value: 'light', label: 'Light', bg: '#ffffff', text: '#1a1a1a' },
@@ -204,5 +205,10 @@
 				</button>
 			{/each}
 		</div>
+	</section>
+
+	<section class="mt-auto border-t border-gray-200 pt-4">
+		<h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Export</h3>
+		<ExportButton raceName={posterStore.data.raceName} date={posterStore.data.date} />
 	</section>
 </div>
