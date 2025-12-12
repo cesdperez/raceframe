@@ -4,7 +4,7 @@ This document outlines the phased implementation approach for RaceFrame. Each ph
 
 ---
 
-## Phase 1: Project Foundation
+## [DONE] Phase 1: Project Foundation
 
 **Goal:** Set up the project infrastructure with a deployable skeleton.
 
@@ -43,7 +43,7 @@ A deployed, empty SvelteKit app at `https://cesdperez.github.io/raceframe` with 
 
 ---
 
-## Phase 2: GPX Processing
+## [DONE] Phase 2: GPX Processing
 
 **Goal:** Parse GPX files and extract route data with full test coverage.
 

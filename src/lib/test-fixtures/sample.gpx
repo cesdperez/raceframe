@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="RaceFrame Test" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Morning Run</name>
+    <time>2025-01-01T09:00:00Z</time>
+  </metadata>
+  <trk>
+    <name>Morning Run</name>
+    <trkseg>
+      <trkpt lat="0" lon="0">
+        <ele>10</ele>
+        <time>2025-01-01T09:00:00Z</time>
+      </trkpt>
+      <trkpt lat="0" lon="0.008993">
+        <ele>15</ele>
+        <time>2025-01-01T09:15:00Z</time>
+      </trkpt>
+      <trkpt lat="0.008993" lon="0.008993">
+        <ele>20</ele>
+        <time>2025-01-01T09:30:00Z</time>
+      </trkpt>
+      <trkpt lat="0.008993" lon="0">
+        <ele>15</ele>
+        <time>2025-01-01T09:45:00Z</time>
+      </trkpt>
+      <trkpt lat="0" lon="0">
+        <ele>10</ele>
+        <time>2025-01-01T10:00:00Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
