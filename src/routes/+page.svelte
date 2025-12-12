@@ -4,6 +4,7 @@
 	import FileUpload from '$lib/components/FileUpload.svelte';
 	import ErrorMessage from '$lib/components/ErrorMessage.svelte';
 	import PosterPreview from '$lib/components/PosterPreview.svelte';
+	import EditorPanel from '$lib/components/EditorPanel.svelte';
 
 	let currentView = $state<AppView>('landing');
 	let uploadError = $state<UploadError | null>(null);
@@ -87,19 +88,25 @@
 			</div>
 
 			<aside
-				class="w-full lg:w-80 p-4 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0"
+				class="w-full lg:w-80 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0 flex flex-col"
 			>
-				<h2 class="text-lg font-medium mb-4" style="font-family: var(--font-heading);">
-					Customize
-				</h2>
-				<p class="text-gray-500 text-sm mb-6">Full editor coming in Phase 6.</p>
-				<button
-					onclick={handleStartOver}
-					class="w-full px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
-					style="font-family: var(--font-heading);"
-				>
-					Start Over
-				</button>
+				<div class="p-4 border-b border-gray-200">
+					<h2 class="text-lg font-medium" style="font-family: var(--font-heading);">
+						Customize
+					</h2>
+				</div>
+				<div class="flex-1 overflow-y-auto">
+					<EditorPanel />
+				</div>
+				<div class="p-4 border-t border-gray-200">
+					<button
+						onclick={handleStartOver}
+						class="w-full px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+						style="font-family: var(--font-heading);"
+					>
+						Start Over
+					</button>
+				</div>
 			</aside>
 		</main>
 	{/if}

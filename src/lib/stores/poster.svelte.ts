@@ -72,6 +72,38 @@ class PosterStore {
 		this.data.unit = unit;
 	}
 
+	setRunnerName(name: string): void {
+		this.data.runnerName = name;
+	}
+
+	setRaceName(name: string): void {
+		this.data.raceName = name;
+	}
+
+	setBibNumber(bib: string): void {
+		this.data.bibNumber = bib;
+	}
+
+	setCity(city: string): void {
+		this.data.city = city;
+	}
+
+	setQrCodeUrl(url: string): void {
+		this.data.qrCodeUrl = url;
+	}
+
+	setFinishTime(time: string): void {
+		this.data.finishTime = time;
+	}
+
+	setDate(date: Date | null): void {
+		this.data.date = date;
+	}
+
+	setDistance(distance: number): void {
+		this.data.distance = distance;
+	}
+
 	reset(): void {
 		this.data = createDefaultPosterData();
 	}

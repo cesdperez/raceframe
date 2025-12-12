@@ -204,7 +204,7 @@ A complete poster preview that displays all race data with correct layout and ty
 
 ---
 
-## Phase 6: Editor Panel
+## [DONE] Phase 6: Editor Panel
 
 **Goal:** Allow users to customize all poster content and styling.
 

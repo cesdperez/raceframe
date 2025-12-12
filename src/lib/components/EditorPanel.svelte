@@ -1,0 +1,208 @@
+<script lang="ts">
+	import { posterStore } from '../stores/poster.svelte.js';
+	import type { Theme, RouteColor, Unit } from '../types/index.js';
+
+	const themes: { value: Theme; label: string; bg: string; text: string }[] = [
+		{ value: 'light', label: 'Light', bg: '#ffffff', text: '#1a1a1a' },
+		{ value: 'dark', label: 'Dark', bg: '#1a1a2e', text: '#ffffff' },
+		{ value: 'midnight', label: 'Midnight', bg: '#0f0f1a', text: '#e0e0e0' },
+		{ value: 'forest', label: 'Forest', bg: '#1a2e1a', text: '#e8f5e8' }
+	];
+
+	const routeColors: { value: RouteColor; label: string; color: string }[] = [
+		{ value: 'orange', label: 'Orange', color: '#fc5200' },
+		{ value: 'yellow', label: 'Yellow', color: '#ffd700' },
+		{ value: 'cyan', label: 'Cyan', color: '#00ced1' },
+		{ value: 'pink', label: 'Pink', color: '#ff69b4' },
+		{ value: 'green', label: 'Green', color: '#32cd32' },
+		{ value: 'white', label: 'White', color: '#ffffff' }
+	];
+
+	function handleDateChange(e: Event) {
+		const input = e.target as HTMLInputElement;
+		posterStore.setDate(input.value ? new Date(input.value) : null);
+	}
+
+	function formatDateForInput(date: Date | null): string {
+		if (!date) return '';
+		return date.toISOString().split('T')[0];
+	}
+
+	function handleDistanceChange(e: Event) {
+		const input = e.target as HTMLInputElement;
+		const value = parseFloat(input.value);
+		if (!isNaN(value) && value >= 0) {
+			posterStore.setDistance(value);
+		}
+	}
+</script>
+
+<div class="flex h-full flex-col overflow-y-auto p-4">
+	<section class="mb-6">
+		<h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Race Details</h3>
+		<div class="space-y-3">
+			<div>
+				<label for="raceName" class="mb-1 block text-sm font-medium text-gray-700">Race Name</label>
+				<input
+					type="text"
+					id="raceName"
+					value={posterStore.data.raceName}
+					oninput={(e) => posterStore.setRaceName((e.target as HTMLInputElement).value)}
+					placeholder="e.g. Berlin Marathon"
+					class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+				/>
+			</div>
+			<div>
+				<label for="date" class="mb-1 block text-sm font-medium text-gray-700">Date</label>
+				<input
+					type="date"
+					id="date"
+					value={formatDateForInput(posterStore.data.date)}
+					onchange={handleDateChange}
+					class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+				/>
+			</div>
+		</div>
+	</section>
+
+	<section class="mb-6">
+		<h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Runner Info</h3>
+		<div class="space-y-3">
+			<div>
+				<label for="runnerName" class="mb-1 block text-sm font-medium text-gray-700">Your Name</label>
+				<input
+					type="text"
+					id="runnerName"
+					value={posterStore.data.runnerName}
+					oninput={(e) => posterStore.setRunnerName((e.target as HTMLInputElement).value)}
+					placeholder="e.g. John Doe"
+					class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+				/>
+			</div>
+			<div>
+				<label for="bibNumber" class="mb-1 block text-sm font-medium text-gray-700">Bib Number</label>
+				<input
+					type="text"
+					id="bibNumber"
+					value={posterStore.data.bibNumber}
+					oninput={(e) => posterStore.setBibNumber((e.target as HTMLInputElement).value)}
+					placeholder="e.g. 12345"
+					class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+				/>
+			</div>
+			<div>
+				<label for="city" class="mb-1 block text-sm font-medium text-gray-700">City</label>
+				<input
+					type="text"
+					id="city"
+					value={posterStore.data.city}
+					oninput={(e) => posterStore.setCity((e.target as HTMLInputElement).value)}
+					placeholder="e.g. Berlin"
+					class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+				/>
+			</div>
+		</div>
+	</section>
+
+	<section class="mb-6">
+		<h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Performance</h3>
+		<div class="space-y-3">
+			<div>
+				<label for="finishTime" class="mb-1 block text-sm font-medium text-gray-700">Finish Time</label>
+				<input
+					type="text"
+					id="finishTime"
+					value={posterStore.data.finishTime}
+					oninput={(e) => posterStore.setFinishTime((e.target as HTMLInputElement).value)}
+					placeholder="e.g. 3:45'22&quot;"
+					class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+				/>
+			</div>
+			<div>
+				<label for="distance" class="mb-1 block text-sm font-medium text-gray-700">Distance</label>
+				<div class="flex gap-2">
+					<input
+						type="number"
+						id="distance"
+						value={posterStore.data.distance}
+						oninput={handleDistanceChange}
+						step="0.1"
+						min="0"
+						class="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+					/>
+					<div class="flex rounded-md border border-gray-300">
+						<button
+							type="button"
+							onclick={() => posterStore.setUnit('km')}
+							class="px-3 py-2 text-sm font-medium transition-colors {posterStore.data.unit === 'km'
+								? 'bg-blue-500 text-white'
+								: 'bg-white text-gray-700 hover:bg-gray-50'} rounded-l-md"
+						>
+							km
+						</button>
+						<button
+							type="button"
+							onclick={() => posterStore.setUnit('miles')}
+							class="px-3 py-2 text-sm font-medium transition-colors {posterStore.data.unit === 'miles'
+								? 'bg-blue-500 text-white'
+								: 'bg-white text-gray-700 hover:bg-gray-50'} rounded-r-md border-l border-gray-300"
+						>
+							mi
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="mb-6">
+		<h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Theme</h3>
+		<div class="grid grid-cols-2 gap-2">
+			{#each themes as theme}
+				<button
+					type="button"
+					onclick={() => posterStore.setTheme(theme.value)}
+					class="flex items-center gap-2 rounded-md border-2 px-3 py-2 text-sm font-medium transition-colors {posterStore.data
+						.theme === theme.value
+						? 'border-blue-500'
+						: 'border-gray-200 hover:border-gray-300'}"
+				>
+					<span
+						class="flex h-5 w-5 items-center justify-center rounded border border-gray-300"
+						style="background-color: {theme.bg}"
+					>
+						<span
+							class="text-xs font-bold"
+							style="color: {theme.text}"
+						>
+							A
+						</span>
+					</span>
+					<span class="text-gray-700">{theme.label}</span>
+				</button>
+			{/each}
+		</div>
+	</section>
+
+	<section class="mb-6">
+		<h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Route Color</h3>
+		<div class="flex flex-wrap gap-2">
+			{#each routeColors as color}
+				<button
+					type="button"
+					onclick={() => posterStore.setRouteColor(color.value)}
+					class="group relative"
+					title={color.label}
+				>
+					<span
+						class="block h-8 w-8 rounded-full border-2 transition-transform {posterStore.data.routeColor ===
+						color.value
+							? 'scale-110 border-blue-500'
+							: 'border-gray-300 hover:scale-105'}"
+						style="background-color: {color.color}"
+					></span>
+				</button>
+			{/each}
+		</div>
+	</section>
+</div>
