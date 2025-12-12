@@ -153,7 +153,13 @@
 <div class="poster-map" bind:this={mapContainer}>
 	{#if loading}
 		<div class="loading-overlay">
-			<span class="loading-text">Loading map...</span>
+			<div class="loading-content">
+				<svg class="loading-spinner" viewBox="0 0 24 24" fill="none">
+					<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+					<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+				</svg>
+				<span class="loading-text">Loading map tiles...</span>
+			</div>
 		</div>
 	{/if}
 </div>
@@ -171,13 +177,34 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background-color: rgba(0, 0, 0, 0.1);
+		background-color: rgba(128, 128, 128, 0.1);
 		z-index: 1000;
+	}
+
+	.loading-content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 12px;
+	}
+
+	.loading-spinner {
+		width: 32px;
+		height: 32px;
+		color: var(--color-text);
+		opacity: 0.6;
+		animation: spin 1s linear infinite;
+	}
+
+	@keyframes spin {
+		from { transform: rotate(0deg); }
+		to { transform: rotate(360deg); }
 	}
 
 	.loading-text {
 		font-family: var(--font-body);
 		color: var(--color-text);
-		font-size: 0.875rem;
+		font-size: 0.75rem;
+		opacity: 0.6;
 	}
 </style>

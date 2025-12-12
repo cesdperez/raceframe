@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import type { AppView, UploadError, GPXData } from '$lib/types/index.js';
 	import { posterStore } from '$lib/stores/poster.svelte.js';
 	import FileUpload from '$lib/components/FileUpload.svelte';
@@ -8,31 +9,46 @@
 
 	let currentView = $state<AppView>('landing');
 	let uploadError = $state<UploadError | null>(null);
+	let statusMessage = $state('');
 
-	function handleUploadSuccess(gpxData: GPXData) {
+	let editorHeading = $state<HTMLHeadingElement | null>(null);
+
+	async function handleUploadSuccess(gpxData: GPXData) {
 		posterStore.loadFromGPX(gpxData);
 		currentView = 'editor';
 		uploadError = null;
+		statusMessage = 'GPX file loaded successfully. You can now customize your poster.';
+		await tick();
+		editorHeading?.focus();
 	}
 
 	function handleUploadError(error: UploadError) {
 		uploadError = error;
+		statusMessage = `Error: ${error.message}`;
 	}
 
 	function handleDismissError() {
 		uploadError = null;
+		statusMessage = '';
 	}
 
 	function handleStartOver() {
 		posterStore.reset();
 		currentView = 'landing';
 		uploadError = null;
+		statusMessage = '';
 	}
 </script>
 
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<div aria-live="polite" aria-atomic="true" class="sr-only">
+	{statusMessage}
+</div>
+
 <div class="min-h-screen flex flex-col">
 	{#if currentView === 'landing'}
-		<main class="flex-1 flex flex-col items-center justify-center px-4 py-12">
+		<main id="main-content" class="flex-1 flex flex-col items-center justify-center px-4 py-12 view-fade-in">
 			<div class="max-w-2xl mx-auto text-center">
 				<h1
 					class="text-5xl md:text-6xl font-semibold tracking-tight mb-4"
@@ -82,26 +98,38 @@
 			</div>
 		</main>
 	{:else if currentView === 'editor'}
-		<main class="flex-1 flex flex-col lg:flex-row min-h-0">
-			<div class="flex-1 min-h-[60vh] lg:min-h-0 bg-gray-100 relative">
+		<main id="main-content" class="flex-1 flex flex-col lg:flex-row min-h-0 view-fade-in">
+			<div class="flex-1 min-h-[50vh] md:min-h-[60vh] lg:min-h-0 bg-gray-100 relative" role="img" aria-label="Poster preview showing your race route and details">
 				<PosterPreview />
 			</div>
 
 			<aside
-				class="w-full lg:w-80 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0 flex flex-col"
+				class="w-full lg:w-80 xl:w-96 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0 flex flex-col max-h-[50vh] md:max-h-[40vh] lg:max-h-none"
+				aria-label="Poster customization options"
 			>
-				<div class="p-4 border-b border-gray-200">
-					<h2 class="text-lg font-medium" style="font-family: var(--font-heading);">
+				<div class="p-3 md:p-4 border-b border-gray-200 flex items-center justify-between">
+					<h2
+						bind:this={editorHeading}
+						tabindex="-1"
+						class="text-lg font-medium focus:outline-none"
+						style="font-family: var(--font-heading);"
+					>
 						Customize
 					</h2>
+					<button
+						onclick={handleStartOver}
+						class="lg:hidden px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+					>
+						Start Over
+					</button>
 				</div>
 				<div class="flex-1 overflow-y-auto">
 					<EditorPanel />
 				</div>
-				<div class="p-4 border-t border-gray-200">
+				<div class="hidden lg:block p-4 border-t border-gray-200">
 					<button
 						onclick={handleStartOver}
-						class="w-full px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+						class="w-full px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 active:bg-gray-950 transition-colors min-h-[44px]"
 						style="font-family: var(--font-heading);"
 					>
 						Start Over

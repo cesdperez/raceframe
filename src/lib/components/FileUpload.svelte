@@ -76,8 +76,10 @@
 <div
 	role="button"
 	tabindex="0"
-	class="border-2 border-dashed rounded-xl p-12 transition-colors cursor-pointer
-		{isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50 hover:border-gray-400'}
+	aria-label="Upload GPX file. Drop your file here or press Enter to browse"
+	aria-busy={isLoading}
+	class="border-2 border-dashed rounded-xl p-8 md:p-12 transition-colors cursor-pointer min-h-[180px] flex flex-col items-center justify-center
+		{isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50 hover:border-gray-400 active:bg-gray-100'}
 		{isLoading ? 'opacity-60 cursor-wait' : ''}"
 	ondrop={handleDrop}
 	ondragover={handleDragOver}

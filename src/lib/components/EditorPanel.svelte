@@ -38,7 +38,7 @@
 	}
 </script>
 
-<div class="flex h-full flex-col overflow-y-auto p-4">
+<div class="flex h-full flex-col overflow-y-auto p-3 md:p-4">
 	<section class="mb-6">
 		<h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Race Details</h3>
 		<div class="space-y-3">
@@ -131,10 +131,11 @@
 						min="0"
 						class="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
 					/>
-					<div class="flex rounded-md border border-gray-300">
+					<div class="flex rounded-md border border-gray-300" role="group" aria-label="Distance unit">
 						<button
 							type="button"
 							onclick={() => posterStore.setUnit('km')}
+							aria-pressed={posterStore.data.unit === 'km'}
 							class="px-3 py-2 text-sm font-medium transition-colors {posterStore.data.unit === 'km'
 								? 'bg-blue-500 text-white'
 								: 'bg-white text-gray-700 hover:bg-gray-50'} rounded-l-md"
@@ -144,6 +145,7 @@
 						<button
 							type="button"
 							onclick={() => posterStore.setUnit('miles')}
+							aria-pressed={posterStore.data.unit === 'miles'}
 							class="px-3 py-2 text-sm font-medium transition-colors {posterStore.data.unit === 'miles'
 								? 'bg-blue-500 text-white'
 								: 'bg-white text-gray-700 hover:bg-gray-50'} rounded-r-md border-l border-gray-300"
@@ -157,12 +159,15 @@
 	</section>
 
 	<section class="mb-6">
-		<h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Theme</h3>
-		<div class="grid grid-cols-2 gap-2">
+		<h3 id="theme-label" class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Theme</h3>
+		<div class="grid grid-cols-2 gap-2" role="radiogroup" aria-labelledby="theme-label">
 			{#each themes as theme}
 				<button
 					type="button"
 					onclick={() => posterStore.setTheme(theme.value)}
+					role="radio"
+					aria-checked={posterStore.data.theme === theme.value}
+					aria-label="{theme.label} theme"
 					class="flex items-center gap-2 rounded-md border-2 px-3 py-2 text-sm font-medium transition-colors {posterStore.data
 						.theme === theme.value
 						? 'border-blue-500'
@@ -171,6 +176,7 @@
 					<span
 						class="flex h-5 w-5 items-center justify-center rounded border border-gray-300"
 						style="background-color: {theme.bg}"
+						aria-hidden="true"
 					>
 						<span
 							class="text-xs font-bold"
@@ -186,21 +192,24 @@
 	</section>
 
 	<section class="mb-6">
-		<h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Route Color</h3>
-		<div class="flex flex-wrap gap-2">
+		<h3 id="route-color-label" class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Route Color</h3>
+		<div class="flex flex-wrap gap-1" role="radiogroup" aria-labelledby="route-color-label">
 			{#each routeColors as color}
 				<button
 					type="button"
 					onclick={() => posterStore.setRouteColor(color.value)}
-					class="group relative"
-					title={color.label}
+					class="group relative p-1.5"
+					role="radio"
+					aria-checked={posterStore.data.routeColor === color.value}
+					aria-label="{color.label} route color"
 				>
 					<span
-						class="block h-8 w-8 rounded-full border-2 transition-transform {posterStore.data.routeColor ===
+						class="block h-8 w-8 md:h-7 md:w-7 rounded-full border-2 transition-transform {posterStore.data.routeColor ===
 						color.value
 							? 'scale-110 border-blue-500'
 							: 'border-gray-300 hover:scale-105'}"
 						style="background-color: {color.color}"
+						aria-hidden="true"
 					></span>
 				</button>
 			{/each}

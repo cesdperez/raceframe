@@ -10,15 +10,19 @@
 
 	let isExporting = $state(false);
 	let error = $state<string | null>(null);
+	let exportStatus = $state('');
 
 	async function handleExport(scale: ExportScale) {
 		isExporting = true;
 		error = null;
+		exportStatus = `Exporting ${scale === 4 ? 'high-resolution' : 'standard'} image...`;
 
 		try {
 			await exportPoster({ scale, raceName, date });
+			exportStatus = 'Export complete! Your download should start automatically.';
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to export poster';
+			exportStatus = `Export failed: ${error}`;
 		} finally {
 			isExporting = false;
 		}
@@ -26,15 +30,19 @@
 </script>
 
 <div class="space-y-3">
+	<div aria-live="polite" aria-atomic="true" class="sr-only">
+		{exportStatus}
+	</div>
 	<div class="flex gap-2">
 		<button
 			type="button"
 			onclick={() => handleExport(2)}
 			disabled={isExporting}
+			aria-label="Download poster at 2x resolution for web use"
 			class="flex flex-1 items-center justify-center gap-2 rounded-md bg-blue-500 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
 		>
 			{#if isExporting}
-				<svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+				<svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
 					<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
 					></circle>
 					<path
@@ -45,7 +53,7 @@
 				</svg>
 				Exporting...
 			{:else}
-				<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
 					<path
 						stroke-linecap="round"
 						stroke-linejoin="round"
@@ -60,10 +68,11 @@
 			type="button"
 			onclick={() => handleExport(4)}
 			disabled={isExporting}
+			aria-label="Download poster at 4x resolution for high-quality print (300 DPI)"
 			class="flex flex-1 items-center justify-center gap-2 rounded-md border-2 border-blue-500 bg-white px-4 py-3 text-sm font-medium text-blue-500 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
 		>
 			{#if isExporting}
-				<svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+				<svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
 					<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
 					></circle>
 					<path
@@ -73,7 +82,7 @@
 					></path>
 				</svg>
 			{:else}
-				<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
 					<path
 						stroke-linecap="round"
 						stroke-linejoin="round"
@@ -87,6 +96,6 @@
 	</div>
 	<p class="text-center text-xs text-gray-500">2x for web, 4x for high-quality print (300 DPI)</p>
 	{#if error}
-		<p class="text-center text-sm text-red-500">{error}</p>
+		<p class="text-center text-sm text-red-500" role="alert">{error}</p>
 	{/if}
 </div>
