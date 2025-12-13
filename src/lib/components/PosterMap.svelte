@@ -119,12 +119,35 @@
 		finishMarker.setStyle({ fillColor: color });
 	}
 
+	let resizeObserver: ResizeObserver | null = null;
+
+	function invalidateMapSize() {
+		if (!map || !routePolyline) return;
+
+		map.invalidateSize();
+
+		const bounds = routePolyline.getBounds();
+		if (bounds.isValid()) {
+			map.fitBounds(bounds, { padding: [20, 20] });
+		}
+	}
+
 	onMount(async () => {
 		L = await import('leaflet');
 		initializeMap();
+
+		resizeObserver = new ResizeObserver(() => {
+			invalidateMapSize();
+		});
+
+		if (mapContainer) {
+			resizeObserver.observe(mapContainer);
+		}
 	});
 
 	onDestroy(() => {
+		resizeObserver?.disconnect();
+		resizeObserver = null;
 		map?.remove();
 		map = null;
 		tileLayer = null;
@@ -149,6 +172,13 @@
 		if (map) {
 			renderRoute();
 		}
+	});
+
+	$effect(() => {
+		const _ = posterStore.data.aspectRatio;
+		setTimeout(() => {
+			invalidateMapSize();
+		}, 50);
 	});
 </script>
 

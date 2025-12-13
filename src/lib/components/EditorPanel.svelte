@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { posterStore } from '../stores/poster.svelte.js';
 	import { THEMES, ROUTE_COLOR_OPTIONS } from '$lib/constants/themes';
+	import { ASPECT_RATIOS } from '$lib/constants/poster';
 	import ExportButton from './ExportButton.svelte';
 
 	function handleDateChange(e: Event) {
@@ -261,6 +262,47 @@
 					</button>
 				{/if}
 			</div>
+		</div>
+	</section>
+
+	<section class="mb-6">
+		<h3 id="size-label" class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Poster Size</h3>
+		<div class="grid grid-cols-3 gap-2" role="radiogroup" aria-labelledby="size-label">
+			{#each ASPECT_RATIOS as ratio}
+				<button
+					type="button"
+					onclick={() => posterStore.setAspectRatio(ratio.value)}
+					role="radio"
+					aria-checked={posterStore.data.aspectRatio === ratio.value}
+					aria-label="{ratio.label} size"
+					class="flex flex-col items-center rounded-md border-2 px-2 py-2 text-sm transition-colors {posterStore.data
+						.aspectRatio === ratio.value
+						? 'border-blue-500'
+						: 'border-gray-200 hover:border-gray-300'}"
+				>
+					<span class="font-medium text-gray-700">{ratio.label}</span>
+					<span class="text-xs text-gray-500">{ratio.printSize}</span>
+				</button>
+			{/each}
+		</div>
+	</section>
+
+	<section class="mb-6">
+		<h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">QR Code</h3>
+		<div>
+			<label for="qrCodeUrl" class="mb-1 block text-sm font-medium text-gray-700">Activity URL</label>
+			<input
+				type="url"
+				id="qrCodeUrl"
+				value={posterStore.data.qrCodeUrl ?? ''}
+				oninput={(e) => {
+					const value = (e.target as HTMLInputElement).value;
+					posterStore.setQrCodeUrl(value || null);
+				}}
+				placeholder="e.g. https://strava.com/activities/..."
+				class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+			/>
+			<p class="mt-1 text-xs text-gray-500">Optional: Add a QR code linking to your activity</p>
 		</div>
 	</section>
 

@@ -1,5 +1,4 @@
 import { domToPng } from 'modern-screenshot';
-import { POSTER_WIDTH, POSTER_HEIGHT } from '$lib/constants/poster';
 import { posterStore } from '$lib/stores/poster.svelte';
 
 export type ExportScale = 2 | 4;
@@ -47,6 +46,9 @@ export function clonePosterElement(): ClonedPoster {
 		throw new Error('Poster element not found');
 	}
 
+	const width = posterStore.posterWidth;
+	const height = posterStore.posterHeight;
+
 	const clone = element.cloneNode(true) as HTMLElement;
 	const container = document.createElement('div');
 
@@ -54,8 +56,8 @@ export function clonePosterElement(): ClonedPoster {
 		position: fixed;
 		left: -99999px;
 		top: 0;
-		width: ${POSTER_WIDTH}px;
-		height: ${POSTER_HEIGHT}px;
+		width: ${width}px;
+		height: ${height}px;
 		overflow: visible;
 		pointer-events: none;
 	`;
@@ -77,13 +79,15 @@ export function clonePosterElement(): ClonedPoster {
 
 export async function renderPosterToPng(scale: ExportScale): Promise<string> {
 	const { clone, cleanup } = clonePosterElement();
+	const width = posterStore.posterWidth;
+	const height = posterStore.posterHeight;
 
 	try {
 		return await domToPng(clone, {
 			scale,
 			quality: 1,
-			width: POSTER_WIDTH,
-			height: POSTER_HEIGHT,
+			width,
+			height,
 			fetch: {
 				requestInit: {
 					mode: 'cors'

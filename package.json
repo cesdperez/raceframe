@@ -34,6 +34,7 @@
 		"@tmcw/togeojson": "^7.1.2",
 		"jspdf": "^3.0.4",
 		"leaflet": "^1.9.4",
-		"modern-screenshot": "^4.6.7"
+		"modern-screenshot": "^4.6.7",
+		"qr-code-styling": "^1.9.2"
 	}
 }

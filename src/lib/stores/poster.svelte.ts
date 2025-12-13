@@ -1,7 +1,8 @@
-import type { GPXData, PosterData, Theme, RouteColor, Unit } from '../types/index.js';
+import type { GPXData, PosterData, Theme, RouteColor, Unit, AspectRatio } from '../types/index.js';
 import { formatTime, formatDistance, formatPace, formatDate, metersToKm, metersToMiles } from '../utils/format.js';
 import { calculatePace } from '../utils/geo.js';
 import { THEMES, ROUTE_COLORS } from '../constants/themes.js';
+import { getDimensions } from '../constants/poster.js';
 
 function createDefaultPosterData(): PosterData {
 	return {
@@ -17,7 +18,9 @@ function createDefaultPosterData(): PosterData {
 		routeColor: 'orange',
 		customBgColor: null,
 		customTextColor: null,
-		customRouteColor: null
+		customRouteColor: null,
+		aspectRatio: 'default',
+		qrCodeUrl: null
 	};
 }
 
@@ -125,6 +128,22 @@ class PosterStore {
 
 	setDistance(distance: number): void {
 		this.data.distance = distance;
+	}
+
+	setAspectRatio(ratio: AspectRatio): void {
+		this.data.aspectRatio = ratio;
+	}
+
+	setQrCodeUrl(url: string | null): void {
+		this.data.qrCodeUrl = url;
+	}
+
+	get posterWidth(): number {
+		return getDimensions(this.data.aspectRatio).width;
+	}
+
+	get posterHeight(): number {
+		return getDimensions(this.data.aspectRatio).height;
 	}
 
 	reset(): void {

@@ -1,7 +1,5 @@
 import { jsPDF } from 'jspdf';
 import {
-	POSTER_WIDTH,
-	POSTER_HEIGHT,
 	BLEED_MM,
 	CROP_MARK_LENGTH_MM,
 	CROP_MARK_OFFSET_MM,
@@ -18,8 +16,8 @@ function pixelsToMm(pixels: number, scale: ExportScale): number {
 }
 
 function getPosterDimensionsMm(scale: ExportScale): { width: number; height: number } {
-	const scaledWidth = POSTER_WIDTH * scale;
-	const scaledHeight = POSTER_HEIGHT * scale;
+	const scaledWidth = posterStore.posterWidth * scale;
+	const scaledHeight = posterStore.posterHeight * scale;
 	return {
 		width: pixelsToMm(scaledWidth, scale),
 		height: pixelsToMm(scaledHeight, scale)

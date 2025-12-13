@@ -11,6 +11,7 @@ export interface GPXData {
 export type Theme = 'light' | 'dark' | 'midnight' | 'forest';
 export type RouteColor = 'orange' | 'yellow' | 'cyan' | 'pink' | 'green' | 'white';
 export type Unit = 'km' | 'miles';
+export type AspectRatio = 'default' | 'a4' | 'square';
 
 export interface PosterData {
 	gpxData: GPXData | null;
@@ -26,6 +27,8 @@ export interface PosterData {
 	customBgColor: string | null;
 	customTextColor: string | null;
 	customRouteColor: string | null;
+	aspectRatio: AspectRatio;
+	qrCodeUrl: string | null;
 }
 
 export type AppView = 'landing' | 'editor';

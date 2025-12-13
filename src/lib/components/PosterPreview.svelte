@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { posterStore } from '$lib/stores/poster.svelte';
-	import { POSTER_WIDTH, POSTER_HEIGHT } from '$lib/constants/poster';
 	import PosterMap from './PosterMap.svelte';
+	import QrCode from './QrCode.svelte';
 
 	let containerEl: HTMLDivElement;
 	let scale = $state(1);
+
+	const posterWidth = $derived(posterStore.posterWidth);
+	const posterHeight = $derived(posterStore.posterHeight);
 
 	function calculateScale() {
 		if (!containerEl) return;
@@ -14,8 +17,8 @@
 		const availableWidth = containerRect.width - 40;
 		const availableHeight = containerRect.height - 40;
 
-		const scaleX = availableWidth / POSTER_WIDTH;
-		const scaleY = availableHeight / POSTER_HEIGHT;
+		const scaleX = availableWidth / posterWidth;
+		const scaleY = availableHeight / posterHeight;
 
 		scale = Math.min(scaleX, scaleY, 1);
 	}
@@ -24,6 +27,12 @@
 		calculateScale();
 		window.addEventListener('resize', calculateScale);
 		return () => window.removeEventListener('resize', calculateScale);
+	});
+
+	$effect(() => {
+		posterWidth;
+		posterHeight;
+		calculateScale();
 	});
 
 	const raceName = $derived(posterStore.data.raceName || 'RACE NAME');
@@ -38,6 +47,9 @@
 	const theme = $derived(posterStore.data.theme);
 	const customBgColor = $derived(posterStore.data.customBgColor);
 	const customTextColor = $derived(posterStore.data.customTextColor);
+	const qrCodeUrl = $derived(posterStore.data.qrCodeUrl);
+
+	const mapMaxHeight = $derived(Math.round(posterHeight * 0.58));
 </script>
 
 <div class="poster-viewport" bind:this={containerEl}>
@@ -51,13 +63,15 @@
 			data-poster-export
 			style:--color-bg={customBgColor}
 			style:--color-text={customTextColor}
+			style:width="{posterWidth}px"
+			style:height="{posterHeight}px"
 		>
 			<header class="poster-header">
 				<h1 class="race-name">{raceName.toUpperCase()}</h1>
 				<p class="race-date">{formattedDate}</p>
 			</header>
 
-			<div class="poster-map-container">
+			<div class="poster-map-container" style:max-height="{mapMaxHeight}px">
 				<PosterMap />
 			</div>
 
@@ -84,6 +98,12 @@
 					<span class="stat-label">{paceLabel}</span>
 				</div>
 			</div>
+
+			{#if qrCodeUrl}
+				<div class="qr-code-container">
+					<QrCode url={qrCodeUrl} size={120} color={posterStore.effectiveTextColor} />
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>
@@ -104,8 +124,6 @@
 	}
 
 	.poster {
-		width: 1600px;
-		height: 2240px;
 		background-color: var(--color-bg);
 		color: var(--color-text);
 		display: flex;
@@ -144,7 +162,6 @@
 	.poster-map-container {
 		flex: 1;
 		min-height: 0;
-		max-height: 1300px;
 		margin: 0 0 50px 0;
 		border-radius: 12px;
 		overflow: hidden;
@@ -212,5 +229,11 @@
 		letter-spacing: 0.15em;
 		opacity: 0.5;
 		margin-top: 12px;
+	}
+
+	.qr-code-container {
+		display: flex;
+		justify-content: center;
+		margin-top: 40px;
 	}
 </style>
