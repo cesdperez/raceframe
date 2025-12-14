@@ -17,7 +17,9 @@ test.describe('GPX Upload', () => {
 	test('uploads GPX file and shows editor', async ({ page }) => {
 		await page.goto('/');
 
-		const fileInput = page.locator('input[type="file"]');
+		// Wait for hydration before interacting with file input
+		const fileInput = page.locator('input[type="file"][data-upload-ready]');
+		await fileInput.waitFor({ state: 'attached' });
 		await fileInput.setInputFiles(FIXTURE_PATH);
 
 		// Should transition to editor view
@@ -34,7 +36,8 @@ test.describe('GPX Upload', () => {
 	test('shows error for invalid file type', async ({ page }) => {
 		await page.goto('/');
 
-		const fileInput = page.locator('input[type="file"]');
+		const fileInput = page.locator('input[type="file"][data-upload-ready]');
+		await fileInput.waitFor({ state: 'attached' });
 		await fileInput.setInputFiles({
 			name: 'test.txt',
 			mimeType: 'text/plain',
@@ -47,7 +50,8 @@ test.describe('GPX Upload', () => {
 	test('can edit race details after upload', async ({ page }) => {
 		await page.goto('/');
 
-		const fileInput = page.locator('input[type="file"]');
+		const fileInput = page.locator('input[type="file"][data-upload-ready]');
+		await fileInput.waitFor({ state: 'attached' });
 		await fileInput.setInputFiles(FIXTURE_PATH);
 
 		await expect(page.getByRole('heading', { name: 'Customize', exact: true })).toBeVisible();
@@ -71,7 +75,8 @@ test.describe('GPX Upload', () => {
 	test('can change theme', async ({ page }) => {
 		await page.goto('/');
 
-		const fileInput = page.locator('input[type="file"]');
+		const fileInput = page.locator('input[type="file"][data-upload-ready]');
+		await fileInput.waitFor({ state: 'attached' });
 		await fileInput.setInputFiles(FIXTURE_PATH);
 
 		await expect(page.getByRole('heading', { name: 'Customize', exact: true })).toBeVisible();
@@ -85,7 +90,8 @@ test.describe('GPX Upload', () => {
 	test('can switch distance units', async ({ page }) => {
 		await page.goto('/');
 
-		const fileInput = page.locator('input[type="file"]');
+		const fileInput = page.locator('input[type="file"][data-upload-ready]');
+		await fileInput.waitFor({ state: 'attached' });
 		await fileInput.setInputFiles(FIXTURE_PATH);
 
 		await expect(page.getByRole('heading', { name: 'Customize', exact: true })).toBeVisible();
@@ -104,7 +110,8 @@ test.describe('GPX Upload', () => {
 	test('start over returns to landing page', async ({ page }) => {
 		await page.goto('/');
 
-		const fileInput = page.locator('input[type="file"]');
+		const fileInput = page.locator('input[type="file"][data-upload-ready]');
+		await fileInput.waitFor({ state: 'attached' });
 		await fileInput.setInputFiles(FIXTURE_PATH);
 
 		await expect(page.getByRole('heading', { name: 'Customize', exact: true })).toBeVisible();

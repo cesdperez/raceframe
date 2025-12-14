@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import type { GPXData, UploadError } from '$lib/types/index.js';
 	import { parseGPX } from '$lib/utils/gpx.js';
 	import { validateGpxFile } from '$lib/utils/validation.js';
@@ -15,6 +16,12 @@
 	let isDragging = $state(false);
 	let isLoading = $state(false);
 	let fileInput: HTMLInputElement;
+
+	// Signals that event listeners are attached (used by E2E tests to avoid race conditions)
+	let isHydrated = $state(false);
+	onMount(() => {
+		isHydrated = true;
+	});
 
 	async function processFile(file: File) {
 		const validationError = validateGpxFile(file);
@@ -114,5 +121,6 @@
 	type="file"
 	accept=".gpx"
 	class="hidden"
+	data-upload-ready={isHydrated || undefined}
 	onchange={handleFileChange}
 />

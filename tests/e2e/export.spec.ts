@@ -8,12 +8,11 @@ const FIXTURE_PATH = path.join(__dirname, '../../src/lib/test-fixtures/sample.gp
 test.describe('Export', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
-		await expect(page.getByText('Drop your GPX file here')).toBeVisible();
-		const fileInput = page.locator('input[type="file"]');
+		// Wait for hydration before interacting with file input
+		const fileInput = page.locator('input[type="file"][data-upload-ready]');
+		await fileInput.waitFor({ state: 'attached' });
 		await fileInput.setInputFiles(FIXTURE_PATH);
-		await expect(page.getByRole('heading', { name: 'Customize', exact: true })).toBeVisible();
-		// Wait for poster preview to be visible (map rendering can take a moment)
-		await expect(page.getByRole('img', { name: /poster preview/i })).toBeVisible({ timeout: 10000 });
+		await expect(page.locator('[data-poster-export]')).toBeVisible({ timeout: 10000 });
 	});
 
 	test('exports 2x PNG', async ({ page }) => {
