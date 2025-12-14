@@ -1,8 +1,8 @@
-import type { GPXData, PosterData, Theme, RouteColor, Unit, AspectRatio, QrDotStyle } from '../types/index.js';
+import type { GPXData, PosterData, Theme, RouteColor, Unit, AspectRatio, QrDotStyle, Layout } from '../types/index.js';
 import { formatTime, formatPace, formatDate, metersToKm, metersToMiles, kmToMeters, milesToMeters, parseTime } from '../utils/format.js';
 import { calculatePace } from '../utils/geo.js';
 import { THEMES, ROUTE_COLORS } from '../constants/themes.js';
-import { getDimensions } from '../constants/poster.js';
+import { getDimensions, getAspectRatiosForLayout, LAYOUTS } from '../constants/poster.js';
 
 function createDefaultPosterData(): PosterData {
 	return {
@@ -14,12 +14,13 @@ function createDefaultPosterData(): PosterData {
 		distance: 0,
 		unit: 'km',
 		bibNumber: '',
+		layout: 'classic',
 		theme: 'light',
 		routeColor: 'orange',
 		customBgColor: null,
 		customTextColor: null,
 		customRouteColor: null,
-		aspectRatio: 'default',
+		aspectRatio: '2:3',
 		qrCodeUrl: null,
 		qrDotStyle: 'rounded',
 		qrGradientEnabled: false
@@ -136,6 +137,20 @@ class PosterStore {
 
 	setDistance(distance: number): void {
 		this.data.distance = distance;
+	}
+
+	setLayout(layout: Layout): void {
+		this.data.layout = layout;
+		const validRatios = getAspectRatiosForLayout(layout);
+		const currentRatioValid = validRatios.some((r) => r.value === this.data.aspectRatio);
+		if (!currentRatioValid) {
+			this.data.aspectRatio = validRatios[0].value;
+		}
+	}
+
+	get isLandscape(): boolean {
+		const layoutConfig = LAYOUTS.find((l) => l.value === this.data.layout);
+		return layoutConfig?.orientation === 'landscape';
 	}
 
 	setAspectRatio(ratio: AspectRatio): void {

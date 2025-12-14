@@ -87,11 +87,17 @@ export async function exportPosterToPdf(options: PDFExportOptions): Promise<void
 	const pageWidthMm = posterMm.width + 2 * BLEED_MM;
 	const pageHeightMm = posterMm.height + 2 * BLEED_MM;
 
+	const isLandscape = posterStore.isLandscape;
+
 	const pdf = new jsPDF({
-		orientation: 'portrait',
+		orientation: isLandscape ? 'landscape' : 'portrait',
 		unit: 'mm',
-		format: [pageWidthMm, pageHeightMm]
+		format: isLandscape ? [pageHeightMm, pageWidthMm] : [pageWidthMm, pageHeightMm]
 	});
+
+	// Get actual page dimensions from jsPDF (accounts for orientation swap)
+	const actualPageWidth = pdf.internal.pageSize.getWidth();
+	const actualPageHeight = pdf.internal.pageSize.getHeight();
 
 	const bgColor = posterStore.effectiveBgColor;
 	const hexToRgb = (hex: string) => {
@@ -106,13 +112,13 @@ export async function exportPosterToPdf(options: PDFExportOptions): Promise<void
 	};
 	const rgb = hexToRgb(bgColor);
 	pdf.setFillColor(rgb.r, rgb.g, rgb.b);
-	pdf.rect(0, 0, pageWidthMm, pageHeightMm, 'F');
+	pdf.rect(0, 0, actualPageWidth, actualPageHeight, 'F');
 
 	const pngDataUrl = await renderPosterToPng(scale);
 
 	pdf.addImage(pngDataUrl, 'PNG', BLEED_MM, BLEED_MM, posterMm.width, posterMm.height);
 
-	drawCropMarks(pdf, pageWidthMm, pageHeightMm, BLEED_MM);
+	drawCropMarks(pdf, actualPageWidth, actualPageHeight, BLEED_MM);
 
 	const filename = generatePdfFilename(raceName, date, scale);
 	pdf.save(filename);

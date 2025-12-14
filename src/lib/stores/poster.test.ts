@@ -28,10 +28,16 @@ describe('PosterStore', () => {
 			expect(posterStore.data.theme).toBe('light');
 			expect(posterStore.data.routeColor).toBe('orange');
 			expect(posterStore.data.unit).toBe('km');
+			expect(posterStore.data.layout).toBe('classic');
+			expect(posterStore.data.aspectRatio).toBe('2:3');
 		});
 
 		it('hasGpxData returns false when no GPX is loaded', () => {
 			expect(posterStore.hasGpxData).toBe(false);
+		});
+
+		it('isLandscape returns false for classic layout', () => {
+			expect(posterStore.isLandscape).toBe(false);
 		});
 	});
 
@@ -225,6 +231,73 @@ describe('PosterStore', () => {
 
 			expect(posterStore.data.qrDotStyle).toBe('rounded');
 			expect(posterStore.data.qrGradientEnabled).toBe(false);
+		});
+	});
+
+	describe('setLayout', () => {
+		it('updates layout to medal-right', () => {
+			posterStore.setLayout('medal-right');
+			expect(posterStore.data.layout).toBe('medal-right');
+		});
+
+		it('isLandscape returns true for medal-right layout', () => {
+			posterStore.setLayout('medal-right');
+			expect(posterStore.isLandscape).toBe(true);
+		});
+
+		it('auto-switches aspect ratio when changing to landscape layout', () => {
+			expect(posterStore.data.aspectRatio).toBe('2:3');
+			posterStore.setLayout('medal-right');
+			expect(posterStore.data.aspectRatio).toBe('3:2');
+		});
+
+		it('auto-switches aspect ratio when changing back to portrait layout', () => {
+			posterStore.setLayout('medal-right');
+			expect(posterStore.data.aspectRatio).toBe('3:2');
+			posterStore.setLayout('classic');
+			expect(posterStore.data.aspectRatio).toBe('2:3');
+		});
+
+		it('preserves aspect ratio if valid for new layout orientation', () => {
+			posterStore.setLayout('medal-right');
+			posterStore.setAspectRatio('5:4');
+			expect(posterStore.data.aspectRatio).toBe('5:4');
+			posterStore.setLayout('medal-right');
+			expect(posterStore.data.aspectRatio).toBe('5:4');
+		});
+
+		it('reset clears layout to default', () => {
+			posterStore.setLayout('medal-right');
+			posterStore.reset();
+			expect(posterStore.data.layout).toBe('classic');
+			expect(posterStore.data.aspectRatio).toBe('2:3');
+		});
+	});
+
+	describe('posterWidth and posterHeight', () => {
+		it('returns correct dimensions for portrait 2:3', () => {
+			posterStore.setAspectRatio('2:3');
+			expect(posterStore.posterWidth).toBe(1600);
+			expect(posterStore.posterHeight).toBe(2400);
+		});
+
+		it('returns correct dimensions for portrait 4:5', () => {
+			posterStore.setAspectRatio('4:5');
+			expect(posterStore.posterWidth).toBe(1600);
+			expect(posterStore.posterHeight).toBe(2000);
+		});
+
+		it('returns correct dimensions for landscape 3:2', () => {
+			posterStore.setLayout('medal-right');
+			expect(posterStore.posterWidth).toBe(2400);
+			expect(posterStore.posterHeight).toBe(1600);
+		});
+
+		it('returns correct dimensions for landscape 5:4', () => {
+			posterStore.setLayout('medal-right');
+			posterStore.setAspectRatio('5:4');
+			expect(posterStore.posterWidth).toBe(2000);
+			expect(posterStore.posterHeight).toBe(1600);
 		});
 	});
 });

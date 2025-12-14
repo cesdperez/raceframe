@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { posterStore } from '../stores/poster.svelte.js';
 	import { THEMES, ROUTE_COLOR_OPTIONS } from '$lib/constants/themes';
-	import { ASPECT_RATIOS } from '$lib/constants/poster';
+	import { LAYOUTS, getAspectRatiosForLayout } from '$lib/constants/poster';
 	import ExportButton from './ExportButton.svelte';
+
+	const currentAspectRatios = $derived(getAspectRatiosForLayout(posterStore.data.layout));
 
 	let qrCodeInputValue = $state(posterStore.data.qrCodeUrl ?? '');
 	let qrDebounceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -283,15 +285,37 @@
 	</section>
 
 	<section class="mb-6">
-		<h3 id="size-label" class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Poster Size</h3>
-		<div class="grid grid-cols-3 gap-2" role="radiogroup" aria-labelledby="size-label">
-			{#each ASPECT_RATIOS as ratio}
+		<h3 id="layout-label" class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Layout</h3>
+		<div class="grid grid-cols-2 gap-2" role="radiogroup" aria-labelledby="layout-label">
+			{#each LAYOUTS as layout}
+				<button
+					type="button"
+					onclick={() => posterStore.setLayout(layout.value)}
+					role="radio"
+					aria-checked={posterStore.data.layout === layout.value}
+					aria-label="{layout.label} layout"
+					class="flex flex-col items-center rounded-md border-2 px-2 py-2 text-sm transition-colors {posterStore.data
+						.layout === layout.value
+						? 'border-blue-500'
+						: 'border-gray-200 hover:border-gray-300'}"
+				>
+					<span class="font-medium text-gray-700">{layout.label}</span>
+					<span class="text-xs text-gray-500 capitalize">{layout.orientation}</span>
+				</button>
+			{/each}
+		</div>
+	</section>
+
+	<section class="mb-6">
+		<h3 id="ratio-label" class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Aspect Ratio</h3>
+		<div class="grid grid-cols-2 gap-2" role="radiogroup" aria-labelledby="ratio-label">
+			{#each currentAspectRatios as ratio}
 				<button
 					type="button"
 					onclick={() => posterStore.setAspectRatio(ratio.value)}
 					role="radio"
 					aria-checked={posterStore.data.aspectRatio === ratio.value}
-					aria-label="{ratio.label} size"
+					aria-label="{ratio.label} aspect ratio"
 					class="flex flex-col items-center rounded-md border-2 px-2 py-2 text-sm transition-colors {posterStore.data
 						.aspectRatio === ratio.value
 						? 'border-blue-500'

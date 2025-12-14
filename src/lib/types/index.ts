@@ -11,7 +11,8 @@ export interface GPXData {
 export type Theme = 'light' | 'dark' | 'navy';
 export type RouteColor = 'orange' | 'blue' | 'cyan' | 'yellow' | 'pink';
 export type Unit = 'km' | 'miles';
-export type AspectRatio = 'default' | 'a4' | 'square';
+export type Layout = 'classic' | 'medal-right';
+export type AspectRatio = '2:3' | '4:5' | '3:2' | '5:4';
 export type QrDotStyle = 'rounded' | 'dots' | 'classy' | 'classy-rounded' | 'square' | 'extra-rounded';
 
 export interface PosterData {
@@ -23,6 +24,7 @@ export interface PosterData {
 	distance: number; // in user's selected unit
 	unit: Unit;
 	bibNumber: string;
+	layout: Layout;
 	theme: Theme;
 	routeColor: RouteColor;
 	customBgColor: string | null;

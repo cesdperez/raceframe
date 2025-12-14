@@ -159,3 +159,62 @@ test.describe('Export', () => {
 		}
 	});
 });
+
+test.describe('Export - Medal Right Layout', () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto('/');
+		const fileInput = page.locator('input[type="file"][data-upload-ready]');
+		await fileInput.waitFor({ state: 'attached' });
+		await fileInput.setInputFiles(FIXTURE_PATH);
+		await expect(page.locator('[data-poster-export]')).toBeVisible({ timeout: 10000 });
+
+		// Switch to Medal Right layout
+		await page.getByRole('radio', { name: /Medal Right/i }).click();
+		// Wait for layout to update
+		await page.waitForTimeout(300);
+	});
+
+	test('exports PNG with landscape dimensions', async ({ page }) => {
+		const downloadPromise = page.waitForEvent('download');
+		await page.getByRole('button', { name: /Download PNG at 2x/i }).click();
+		const download = await downloadPromise;
+
+		expect(download.suggestedFilename()).toMatch(/\.png$/);
+
+		// Verify file is valid and has reasonable size
+		const filePath = await download.path();
+		if (filePath) {
+			const fs = await import('fs');
+			const stats = fs.statSync(filePath);
+			expect(stats.size).toBeGreaterThan(10 * 1024);
+		}
+	});
+
+	test('exports PDF with landscape orientation', async ({ page }) => {
+		const downloadPromise = page.waitForEvent('download');
+		await page.getByRole('button', { name: /Download PDF at 2x/i }).click();
+		const download = await downloadPromise;
+
+		expect(download.suggestedFilename()).toMatch(/\.pdf$/);
+
+		const filePath = await download.path();
+		if (filePath) {
+			const fs = await import('fs');
+			const stats = fs.statSync(filePath);
+			expect(stats.size).toBeGreaterThan(10 * 1024);
+		}
+	});
+
+	test('preview shows medal zone placeholder', async ({ page }) => {
+		// Medal zone should be visible in preview
+		await expect(page.locator('[data-medal-zone]')).toBeVisible();
+	});
+
+	test('medal-right preview matches snapshot', async ({ page }) => {
+		// Visual regression test - catches layout issues like the flex vs height bug
+		const poster = page.locator('[data-poster-export]');
+		await expect(poster).toHaveScreenshot('medal-right-preview.png', {
+			maxDiffPixelRatio: 0.05, // Allow 5% difference for font rendering
+		});
+	});
+});

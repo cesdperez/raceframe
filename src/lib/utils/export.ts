@@ -85,6 +85,13 @@ export function clonePosterElement(): ClonedPoster {
 	clone.style.setProperty('--color-text', posterStore.effectiveTextColor);
 	clone.style.setProperty('--color-route', posterStore.effectiveRouteColor);
 
+	// Hide medal zone placeholder in export (remove visual indicators but keep size)
+	const medalZone = clone.querySelector('[data-medal-zone]') as HTMLElement | null;
+	if (medalZone) {
+		medalZone.style.border = 'none';
+		medalZone.style.opacity = '0';
+	}
+
 	container.appendChild(clone);
 	document.body.appendChild(container);
 
