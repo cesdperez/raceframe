@@ -4,6 +4,22 @@
 	import { ASPECT_RATIOS } from '$lib/constants/poster';
 	import ExportButton from './ExportButton.svelte';
 
+	let qrCodeInputValue = $state(posterStore.data.qrCodeUrl ?? '');
+	let qrDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+	function handleQrCodeUrlChange(e: Event) {
+		const value = (e.target as HTMLInputElement).value;
+		qrCodeInputValue = value;
+
+		if (qrDebounceTimer) {
+			clearTimeout(qrDebounceTimer);
+		}
+
+		qrDebounceTimer = setTimeout(() => {
+			posterStore.setQrCodeUrl(value || null);
+		}, 500);
+	}
+
 	function handleDateChange(e: Event) {
 		const input = e.target as HTMLInputElement;
 		posterStore.setDate(input.value ? new Date(input.value) : null);
@@ -294,11 +310,8 @@
 			<input
 				type="url"
 				id="qrCodeUrl"
-				value={posterStore.data.qrCodeUrl ?? ''}
-				oninput={(e) => {
-					const value = (e.target as HTMLInputElement).value;
-					posterStore.setQrCodeUrl(value || null);
-				}}
+				value={qrCodeInputValue}
+				oninput={handleQrCodeUrlChange}
 				placeholder="e.g. https://strava.com/activities/..."
 				class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
 			/>

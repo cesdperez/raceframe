@@ -10,11 +10,10 @@
 	let { url, size = 120, color = '#000000' }: Props = $props();
 
 	let containerEl: HTMLDivElement;
-	let qrCode: any = null;
 
 	onMount(() => {
 		import('qr-code-styling').then(({ default: QRCodeStyling }) => {
-			qrCode = new QRCodeStyling({
+			const qrCode = new QRCodeStyling({
 				width: size,
 				height: size,
 				data: url,
@@ -42,15 +41,6 @@
 	onDestroy(() => {
 		if (containerEl) {
 			containerEl.innerHTML = '';
-		}
-	});
-
-	$effect(() => {
-		if (qrCode) {
-			qrCode.update({
-				data: url,
-				dotsOptions: { color }
-			});
 		}
 	});
 </script>

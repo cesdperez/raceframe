@@ -101,7 +101,9 @@
 
 			{#if qrCodeUrl}
 				<div class="qr-code-container">
-					<QrCode url={qrCodeUrl} size={120} color={posterStore.effectiveTextColor} />
+					{#key `${qrCodeUrl}-${posterStore.effectiveTextColor}`}
+						<QrCode url={qrCodeUrl} size={120} color={posterStore.effectiveTextColor} />
+					{/key}
 				</div>
 			{/if}
 		</div>

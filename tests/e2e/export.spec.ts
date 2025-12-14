@@ -101,4 +101,62 @@ test.describe('Export', () => {
 			expect(stats.size).toBeGreaterThan(10 * 1024);
 		}
 	});
+
+	test('exports PNG with QR code when URL is set', async ({ page }) => {
+		// First export without QR code to get baseline size
+		const baselineDownloadPromise = page.waitForEvent('download');
+		await page.getByRole('button', { name: /Download PNG at 2x/i }).click();
+		const baselineDownload = await baselineDownloadPromise;
+		const baselinePath = await baselineDownload.path();
+
+		const fs = await import('fs');
+		const baselineSize = baselinePath ? fs.statSync(baselinePath).size : 0;
+
+		// Add QR code URL
+		const qrInput = page.getByLabel(/Activity URL/i);
+		await qrInput.fill('https://strava.com/activities/12345');
+
+		// Wait for debounce (500ms) + QR code render time
+		await page.waitForTimeout(800);
+
+		// Verify QR code is visible in preview
+		await expect(page.locator('.qr-code-container canvas')).toBeVisible();
+
+		// Export with QR code
+		const qrDownloadPromise = page.waitForEvent('download');
+		await page.getByRole('button', { name: /Download PNG at 2x/i }).click();
+		const qrDownload = await qrDownloadPromise;
+		const qrPath = await qrDownload.path();
+
+		if (qrPath && baselinePath) {
+			const qrSize = fs.statSync(qrPath).size;
+			// PNG with QR code should be larger than without
+			expect(qrSize).toBeGreaterThan(baselineSize);
+		}
+	});
+
+	test('exports PDF with QR code when URL is set', async ({ page }) => {
+		// Add QR code URL
+		const qrInput = page.getByLabel(/Activity URL/i);
+		await qrInput.fill('https://strava.com/activities/12345');
+
+		// Wait for QR code to render
+		await page.waitForTimeout(500);
+
+		// Verify QR code is visible in preview
+		await expect(page.locator('.qr-code-container canvas')).toBeVisible();
+
+		// Export PDF
+		const downloadPromise = page.waitForEvent('download');
+		await page.getByRole('button', { name: /Download PDF at 2x/i }).click();
+		const download = await downloadPromise;
+
+		const filePath = await download.path();
+		if (filePath) {
+			const fs = await import('fs');
+			const stats = fs.statSync(filePath);
+			// PDF with QR code should be substantial
+			expect(stats.size).toBeGreaterThan(10 * 1024);
+		}
+	});
 });

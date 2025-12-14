@@ -40,6 +40,23 @@ export interface ClonedPoster {
 	cleanup: () => void;
 }
 
+function copyCanvasContent(source: Element, clone: HTMLElement): void {
+	const sourceCanvases = source.querySelectorAll('canvas');
+	const cloneCanvases = clone.querySelectorAll('canvas');
+
+	sourceCanvases.forEach((sourceCanvas, index) => {
+		const cloneCanvas = cloneCanvases[index] as HTMLCanvasElement;
+		if (cloneCanvas && sourceCanvas.width > 0 && sourceCanvas.height > 0) {
+			cloneCanvas.width = sourceCanvas.width;
+			cloneCanvas.height = sourceCanvas.height;
+			const ctx = cloneCanvas.getContext('2d');
+			if (ctx) {
+				ctx.drawImage(sourceCanvas, 0, 0);
+			}
+		}
+	});
+}
+
 export function clonePosterElement(): ClonedPoster {
 	const element = document.querySelector('[data-poster-export]');
 	if (!element) {
@@ -50,6 +67,7 @@ export function clonePosterElement(): ClonedPoster {
 	const height = posterStore.posterHeight;
 
 	const clone = element.cloneNode(true) as HTMLElement;
+	copyCanvasContent(element, clone);
 	const container = document.createElement('div');
 
 	container.style.cssText = `
