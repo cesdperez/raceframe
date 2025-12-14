@@ -2,59 +2,11 @@ import { test, expect } from '@playwright/test';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { PNG } from 'pngjs';
-import pixelmatch from 'pixelmatch';
 import fs from 'fs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FIXTURE_PATH = path.join(__dirname, '../../src/lib/test-fixtures/sample.gpx');
 const TEST_RESULTS_DIR = path.join(__dirname, 'test-results');
-
-async function dataUrlToBuffer(dataUrl: string): Promise<Buffer> {
-	const base64 = dataUrl.split(',')[1];
-	return Buffer.from(base64, 'base64');
-}
-
-async function comparePngs(
-	buffer1: Buffer,
-	buffer2: Buffer,
-	diffPath?: string
-): Promise<{ diffPercent: number; diffPixels: number; width1: number; height1: number; width2: number; height2: number }> {
-	const img1 = PNG.sync.read(buffer1);
-	const img2 = PNG.sync.read(buffer2);
-
-	const result = {
-		diffPercent: 100,
-		diffPixels: 0,
-		width1: img1.width,
-		height1: img1.height,
-		width2: img2.width,
-		height2: img2.height
-	};
-
-	if (img1.width !== img2.width || img1.height !== img2.height) {
-		console.log(`Image dimensions don't match: ${img1.width}x${img1.height} vs ${img2.width}x${img2.height}`);
-		return result;
-	}
-
-	const { width, height } = img1;
-	const diff = new PNG({ width, height });
-
-	const diffPixels = pixelmatch(img1.data, img2.data, diff.data, width, height, {
-		threshold: 0.1,
-		includeAA: false
-	});
-
-	if (diffPath) {
-		fs.mkdirSync(path.dirname(diffPath), { recursive: true });
-		fs.writeFileSync(diffPath, PNG.sync.write(diff));
-	}
-
-	const totalPixels = width * height;
-	result.diffPercent = (diffPixels / totalPixels) * 100;
-	result.diffPixels = diffPixels;
-
-	return result;
-}
 
 test.describe('Export Visual Fidelity', () => {
 	test.beforeEach(async ({ page }) => {
@@ -120,11 +72,6 @@ test.describe('Export Visual Fidelity', () => {
 		const previewPng = PNG.sync.read(previewScreenshot);
 		const exportPng = PNG.sync.read(exportBuffer);
 
-		// Preview should be at base dimensions (1600x2400)
-		// 2x export should be double (3200x4800)
-		console.log(`Preview dimensions: ${previewPng.width}x${previewPng.height}`);
-		console.log(`Export dimensions: ${exportPng.width}x${exportPng.height}`);
-
 		// The export should be exactly 2x the preview dimensions
 		expect(exportPng.width).toBe(previewPng.width * 2);
 		expect(exportPng.height).toBe(previewPng.height * 2);
@@ -169,9 +116,6 @@ test.describe('Export Visual Fidelity', () => {
 		const previewPng = PNG.sync.read(previewScreenshot);
 		const exportPng = PNG.sync.read(exportBuffer);
 
-		console.log(`Medal-right preview: ${previewPng.width}x${previewPng.height}`);
-		console.log(`Medal-right export: ${exportPng.width}x${exportPng.height}`);
-
 		// Should be landscape (width > height)
 		expect(exportPng.width).toBeGreaterThan(exportPng.height);
 
@@ -197,8 +141,6 @@ test.describe('Export Visual Fidelity', () => {
 				inter400: document.fonts.check('400 16px "Inter"')
 			};
 		});
-
-		console.log('Fonts loaded status:', fontsLoaded);
 
 		// All fonts should be loaded
 		expect(fontsLoaded.oswald600).toBe(true);
@@ -243,8 +185,6 @@ test.describe('Export Visual Fidelity', () => {
 		const qrPath = await qrDownload.path();
 		const qrSize = fs.statSync(qrPath!).size;
 
-		console.log(`Baseline size: ${baselineSize}, With QR: ${qrSize}`);
-
 		// Export with QR should be larger (more visual data)
 		expect(qrSize).toBeGreaterThan(baselineSize);
 	});
@@ -267,8 +207,6 @@ test.describe('Export Visual Fidelity', () => {
 
 			const downloadPath = await download.path();
 			const stats = fs.statSync(downloadPath!);
-
-			console.log(`Theme ${theme}: ${stats.size} bytes`);
 
 			// Each theme should produce substantial output
 			expect(stats.size).toBeGreaterThan(100000);
@@ -305,9 +243,6 @@ test.describe('Export Visual Fidelity', () => {
 		// Calculate aspect ratios
 		const previewRatio = previewPng.width / previewPng.height;
 		const exportRatio = exportPng.width / exportPng.height;
-
-		console.log(`Preview ratio: ${previewRatio.toFixed(4)}`);
-		console.log(`Export ratio: ${exportRatio.toFixed(4)}`);
 
 		// Aspect ratios should match exactly (or very close)
 		expect(Math.abs(previewRatio - exportRatio)).toBeLessThan(0.001);
