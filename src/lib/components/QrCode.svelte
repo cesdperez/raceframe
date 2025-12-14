@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import type { QrDotStyle } from '$lib/types/index.js';
+	import { exportReadyStore } from '$lib/stores/export-ready.svelte';
 
 	interface Props {
 		url: string;
@@ -23,6 +24,8 @@
 	}
 
 	onMount(() => {
+		exportReadyStore.setQrCodeReady(false);
+
 		import('qr-code-styling').then(({ default: QRCodeStyling }) => {
 			const dotsOptions: Record<string, unknown> = {
 				type: dotStyle
@@ -61,6 +64,9 @@
 
 			if (containerEl) {
 				qrCode.append(containerEl);
+				requestAnimationFrame(() => {
+					exportReadyStore.setQrCodeReady(true);
+				});
 			}
 		});
 	});

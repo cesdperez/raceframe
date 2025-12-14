@@ -2,6 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import type { Map, TileLayer, Polyline, CircleMarker } from 'leaflet';
 	import { posterStore } from '$lib/stores/poster.svelte';
+	import { exportReadyStore } from '$lib/stores/export-ready.svelte';
 	import {
 		TILE_URLS,
 		TILE_ATTRIBUTION,
@@ -52,10 +53,12 @@
 
 		tileLayer.on('load', () => {
 			loading = false;
+			exportReadyStore.setMapReady(true);
 		});
 
 		tileLayer.on('loading', () => {
 			loading = true;
+			exportReadyStore.setMapReady(false);
 		});
 
 		renderRoute();

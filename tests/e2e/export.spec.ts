@@ -8,7 +8,6 @@ const FIXTURE_PATH = path.join(__dirname, '../../src/lib/test-fixtures/sample.gp
 test.describe('Export', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
-		// Wait for hydration before interacting with file input
 		const fileInput = page.locator('input[type="file"][data-upload-ready]');
 		await fileInput.waitFor({ state: 'attached' });
 		await fileInput.setInputFiles(FIXTURE_PATH);
@@ -17,7 +16,7 @@ test.describe('Export', () => {
 
 	test('exports 2x PNG', async ({ page }) => {
 		const downloadPromise = page.waitForEvent('download');
-		await page.getByRole('button', { name: /Download PNG at 2x/i }).click();
+		await page.locator('button:has-text("2x Web")').click();
 		const download = await downloadPromise;
 
 		expect(download.suggestedFilename()).toMatch(/Morning.Run.*\.png$/);
@@ -25,26 +24,10 @@ test.describe('Export', () => {
 
 	test('exports 4x PNG', async ({ page }) => {
 		const downloadPromise = page.waitForEvent('download');
-		await page.getByRole('button', { name: /Download PNG at 4x/i }).click();
+		await page.locator('button:has-text("4x Print")').click();
 		const download = await downloadPromise;
 
 		expect(download.suggestedFilename()).toMatch(/Morning.Run.*\.png$/);
-	});
-
-	test('exports 2x PDF', async ({ page }) => {
-		const downloadPromise = page.waitForEvent('download');
-		await page.getByRole('button', { name: /Download PDF at 2x/i }).click();
-		const download = await downloadPromise;
-
-		expect(download.suggestedFilename()).toMatch(/Morning.Run.*\.pdf$/);
-	});
-
-	test('exports 4x PDF', async ({ page }) => {
-		const downloadPromise = page.waitForEvent('download');
-		await page.getByRole('button', { name: /Download PDF at 4x/i }).click();
-		const download = await downloadPromise;
-
-		expect(download.suggestedFilename()).toMatch(/Morning.Run.*\.pdf$/);
 	});
 
 	test('PNG filename includes custom race name', async ({ page }) => {
@@ -52,110 +35,61 @@ test.describe('Export', () => {
 		await raceNameInput.fill('Berlin Marathon 2024');
 
 		const downloadPromise = page.waitForEvent('download');
-		await page.getByRole('button', { name: /Download PNG at 2x/i }).click();
+		await page.locator('button:has-text("2x Web")').click();
 		const download = await downloadPromise;
 
 		expect(download.suggestedFilename()).toMatch(/Berlin.Marathon.2024.*\.png$/);
 	});
 
 	test('shows loading state during export', async ({ page }) => {
-		const exportButton = page.getByRole('button', { name: /Download PNG at 2x/i });
+		const exportButton = page.locator('button:has-text("2x Web")');
 
 		await exportButton.click();
 
-		// Button should be disabled during export
 		await expect(exportButton).toBeDisabled();
 
-		// Wait for download to complete
 		await page.waitForEvent('download');
 
-		// Button should be enabled again
 		await expect(exportButton).toBeEnabled();
 	});
 
 	test('exported PNG has reasonable file size', async ({ page }) => {
 		const downloadPromise = page.waitForEvent('download');
-		await page.getByRole('button', { name: /Download PNG at 2x/i }).click();
+		await page.locator('button:has-text("2x Web")').click();
 		const download = await downloadPromise;
 
 		const filePath = await download.path();
 		if (filePath) {
 			const fs = await import('fs');
 			const stats = fs.statSync(filePath);
-			// PNG should be at least 10KB (sanity check that it's not empty/broken)
-			expect(stats.size).toBeGreaterThan(10 * 1024);
-		}
-	});
-
-	test('exported PDF has reasonable file size', async ({ page }) => {
-		const downloadPromise = page.waitForEvent('download');
-		await page.getByRole('button', { name: /Download PDF at 2x/i }).click();
-		const download = await downloadPromise;
-
-		const filePath = await download.path();
-		if (filePath) {
-			const fs = await import('fs');
-			const stats = fs.statSync(filePath);
-			// PDF should be at least 10KB
 			expect(stats.size).toBeGreaterThan(10 * 1024);
 		}
 	});
 
 	test('exports PNG with QR code when URL is set', async ({ page }) => {
-		// First export without QR code to get baseline size
 		const baselineDownloadPromise = page.waitForEvent('download');
-		await page.getByRole('button', { name: /Download PNG at 2x/i }).click();
+		await page.locator('button:has-text("2x Web")').click();
 		const baselineDownload = await baselineDownloadPromise;
 		const baselinePath = await baselineDownload.path();
 
 		const fs = await import('fs');
 		const baselineSize = baselinePath ? fs.statSync(baselinePath).size : 0;
 
-		// Add QR code URL
 		const qrInput = page.getByLabel(/Activity URL/i);
 		await qrInput.fill('https://strava.com/activities/12345');
 
-		// Wait for debounce (500ms) + QR code render time
 		await page.waitForTimeout(800);
 
-		// Verify QR code is visible in preview
 		await expect(page.locator('.qr-code-container canvas')).toBeVisible();
 
-		// Export with QR code
 		const qrDownloadPromise = page.waitForEvent('download');
-		await page.getByRole('button', { name: /Download PNG at 2x/i }).click();
+		await page.locator('button:has-text("2x Web")').click();
 		const qrDownload = await qrDownloadPromise;
 		const qrPath = await qrDownload.path();
 
 		if (qrPath && baselinePath) {
 			const qrSize = fs.statSync(qrPath).size;
-			// PNG with QR code should be larger than without
 			expect(qrSize).toBeGreaterThan(baselineSize);
-		}
-	});
-
-	test('exports PDF with QR code when URL is set', async ({ page }) => {
-		// Add QR code URL
-		const qrInput = page.getByLabel(/Activity URL/i);
-		await qrInput.fill('https://strava.com/activities/12345');
-
-		// Wait for QR code to render
-		await page.waitForTimeout(500);
-
-		// Verify QR code is visible in preview
-		await expect(page.locator('.qr-code-container canvas')).toBeVisible();
-
-		// Export PDF
-		const downloadPromise = page.waitForEvent('download');
-		await page.getByRole('button', { name: /Download PDF at 2x/i }).click();
-		const download = await downloadPromise;
-
-		const filePath = await download.path();
-		if (filePath) {
-			const fs = await import('fs');
-			const stats = fs.statSync(filePath);
-			// PDF with QR code should be substantial
-			expect(stats.size).toBeGreaterThan(10 * 1024);
 		}
 	});
 });
@@ -168,34 +102,16 @@ test.describe('Export - Medal Right Layout', () => {
 		await fileInput.setInputFiles(FIXTURE_PATH);
 		await expect(page.locator('[data-poster-export]')).toBeVisible({ timeout: 10000 });
 
-		// Switch to Medal Right layout
 		await page.getByRole('radio', { name: /Medal Right/i }).click();
-		// Wait for layout to update
 		await page.waitForTimeout(300);
 	});
 
 	test('exports PNG with landscape dimensions', async ({ page }) => {
 		const downloadPromise = page.waitForEvent('download');
-		await page.getByRole('button', { name: /Download PNG at 2x/i }).click();
+		await page.locator('button:has-text("2x Web")').click();
 		const download = await downloadPromise;
 
 		expect(download.suggestedFilename()).toMatch(/\.png$/);
-
-		// Verify file is valid and has reasonable size
-		const filePath = await download.path();
-		if (filePath) {
-			const fs = await import('fs');
-			const stats = fs.statSync(filePath);
-			expect(stats.size).toBeGreaterThan(10 * 1024);
-		}
-	});
-
-	test('exports PDF with landscape orientation', async ({ page }) => {
-		const downloadPromise = page.waitForEvent('download');
-		await page.getByRole('button', { name: /Download PDF at 2x/i }).click();
-		const download = await downloadPromise;
-
-		expect(download.suggestedFilename()).toMatch(/\.pdf$/);
 
 		const filePath = await download.path();
 		if (filePath) {
@@ -206,15 +122,13 @@ test.describe('Export - Medal Right Layout', () => {
 	});
 
 	test('preview shows medal zone placeholder', async ({ page }) => {
-		// Medal zone should be visible in preview
 		await expect(page.locator('[data-medal-zone]')).toBeVisible();
 	});
 
 	test('medal-right preview matches snapshot', async ({ page }) => {
-		// Visual regression test - catches layout issues like the flex vs height bug
 		const poster = page.locator('[data-poster-export]');
 		await expect(poster).toHaveScreenshot('medal-right-preview.png', {
-			maxDiffPixelRatio: 0.05, // Allow 5% difference for font rendering
+			maxDiffPixelRatio: 0.05
 		});
 	});
 });

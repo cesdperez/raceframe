@@ -1,8 +1,9 @@
 import { domToPng } from 'modern-screenshot';
 import { posterStore } from '$lib/stores/poster.svelte';
+import { exportReadyStore } from '$lib/stores/export-ready.svelte';
+import { waitForFonts, getEmbeddedFontCss } from './fonts';
 
 export type ExportScale = 2 | 4;
-export type ExportFormat = 'png' | 'pdf';
 
 export function sanitizeForFilename(input: string): string {
 	return input
@@ -103,6 +104,10 @@ export function clonePosterElement(): ClonedPoster {
 }
 
 export async function renderPosterToPng(scale: ExportScale): Promise<string> {
+	const [, fontCss] = await Promise.all([waitForFonts(), getEmbeddedFontCss()]);
+	await exportReadyStore.waitUntilReady(5000);
+	await new Promise((resolve) => requestAnimationFrame(resolve));
+
 	const { clone, cleanup } = clonePosterElement();
 	const width = posterStore.posterWidth;
 	const height = posterStore.posterHeight;
@@ -113,6 +118,7 @@ export async function renderPosterToPng(scale: ExportScale): Promise<string> {
 			quality: 1,
 			width,
 			height,
+			font: fontCss ? { cssText: fontCss } : undefined,
 			fetch: {
 				requestInit: {
 					mode: 'cors'
