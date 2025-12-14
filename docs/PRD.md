@@ -31,7 +31,7 @@ A client-side web app that:
 | Styling | Tailwind CSS 4 | Rapid UI development |
 | Maps | Leaflet + CartoDB tiles | Free, no API key required |
 | GPX Parsing | @tmcw/togeojson | Maintained, ESM, handles GPX/KML/TCX |
-| Export | modern-screenshot | Fast rasterization, Web Worker support |
+| Export | modern-screenshot | Fast rasterization |
 | Hosting | GitHub Pages | Free static hosting |
 
 ---
@@ -51,55 +51,30 @@ A client-side web app that:
 
 ---
 
-## Current Features (v1.x)
+## Features
 
 ### GPX Processing
-- Parse GPX files to extract coordinates, distance, time, pace
+- Parse GPX files to extract coordinates, distance, time, pace, elevation gain
 - Handle files with multiple tracks/segments
 
 ### Poster Editor
 - Live preview scaled to viewport
 - Map rendering with route overlay and start/finish markers
-- Editable fields: runner name, race name, time, date, distance, bib number, city
-- Optional QR code
+- Editable fields: runner name, race name, time, date, distance, bib number
+- Optional QR code linking to activity
 
-### Themes & Customization
-- 3 themes: Light, Dark, Midnight
-- Route color picker
-- Unit toggle (km/miles)
-- QR code styling (dot style, gradient)
+### Layouts
 
-### Export
-- PNG export at 2x and 4x resolution (300 DPI for print)
-- PDF export with bleed margins for professional printing
-- Filename includes race name and date
-
----
-
-## Next Iteration: Layout System for Medal Display
-
-### Problem
-
-Runners often want to display their race poster alongside their finisher medal in a DIY frame. The current fixed portrait layout doesn't accommodate this use case.
-
-### Solution
-
-Introduce a **Layout** selector that offers different poster arrangements optimized for medal display frames.
-
-### Layout Options
-
-#### 1. Classic (Current)
-Standard portrait poster, no medal zone. For traditional framing or digital display.
+**Classic (Portrait)**
+Standard vertical poster for traditional framing or digital display.
 
 ```
 ┌────────────────────────────────────┐
 │           RACE NAME                │
 │           1 December 2025          │
 │  ┌──────────────────────────────┐  │
-│  │                              │  │
 │  │           MAP                │  │
 │  │        + ROUTE               │  │
-│  │                              │  │
 │  └──────────────────────────────┘  │
 │  ─────────────────────────────────  │
 │        RUNNER NAME  #12345         │
@@ -108,117 +83,44 @@ Standard portrait poster, no medal zone. For traditional framing or digital disp
 └────────────────────────────────────┘
 ```
 
-#### 2. Medal Right
-Landscape orientation. Two-column layout (50/50 split).
+**Medal Right (Landscape)**
+Two-column layout with medal zone for displaying finisher medals.
 
 ```
 ┌─────────────────────────┬─────────────────────────┐
-│      RACE NAME          │  ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄   │
-│      1 December 2025    │      Medal zone         │
-│  ┌───────────────────┐  │       (top 50%)         │
-│  │                   │  │  ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄   │
-│  │       MAP         │  ├─────────────────────────┤
-│  │                   │  │  RUNNER NAME  #12345    │
+│      RACE NAME          │       Medal zone        │
+│      1 December 2025    │       (for medal)       │
+│  ┌───────────────────┐  ├─────────────────────────┤
+│  │       MAP         │  │  RUNNER NAME  #12345    │
 │  │                   │  │  42.2 km • 3:45:22      │
 │  └───────────────────┘  │  5'20"/km               │
 └─────────────────────────┴─────────────────────────┘
-   Column 1: Race identity    Column 2: Achievement
-              ← Full frame exported →
 ```
-
-#### 3. Medal Left
-Landscape orientation. Two-column layout (50/50 split), mirrored.
-
-```
-┌─────────────────────────┬─────────────────────────┐
-│  ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄   │      RACE NAME          │
-│      Medal zone         │      1 December 2025    │
-│       (top 50%)         │  ┌───────────────────┐  │
-│  ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄   │  │                   │  │
-├─────────────────────────┤  │       MAP         │  │
-│  RUNNER NAME  #12345    │  │                   │  │
-│  42.2 km • 3:45:22      │  │                   │  │
-│  5'20"/km               │  └───────────────────┘  │
-└─────────────────────────┴─────────────────────────┘
-   Column 1: Achievement    Column 2: Race identity
-              ← Full frame exported →
-```
-
-#### 4. Medal Top
-Portrait orientation. Medal zone on top (30% of frame height), content below.
-
-```
-┌────────────────────────────────────┐  ↑
-│  ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄  │  │
-│           Medal zone               │  │ Full frame exported
-│  ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄ ┄  │  │
-├────────────────────────────────────┤  │
-│           RACE NAME                │  │
-│  ┌──────────────────────────────┐  │  │
-│  │           MAP                │  │  │
-│  └──────────────────────────────┘  │  │
-│   RUNNER NAME    42.2km • 3:45:22  │  │
-└────────────────────────────────────┘  ↓
-    Medal zone (top) + Content area
-```
-
-### Content Arrangement
-
-**Classic (Portrait):**
-- Vertical stack: Title → Date → Map → Divider → Stats
-
-**Medal Top (Portrait):**
-- Medal zone (top 30%) → Title → Date → Map → Stats
-
-**Medal Right / Medal Left (Landscape):**
-- Two equal columns (50/50 split)
-- **Race identity column:** Title + Date + Map (stacked vertically)
-- **Achievement column:** Medal zone (top 50%) + Stats (bottom 50%)
-- Medal Right: Race identity on left, Achievement on right
-- Medal Left: Achievement on left, Race identity on right
 
 ### Aspect Ratios
 
-The aspect ratio defines the **full frame** dimensions (content area + medal zone combined). This replaces the previous fixed pixel sizes.
+**Portrait layouts (Classic):**
+| Ratio | Common Print Sizes |
+|-------|-------------------|
+| 2:3 | 4×6", 8×12" |
+| 4:5 | 8×10", 16×20" |
 
-**Portrait layouts (Classic, Medal Top):**
-| Ratio | Common Print Sizes | Default |
-|-------|-------------------|---------|
-| 2:3 | 4×6", 8×12", A4-ish | ✓ |
-| 4:5 | 8×10", 16×20" | |
+**Landscape layouts (Medal Right):**
+| Ratio | Common Print Sizes |
+|-------|-------------------|
+| 3:2 | 6×4", 12×8" |
+| 5:4 | 10×8", 20×16" |
 
-**Landscape layouts (Medal Right, Medal Left):**
-| Ratio | Common Print Sizes | Default |
-|-------|-------------------|---------|
-| 3:2 | 6×4", 12×8" | ✓ |
-| 5:4 | 10×8", 20×16" | |
+### Themes & Customization
+- 3 themes: Light, Dark, Navy
+- 5 preset route colors + custom color picker
+- Custom background and text colors
+- Unit toggle (km/miles)
+- QR code styling (dot style, gradient)
 
-**Medal zone proportions:**
-- Medal Right / Medal Left: 50% of column height (within the 50% achievement column)
-- Medal Top: 30% of frame height
-- (May become user-configurable in future iterations)
-
-**Export scales:**
-- 2x — Screen/sharing quality
-- 4x — Print quality (300 DPI at ~5-7")
-- 8x — Large format print
-
-### Preview vs Export
-
-- **Preview:** Shows full frame including medal zone with placeholder visual (dashed border, subtle medal icon) to help users visualize where their physical medal will hang.
-- **Export:** Full frame with the **same dimensions** as the preview. The medal zone is included but rendered as empty background (no placeholder visual). The physical medal will be placed over this empty area when framed.
-
-### UI Changes
-
-New editor controls (replaces current "Frame Size" selector):
-```
-Layout:        [Classic] [Medal Right] [Medal Left] [Medal Top]
-Aspect Ratio:  [2:3] [4:5]      ← for portrait layouts (Classic, Medal Top)
-               [3:2] [5:4]      ← for landscape layouts (Medal Right, Medal Left)
-Export Scale:  [2x] [4x] [8x]
-```
-
-The aspect ratio options automatically change based on the selected layout orientation.
+### Export
+- PNG export at 2x (screen) and 4x (print at 300 DPI) resolution
+- Filename includes race name and date
 
 ---
 
@@ -226,25 +128,25 @@ The aspect ratio options automatically change based on the selected layout orien
 
 ### Typography
 
-| Element | Font | Weight | Size (base) |
-|---------|------|--------|-------------|
-| Race name | Oswald | 600 | 28px |
-| Date | Oswald | 400 | 14px |
-| Runner name | Oswald | 500 | 18px |
-| Stats values | Oswald | 500 | 22px |
-| Stats labels | Inter | 400 | 10px |
+| Element | Font | Weight |
+|---------|------|--------|
+| Race name | Oswald | 600 |
+| Date | Oswald | 400 |
+| Runner name | Oswald | 500 |
+| Stats values | Oswald | 500 |
+| Stats labels | Inter | 400 |
 
 ### Themes
 
 | Theme | Background | Text | Map Tiles |
 |-------|------------|------|-----------|
 | Light | #FFFFFF | #1a1a1a | CartoDB Positron |
-| Dark | #1a1a2e | #FFFFFF | CartoDB Dark Matter |
-| Midnight | #0f0f1a | #e0e0e0 | CartoDB Dark Matter |
+| Dark | #18181b | #fafafa | CartoDB Dark Matter |
+| Navy | #0f172a | #f8fafc | CartoDB Dark Matter |
 
 ### Route Colors
 
-Orange (#FC5200), Yellow (#FFD700), Cyan (#00CED1), Pink (#FF69B4), Green (#32CD32), White (#FFFFFF)
+Orange (#FC5200), Blue (#3b82f6), Cyan (#00CED1), Yellow (#FFD700), Pink (#FF69B4)
 
 ---
 

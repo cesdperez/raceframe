@@ -117,19 +117,3 @@ export async function getEmbeddedFontCss(): Promise<string> {
 		return '';
 	}
 }
-
-export async function loadFonts(): Promise<void> {
-	const fontLoadPromises = REQUIRED_FONTS.map(async (font) => {
-		try {
-			const fontFace = new FontFace(font.family, `local("${font.family}")`, {
-				weight: font.weight
-			});
-			await fontFace.load();
-		} catch {
-			// Font might already be loaded via CSS, which is fine
-		}
-	});
-
-	await Promise.allSettled(fontLoadPromises);
-	await document.fonts.ready;
-}

@@ -1,7 +1,10 @@
-[] Themed QR code that looks prettier (maybe using the race logo?)
-[] Optional race logo
-[] Speed or elevation color gradient on the route
-[] Preset race routes (for users without GPX)
-[] Elevation profile visualization
-[] Social sharing (generate preview image)
-[] PWA support for offline use
+[] Layout: Horizontal with Medal left
+[] Layout: Vertical with Medal top
+[] Branded QR code
+[] Race logo
+[] Split times
+[] Weather info
+[] Elevation profile
+[] Support multiple gpx (eg triathlon)
+[] Social sharing?
+[] PWA?

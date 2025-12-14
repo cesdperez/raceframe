@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { posterStore } from '$lib/stores/poster.svelte';
 	import PosterMap from './PosterMap.svelte';
 	import QrCode from './QrCode.svelte';
 
 	let containerEl: HTMLDivElement;
 	let scale = $state(1);
+	let resizeObserver: ResizeObserver | null = null;
 
 	const posterWidth = $derived(posterStore.posterWidth);
 	const posterHeight = $derived(posterStore.posterHeight);
@@ -25,9 +26,13 @@
 	}
 
 	onMount(() => {
-		calculateScale();
-		window.addEventListener('resize', calculateScale);
-		return () => window.removeEventListener('resize', calculateScale);
+		resizeObserver = new ResizeObserver(calculateScale);
+		resizeObserver.observe(containerEl);
+	});
+
+	onDestroy(() => {
+		resizeObserver?.disconnect();
+		resizeObserver = null;
 	});
 
 	$effect(() => {

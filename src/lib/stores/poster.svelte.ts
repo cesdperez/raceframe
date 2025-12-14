@@ -89,16 +89,18 @@ class PosterStore {
 		this.data.customRouteColor = color;
 	}
 
+	private get currentThemeConfig() {
+		return THEMES.find((t) => t.value === this.data.theme);
+	}
+
 	get effectiveBgColor(): string {
 		if (this.data.customBgColor) return this.data.customBgColor;
-		const themeConfig = THEMES.find((t) => t.value === this.data.theme);
-		return themeConfig?.bg ?? '#ffffff';
+		return this.currentThemeConfig?.bg ?? '#ffffff';
 	}
 
 	get effectiveTextColor(): string {
 		if (this.data.customTextColor) return this.data.customTextColor;
-		const themeConfig = THEMES.find((t) => t.value === this.data.theme);
-		return themeConfig?.text ?? '#1a1a1a';
+		return this.currentThemeConfig?.text ?? '#1a1a1a';
 	}
 
 	get effectiveRouteColor(): string {

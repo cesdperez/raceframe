@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import {
 	formatTime,
 	parseTime,
-	formatDistance,
 	formatPace,
 	formatDate,
 	metersToKm,
@@ -99,24 +98,6 @@ describe('milesToMeters', () => {
 
 	it('handles zero', () => {
 		expect(milesToMeters(0)).toBe(0);
-	});
-});
-
-describe('formatDistance', () => {
-	it('formats distance in km with one decimal', () => {
-		expect(formatDistance(42195, 'km')).toBe('42.2');
-	});
-
-	it('formats distance in miles with one decimal', () => {
-		expect(formatDistance(42195, 'miles')).toBe('26.2');
-	});
-
-	it('handles small distances', () => {
-		expect(formatDistance(500, 'km')).toBe('0.5');
-	});
-
-	it('handles zero', () => {
-		expect(formatDistance(0, 'km')).toBe('0.0');
 	});
 });
 

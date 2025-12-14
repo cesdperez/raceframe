@@ -43,11 +43,6 @@ export function parseTime(timeStr: string): number | null {
 	return hours * 3600 + minutes * 60 + seconds;
 }
 
-export function formatDistance(meters: number, unit: Unit): string {
-	const value = unit === 'km' ? metersToKm(meters) : metersToMiles(meters);
-	return value.toFixed(1);
-}
-
 export function formatPace(secondsPerKm: number, unit: Unit): string {
 	const paceSeconds = unit === 'km' ? secondsPerKm : secondsPerKm * (METERS_PER_MILE / METERS_PER_KM);
 

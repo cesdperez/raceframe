@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import { posterStore } from '../stores/poster.svelte.js';
 	import { THEMES, ROUTE_COLOR_OPTIONS } from '$lib/constants/themes';
 	import { LAYOUTS, getAspectRatiosForLayout } from '$lib/constants/poster';
@@ -8,6 +9,12 @@
 
 	let qrCodeInputValue = $state(posterStore.data.qrCodeUrl ?? '');
 	let qrDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+	onDestroy(() => {
+		if (qrDebounceTimer) {
+			clearTimeout(qrDebounceTimer);
+		}
+	});
 
 	function handleQrCodeUrlChange(e: Event) {
 		const value = (e.target as HTMLInputElement).value;

@@ -4,12 +4,6 @@
 :root {
 	--font-heading: 'Oswald', sans-serif;
 	--font-body: 'Inter', sans-serif;
-
-	--color-route-orange: #fc5200;
-	--color-route-blue: #3b82f6;
-	--color-route-cyan: #00ced1;
-	--color-route-yellow: #ffd700;
-	--color-route-pink: #ff69b4;
 }
 
 [data-theme='light'] {
