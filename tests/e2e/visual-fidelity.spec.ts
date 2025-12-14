@@ -1,20 +1,15 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { PNG } from 'pngjs';
 import fs from 'fs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const FIXTURE_PATH = path.join(__dirname, '../../src/lib/test-fixtures/sample.gpx');
 const TEST_RESULTS_DIR = path.join(__dirname, 'test-results');
 
 test.describe('Export Visual Fidelity', () => {
-	test.beforeEach(async ({ page }) => {
-		await page.goto('/');
-		const fileInput = page.locator('input[type="file"][data-upload-ready]');
-		await fileInput.waitFor({ state: 'attached' });
-		await fileInput.setInputFiles(FIXTURE_PATH);
-		await expect(page.locator('[data-poster-export]')).toBeVisible({ timeout: 10000 });
+	test.beforeEach(async ({ editorPage, page }) => {
+		// editorPage fixture handles GPX upload
 
 		// Wait for fonts to be fully loaded
 		await page.waitForFunction(() => document.fonts.ready);

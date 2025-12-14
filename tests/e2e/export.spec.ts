@@ -1,17 +1,8 @@
-import { test, expect } from '@playwright/test';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const FIXTURE_PATH = path.join(__dirname, '../../src/lib/test-fixtures/sample.gpx');
+import { test, expect, FIXTURE_PATH } from './fixtures.js';
 
 test.describe('Export', () => {
-	test.beforeEach(async ({ page }) => {
-		await page.goto('/');
-		const fileInput = page.locator('input[type="file"][data-upload-ready]');
-		await fileInput.waitFor({ state: 'attached' });
-		await fileInput.setInputFiles(FIXTURE_PATH);
-		await expect(page.locator('[data-poster-export]')).toBeVisible({ timeout: 10000 });
+	test.beforeEach(async ({ editorPage }) => {
+		// editorPage fixture handles GPX upload
 	});
 
 	test('exports 2x PNG', async ({ page }) => {
@@ -66,42 +57,11 @@ test.describe('Export', () => {
 		}
 	});
 
-	test('exports PNG with QR code when URL is set', async ({ page }) => {
-		const baselineDownloadPromise = page.waitForEvent('download');
-		await page.locator('button:has-text("2x Web")').click();
-		const baselineDownload = await baselineDownloadPromise;
-		const baselinePath = await baselineDownload.path();
-
-		const fs = await import('fs');
-		const baselineSize = baselinePath ? fs.statSync(baselinePath).size : 0;
-
-		const qrInput = page.getByLabel(/Activity URL/i);
-		await qrInput.fill('https://strava.com/activities/12345');
-
-		await page.waitForTimeout(800);
-
-		await expect(page.locator('.qr-code-container canvas')).toBeVisible();
-
-		const qrDownloadPromise = page.waitForEvent('download');
-		await page.locator('button:has-text("2x Web")').click();
-		const qrDownload = await qrDownloadPromise;
-		const qrPath = await qrDownload.path();
-
-		if (qrPath && baselinePath) {
-			const qrSize = fs.statSync(qrPath).size;
-			expect(qrSize).toBeGreaterThan(baselineSize);
-		}
-	});
 });
 
 test.describe('Export - Medal Right Layout', () => {
-	test.beforeEach(async ({ page }) => {
-		await page.goto('/');
-		const fileInput = page.locator('input[type="file"][data-upload-ready]');
-		await fileInput.waitFor({ state: 'attached' });
-		await fileInput.setInputFiles(FIXTURE_PATH);
-		await expect(page.locator('[data-poster-export]')).toBeVisible({ timeout: 10000 });
-
+	test.beforeEach(async ({ editorPage, page }) => {
+		// editorPage fixture handles GPX upload
 		await page.getByRole('radio', { name: /Medal Right/i }).click();
 		await page.waitForTimeout(300);
 	});

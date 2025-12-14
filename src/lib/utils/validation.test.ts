@@ -9,18 +9,8 @@ function createMockFile(name: string, size: number = 1000): File {
 }
 
 describe('validateGpxFile', () => {
-	it('accepts .gpx files', () => {
-		const file = createMockFile('race.gpx');
-		expect(validateGpxFile(file)).toBeNull();
-	});
-
-	it('accepts .GPX files (case insensitive)', () => {
-		const file = createMockFile('race.GPX');
-		expect(validateGpxFile(file)).toBeNull();
-	});
-
-	it('accepts .Gpx files (mixed case)', () => {
-		const file = createMockFile('race.Gpx');
+	it.each(['.gpx', '.GPX', '.Gpx'])('accepts %s extension (case insensitive)', (ext) => {
+		const file = createMockFile(`race${ext}`);
 		expect(validateGpxFile(file)).toBeNull();
 	});
 

@@ -70,15 +70,9 @@ describe('calculateElapsedTime', () => {
 		expect(calculateElapsedTime(start, end)).toBe(13522);
 	});
 
-	it('returns null if start is null', () => {
+	it('returns null for invalid inputs', () => {
 		expect(calculateElapsedTime(null, new Date())).toBeNull();
-	});
-
-	it('returns null if end is null', () => {
 		expect(calculateElapsedTime(new Date(), null)).toBeNull();
-	});
-
-	it('returns null if both are null', () => {
 		expect(calculateElapsedTime(null, null)).toBeNull();
 	});
 
@@ -96,11 +90,8 @@ describe('calculatePace', () => {
 		expect(pace).toBeCloseTo(320.5, 0);
 	});
 
-	it('returns null if distance is 0', () => {
+	it('returns null for invalid inputs', () => {
 		expect(calculatePace(0, 1000)).toBeNull();
-	});
-
-	it('returns null if time is null', () => {
 		expect(calculatePace(42195, null)).toBeNull();
 	});
 
