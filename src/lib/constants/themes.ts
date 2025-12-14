@@ -15,27 +15,24 @@ export interface RouteColorConfig {
 
 export const THEMES: ThemeConfig[] = [
 	{ value: 'light', label: 'Light', bg: '#ffffff', text: '#1a1a1a' },
-	{ value: 'dark', label: 'Dark', bg: '#1a1a2e', text: '#ffffff' },
-	{ value: 'midnight', label: 'Midnight', bg: '#0f0f1a', text: '#e0e0e0' },
-	{ value: 'forest', label: 'Forest', bg: '#1a2e1a', text: '#e8f5e8' }
+	{ value: 'dark', label: 'Dark', bg: '#18181b', text: '#fafafa' },
+	{ value: 'navy', label: 'Navy', bg: '#0f172a', text: '#f8fafc' }
 ];
 
 export const ROUTE_COLORS: Record<RouteColor, string> = {
 	orange: '#fc5200',
-	yellow: '#ffd700',
+	blue: '#3b82f6',
 	cyan: '#00ced1',
-	pink: '#ff69b4',
-	green: '#32cd32',
-	white: '#ffffff'
+	yellow: '#ffd700',
+	pink: '#ff69b4'
 };
 
 export const ROUTE_COLOR_OPTIONS: RouteColorConfig[] = [
 	{ value: 'orange', label: 'Orange', color: ROUTE_COLORS.orange },
-	{ value: 'yellow', label: 'Yellow', color: ROUTE_COLORS.yellow },
+	{ value: 'blue', label: 'Blue', color: ROUTE_COLORS.blue },
 	{ value: 'cyan', label: 'Cyan', color: ROUTE_COLORS.cyan },
-	{ value: 'pink', label: 'Pink', color: ROUTE_COLORS.pink },
-	{ value: 'green', label: 'Green', color: ROUTE_COLORS.green },
-	{ value: 'white', label: 'White', color: ROUTE_COLORS.white }
+	{ value: 'yellow', label: 'Yellow', color: ROUTE_COLORS.yellow },
+	{ value: 'pink', label: 'Pink', color: ROUTE_COLORS.pink }
 ];
 
 export const START_MARKER_COLOR = '#22c55e';
@@ -53,6 +50,5 @@ export const TILE_ATTRIBUTION =
 export const THEME_TO_TILES: Record<Theme, TileType> = {
 	light: 'light',
 	dark: 'dark',
-	midnight: 'dark',
-	forest: 'dark'
+	navy: 'dark'
 };

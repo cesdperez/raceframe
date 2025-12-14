@@ -58,12 +58,8 @@ describe('THEME_TO_TILES', () => {
 		expect(THEME_TO_TILES.dark).toBe('dark');
 	});
 
-	it('maps midnight theme to dark tiles', () => {
-		expect(THEME_TO_TILES.midnight).toBe('dark');
-	});
-
-	it('maps forest theme to dark tiles', () => {
-		expect(THEME_TO_TILES.forest).toBe('dark');
+	it('maps navy theme to dark tiles', () => {
+		expect(THEME_TO_TILES.navy).toBe('dark');
 	});
 });
 
@@ -82,11 +78,10 @@ describe('TILE_URLS', () => {
 describe('ROUTE_COLORS', () => {
 	it('has all defined route colors', () => {
 		expect(ROUTE_COLORS.orange).toBe('#fc5200');
-		expect(ROUTE_COLORS.yellow).toBe('#ffd700');
+		expect(ROUTE_COLORS.blue).toBe('#3b82f6');
 		expect(ROUTE_COLORS.cyan).toBe('#00ced1');
+		expect(ROUTE_COLORS.yellow).toBe('#ffd700');
 		expect(ROUTE_COLORS.pink).toBe('#ff69b4');
-		expect(ROUTE_COLORS.green).toBe('#32cd32');
-		expect(ROUTE_COLORS.white).toBe('#ffffff');
 	});
 });
 

@@ -75,11 +75,11 @@ describe('PosterStore', () => {
 			posterStore.setTheme('dark');
 			expect(posterStore.data.theme).toBe('dark');
 
-			posterStore.setTheme('midnight');
-			expect(posterStore.data.theme).toBe('midnight');
+			posterStore.setTheme('navy');
+			expect(posterStore.data.theme).toBe('navy');
 
-			posterStore.setTheme('forest');
-			expect(posterStore.data.theme).toBe('forest');
+			posterStore.setTheme('light');
+			expect(posterStore.data.theme).toBe('light');
 		});
 	});
 

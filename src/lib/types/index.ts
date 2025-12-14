@@ -8,8 +8,8 @@ export interface GPXData {
 	name: string | null; // activity name from GPX
 }
 
-export type Theme = 'light' | 'dark' | 'midnight' | 'forest';
-export type RouteColor = 'orange' | 'yellow' | 'cyan' | 'pink' | 'green' | 'white';
+export type Theme = 'light' | 'dark' | 'navy';
+export type RouteColor = 'orange' | 'blue' | 'cyan' | 'yellow' | 'pink';
 export type Unit = 'km' | 'miles';
 export type AspectRatio = 'default' | 'a4' | 'square';
 export type QrDotStyle = 'rounded' | 'dots' | 'classy' | 'classy-rounded' | 'square' | 'extra-rounded';

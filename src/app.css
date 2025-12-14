@@ -6,11 +6,10 @@
 	--font-body: 'Inter', sans-serif;
 
 	--color-route-orange: #fc5200;
-	--color-route-yellow: #ffd700;
+	--color-route-blue: #3b82f6;
 	--color-route-cyan: #00ced1;
+	--color-route-yellow: #ffd700;
 	--color-route-pink: #ff69b4;
-	--color-route-green: #32cd32;
-	--color-route-white: #ffffff;
 }
 
 [data-theme='light'] {
@@ -19,18 +18,13 @@
 }
 
 [data-theme='dark'] {
-	--color-bg: #1a1a2e;
-	--color-text: #ffffff;
+	--color-bg: #18181b;
+	--color-text: #fafafa;
 }
 
-[data-theme='midnight'] {
-	--color-bg: #0f0f1a;
-	--color-text: #e0e0e0;
-}
-
-[data-theme='forest'] {
-	--color-bg: #1a2e1a;
-	--color-text: #e8f5e8;
+[data-theme='navy'] {
+	--color-bg: #0f172a;
+	--color-text: #f8fafc;
 }
 
 html,
