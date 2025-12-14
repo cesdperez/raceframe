@@ -1,4 +1,4 @@
-import type { GPXData, PosterData, Theme, RouteColor, Unit, AspectRatio } from '../types/index.js';
+import type { GPXData, PosterData, Theme, RouteColor, Unit, AspectRatio, QrDotStyle } from '../types/index.js';
 import { formatTime, formatDistance, formatPace, formatDate, metersToKm, metersToMiles } from '../utils/format.js';
 import { calculatePace } from '../utils/geo.js';
 import { THEMES, ROUTE_COLORS } from '../constants/themes.js';
@@ -20,7 +20,9 @@ function createDefaultPosterData(): PosterData {
 		customTextColor: null,
 		customRouteColor: null,
 		aspectRatio: 'default',
-		qrCodeUrl: null
+		qrCodeUrl: null,
+		qrDotStyle: 'rounded',
+		qrGradientEnabled: false
 	};
 }
 
@@ -136,6 +138,14 @@ class PosterStore {
 
 	setQrCodeUrl(url: string | null): void {
 		this.data.qrCodeUrl = url;
+	}
+
+	setQrDotStyle(style: QrDotStyle): void {
+		this.data.qrDotStyle = style;
+	}
+
+	setQrGradientEnabled(enabled: boolean): void {
+		this.data.qrGradientEnabled = enabled;
 	}
 
 	get posterWidth(): number {

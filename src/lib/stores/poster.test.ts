@@ -143,4 +143,37 @@ describe('PosterStore', () => {
 			expect(posterStore.hasGpxData).toBe(false);
 		});
 	});
+
+	describe('QR code styling', () => {
+		it('has default values for styling', () => {
+			expect(posterStore.data.qrDotStyle).toBe('rounded');
+			expect(posterStore.data.qrGradientEnabled).toBe(false);
+		});
+
+		it('setQrDotStyle updates dot style', () => {
+			posterStore.setQrDotStyle('dots');
+			expect(posterStore.data.qrDotStyle).toBe('dots');
+
+			posterStore.setQrDotStyle('classy');
+			expect(posterStore.data.qrDotStyle).toBe('classy');
+		});
+
+		it('setQrGradientEnabled toggles gradient', () => {
+			posterStore.setQrGradientEnabled(true);
+			expect(posterStore.data.qrGradientEnabled).toBe(true);
+
+			posterStore.setQrGradientEnabled(false);
+			expect(posterStore.data.qrGradientEnabled).toBe(false);
+		});
+
+		it('reset clears styling to defaults', () => {
+			posterStore.setQrDotStyle('classy');
+			posterStore.setQrGradientEnabled(true);
+
+			posterStore.reset();
+
+			expect(posterStore.data.qrDotStyle).toBe('rounded');
+			expect(posterStore.data.qrGradientEnabled).toBe(false);
+		});
+	});
 });

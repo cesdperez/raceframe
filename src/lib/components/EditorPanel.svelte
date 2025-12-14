@@ -37,6 +37,7 @@
 			posterStore.setDistance(value);
 		}
 	}
+
 </script>
 
 <div class="flex h-full flex-col overflow-y-auto p-3 md:p-4">
@@ -305,17 +306,46 @@
 
 	<section class="mb-6">
 		<h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">QR Code</h3>
-		<div>
-			<label for="qrCodeUrl" class="mb-1 block text-sm font-medium text-gray-700">Activity URL</label>
-			<input
-				type="url"
-				id="qrCodeUrl"
-				value={qrCodeInputValue}
-				oninput={handleQrCodeUrlChange}
-				placeholder="e.g. https://strava.com/activities/..."
-				class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-			/>
-			<p class="mt-1 text-xs text-gray-500">Optional: Add a QR code linking to your activity</p>
+		<div class="space-y-3">
+			<div>
+				<label for="qrCodeUrl" class="mb-1 block text-sm font-medium text-gray-700">Activity URL</label>
+				<input
+					type="url"
+					id="qrCodeUrl"
+					value={qrCodeInputValue}
+					oninput={handleQrCodeUrlChange}
+					placeholder="e.g. https://strava.com/activities/..."
+					class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+				/>
+				<p class="mt-1 text-xs text-gray-500">Optional: Add a QR code linking to your activity</p>
+			</div>
+			<div>
+				<label for="qrDotStyle" class="mb-1 block text-sm font-medium text-gray-700">Dot Style</label>
+				<select
+					id="qrDotStyle"
+					value={posterStore.data.qrDotStyle}
+					onchange={(e) => posterStore.setQrDotStyle((e.target as HTMLSelectElement).value as import('$lib/types/index.js').QrDotStyle)}
+					class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+				>
+					<option value="rounded">Rounded</option>
+					<option value="dots">Dots</option>
+					<option value="classy">Classy</option>
+					<option value="classy-rounded">Classy Rounded</option>
+					<option value="square">Square</option>
+					<option value="extra-rounded">Extra Rounded</option>
+				</select>
+			</div>
+			<div>
+				<label class="flex items-center gap-2 text-sm font-medium text-gray-700">
+					<input
+						type="checkbox"
+						checked={posterStore.data.qrGradientEnabled}
+						onchange={(e) => posterStore.setQrGradientEnabled((e.target as HTMLInputElement).checked)}
+						class="h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+					/>
+					Gradient effect
+				</label>
+			</div>
 		</div>
 	</section>
 

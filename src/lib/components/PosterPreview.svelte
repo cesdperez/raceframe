@@ -48,6 +48,8 @@
 	const customBgColor = $derived(posterStore.data.customBgColor);
 	const customTextColor = $derived(posterStore.data.customTextColor);
 	const qrCodeUrl = $derived(posterStore.data.qrCodeUrl);
+	const qrDotStyle = $derived(posterStore.data.qrDotStyle);
+	const qrGradientEnabled = $derived(posterStore.data.qrGradientEnabled);
 
 	const mapMaxHeight = $derived(Math.round(posterHeight * 0.58));
 </script>
@@ -101,8 +103,8 @@
 
 			{#if qrCodeUrl}
 				<div class="qr-code-container">
-					{#key `${qrCodeUrl}-${posterStore.effectiveTextColor}`}
-						<QrCode url={qrCodeUrl} size={120} color={posterStore.effectiveTextColor} />
+					{#key `${qrCodeUrl}-${posterStore.effectiveTextColor}-${qrDotStyle}-${qrGradientEnabled}`}
+						<QrCode url={qrCodeUrl} size={120} color={posterStore.effectiveTextColor} dotStyle={qrDotStyle} gradientEnabled={qrGradientEnabled} />
 					{/key}
 				</div>
 			{/if}
