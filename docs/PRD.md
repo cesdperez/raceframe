@@ -143,13 +143,8 @@ pnpm preview                   # Preview production build
 
 - [x] PDF export with bleed margins for professional printing
 - [x] More themes and custom color pickers
-- [ ] Elevation profile visualization
 - [x] Multiple poster aspect ratios (A4, A3, square, etc.)
 - [x] QR code rendered on poster
-- [ ] Social sharing (generate preview image)
-- [ ] Preset race routes (for users without GPX)
-- [ ] Local storage to save work-in-progress
-- [ ] PWA support for offline use
 
 ---
 
