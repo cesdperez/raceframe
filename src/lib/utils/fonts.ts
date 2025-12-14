@@ -1,3 +1,5 @@
+import { warnDev } from './logger';
+
 export interface FontSpec {
 	family: string;
 	weight: string;
@@ -44,10 +46,10 @@ export async function waitForFonts(timeout = 5000): Promise<boolean> {
 			}
 		}
 
-		console.warn('Fonts did not load within timeout, proceeding anyway');
+		warnDev('Fonts did not load within timeout, proceeding anyway');
 		return false;
 	} catch (error) {
-		console.warn('Font loading error:', error);
+		warnDev('Font loading error:', error);
 		return false;
 	}
 }
@@ -100,7 +102,7 @@ export async function getEmbeddedFontCss(): Promise<string> {
 					const dataUrl = await fetchFontAsBase64(url);
 					urlToDataUrl.set(url, dataUrl);
 				} catch (e) {
-					console.warn(`Failed to fetch font: ${url}`, e);
+					warnDev(`Failed to fetch font: ${url}`, e);
 				}
 			})
 		);
@@ -113,7 +115,7 @@ export async function getEmbeddedFontCss(): Promise<string> {
 		cachedFontCss = embeddedCss;
 		return embeddedCss;
 	} catch (error) {
-		console.warn('Failed to embed fonts:', error);
+		warnDev('Failed to embed fonts:', error);
 		return '';
 	}
 }

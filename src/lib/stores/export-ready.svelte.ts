@@ -1,3 +1,5 @@
+import { warnDev } from '$lib/utils/logger';
+
 interface ReadinessState {
 	map: boolean;
 	qrCode: boolean;
@@ -36,7 +38,7 @@ class ExportReadyStore {
 			await new Promise((resolve) => setTimeout(resolve, pollInterval));
 		}
 
-		console.warn('Export ready timeout. Status:', this.status);
+		warnDev('Export ready timeout. Status:', this.status);
 		return false;
 	}
 
