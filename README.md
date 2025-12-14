@@ -25,6 +25,14 @@ pnpm build
 pnpm preview
 ```
 
+## Testing
+
+```bash
+pnpm test:run      # Unit tests (Vitest)
+pnpm test:e2e      # E2E tests (Playwright)
+pnpm test:all      # Run all tests
+```
+
 ## Tech Stack
 
 - SvelteKit 2 + Svelte 5
