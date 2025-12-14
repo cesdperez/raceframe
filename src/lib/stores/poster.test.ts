@@ -126,6 +126,57 @@ describe('PosterStore', () => {
 		});
 	});
 
+	describe('setDistance', () => {
+		it('updates formattedDistance when distance is changed manually', () => {
+			posterStore.setDistance(21.1);
+			expect(posterStore.formattedDistance).toBe('21.1');
+		});
+
+		it('manual distance is reflected in formattedDistance after GPX load', () => {
+			posterStore.loadFromGPX(mockGpxData);
+			expect(posterStore.formattedDistance).toBe('42.2');
+
+			posterStore.setDistance(50.0);
+			expect(posterStore.formattedDistance).toBe('50.0');
+		});
+	});
+
+	describe('formattedPace', () => {
+		it('updates when finish time is changed', () => {
+			posterStore.loadFromGPX(mockGpxData);
+			const originalPace = posterStore.formattedPace;
+
+			posterStore.setFinishTime("4:00'00\"");
+			expect(posterStore.formattedPace).not.toBe(originalPace);
+		});
+
+		it('updates when distance is changed', () => {
+			posterStore.loadFromGPX(mockGpxData);
+			const originalPace = posterStore.formattedPace;
+
+			posterStore.setDistance(21.1);
+			expect(posterStore.formattedPace).not.toBe(originalPace);
+		});
+
+		it('calculates correct pace from editable values', () => {
+			posterStore.setDistance(10);
+			posterStore.setFinishTime("1:00'00\"");
+			expect(posterStore.formattedPace).toBe("6'00\"");
+		});
+
+		it('returns placeholder when time is invalid', () => {
+			posterStore.setDistance(10);
+			posterStore.setFinishTime('invalid');
+			expect(posterStore.formattedPace).toBe("--'--\"");
+		});
+
+		it('returns placeholder when distance is zero', () => {
+			posterStore.setFinishTime("1:00'00\"");
+			posterStore.setDistance(0);
+			expect(posterStore.formattedPace).toBe("--'--\"");
+		});
+	});
+
 	describe('reset', () => {
 		it('clears all data to defaults', () => {
 			posterStore.loadFromGPX(mockGpxData);

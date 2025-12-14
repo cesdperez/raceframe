@@ -1,11 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import {
 	formatTime,
+	parseTime,
 	formatDistance,
 	formatPace,
 	formatDate,
 	metersToKm,
-	metersToMiles
+	metersToMiles,
+	kmToMeters,
+	milesToMeters
 } from './format.js';
 
 describe('formatTime', () => {
@@ -30,6 +33,35 @@ describe('formatTime', () => {
 	});
 });
 
+describe('parseTime', () => {
+	it('parses formatted time string to seconds', () => {
+		expect(parseTime('3:45\'22"')).toBe(13522);
+	});
+
+	it('parses zero time', () => {
+		expect(parseTime('0:00\'00"')).toBe(0);
+	});
+
+	it('parses time under an hour', () => {
+		expect(parseTime('0:30\'30"')).toBe(1830);
+	});
+
+	it('parses time over 10 hours', () => {
+		expect(parseTime('10:00\'00"')).toBe(36000);
+	});
+
+	it('returns null for invalid format', () => {
+		expect(parseTime('invalid')).toBeNull();
+		expect(parseTime('3:45:22')).toBeNull();
+		expect(parseTime('')).toBeNull();
+	});
+
+	it('returns null for invalid minutes/seconds', () => {
+		expect(parseTime('1:60\'00"')).toBeNull();
+		expect(parseTime('1:00\'60"')).toBeNull();
+	});
+});
+
 describe('metersToKm', () => {
 	it('converts meters to kilometers', () => {
 		expect(metersToKm(42195)).toBeCloseTo(42.195);
@@ -47,6 +79,26 @@ describe('metersToMiles', () => {
 
 	it('handles zero', () => {
 		expect(metersToMiles(0)).toBe(0);
+	});
+});
+
+describe('kmToMeters', () => {
+	it('converts kilometers to meters', () => {
+		expect(kmToMeters(42.195)).toBeCloseTo(42195);
+	});
+
+	it('handles zero', () => {
+		expect(kmToMeters(0)).toBe(0);
+	});
+});
+
+describe('milesToMeters', () => {
+	it('converts miles to meters', () => {
+		expect(milesToMeters(26.219)).toBeCloseTo(42195, -1);
+	});
+
+	it('handles zero', () => {
+		expect(milesToMeters(0)).toBe(0);
 	});
 });
 

@@ -107,6 +107,50 @@ test.describe('GPX Upload', () => {
 		await expect(kmButton).toHaveAttribute('aria-pressed', 'true');
 	});
 
+	test('can edit distance manually and see it in preview', async ({ page }) => {
+		await page.goto('/');
+
+		const fileInput = page.locator('input[type="file"][data-upload-ready]');
+		await fileInput.waitFor({ state: 'attached' });
+		await fileInput.setInputFiles(FIXTURE_PATH);
+
+		await expect(page.getByRole('heading', { name: 'Customize', exact: true })).toBeVisible();
+
+		// Get the distance input and set a new value
+		const distanceInput = page.getByRole('spinbutton', { name: 'Distance' });
+		await distanceInput.fill('99.9');
+
+		// Verify the preview displays the new distance
+		const poster = page.locator('[data-poster-export]');
+		await expect(poster.locator('.stat-value').first()).toHaveText('99.9');
+	});
+
+	test('pace updates when time or distance changes', async ({ page }) => {
+		await page.goto('/');
+
+		const fileInput = page.locator('input[type="file"][data-upload-ready]');
+		await fileInput.waitFor({ state: 'attached' });
+		await fileInput.setInputFiles(FIXTURE_PATH);
+
+		await expect(page.getByRole('heading', { name: 'Customize', exact: true })).toBeVisible();
+
+		// Set known values: 10 km in 1 hour = 6'00"/km pace
+		const distanceInput = page.getByRole('spinbutton', { name: 'Distance' });
+		await distanceInput.fill('10');
+
+		const timeInput = page.getByLabel('Finish Time');
+		await timeInput.fill("1:00'00\"");
+
+		// Verify the pace in preview is 6'00"
+		const poster = page.locator('[data-poster-export]');
+		const paceValue = poster.locator('.stat-value').nth(2);
+		await expect(paceValue).toHaveText("6'00\"");
+
+		// Change distance to 20 km, pace should become 3'00"/km
+		await distanceInput.fill('20');
+		await expect(paceValue).toHaveText("3'00\"");
+	});
+
 	test('start over returns to landing page', async ({ page }) => {
 		await page.goto('/');
 
