@@ -1,9 +1,11 @@
+// @vitest-environment happy-dom
 import { describe, it, expect } from 'vitest';
 import { validateGpxFile } from './validation.js';
 
 function createMockFile(name: string, size: number = 1000): File {
-	const content = new Array(size).fill('a').join('');
-	return new File([content], name, { type: 'application/gpx+xml' });
+	const file = new File(['x'], name, { type: 'application/gpx+xml' });
+	Object.defineProperty(file, 'size', { value: size });
+	return file;
 }
 
 describe('validateGpxFile', () => {
