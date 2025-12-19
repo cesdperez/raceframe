@@ -8,7 +8,6 @@
   [![SvelteKit](https://img.shields.io/badge/SvelteKit-2-FF3E00?logo=svelte&logoColor=white)](https://kit.svelte.dev)
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
   [![Cloudflare Pages](https://img.shields.io/badge/Deployed_to-Cloudflare_Pages-F38020?logo=cloudflare-pages&logoColor=white)](https://raceframe.pages.dev)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 </div>
 
 ---
