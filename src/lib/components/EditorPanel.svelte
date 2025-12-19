@@ -2,13 +2,26 @@
 	import { onDestroy } from 'svelte';
 	import { posterStore } from '../stores/poster.svelte.js';
 	import {
-		ROUTE_COLOR_OPTIONS,
 		MAP_STYLES,
 		MAP_FILTERS,
 		DESIGN_PRESETS,
 		BACKGROUND_PRESETS,
 		ROUTE_COLORS
 	} from '$lib/constants/themes';
+	import type { RouteColor } from '$lib/types';
+
+	const TEXT_COLOR_PRESETS = [
+		{ label: 'Black', color: '#000000' },
+		{ label: 'White', color: '#ffffff' }
+	];
+
+	const ROUTE_COLOR_PRESETS: { value: RouteColor; label: string; color: string }[] = [
+		{ value: 'orange', label: 'Orange', color: ROUTE_COLORS.orange },
+		{ value: 'blue', label: 'Blue', color: ROUTE_COLORS.blue },
+		{ value: 'yellow', label: 'Yellow', color: ROUTE_COLORS.yellow },
+		{ value: 'black', label: 'Black', color: ROUTE_COLORS.black },
+		{ value: 'white', label: 'White', color: ROUTE_COLORS.white }
+	];
 	import { LAYOUTS, getAspectRatiosForLayout } from '$lib/constants/poster';
 	import ExportButton from './ExportButton.svelte';
 
@@ -16,7 +29,6 @@
 
 	let qrCodeInputValue = $state(posterStore.data.qrCodeUrl ?? '');
 	let qrDebounceTimer: ReturnType<typeof setTimeout> | null = null;
-	let customizeOpen = $state(false);
 
 	// Dropdown states
 	let mapStyleOpen = $state(false);
@@ -69,7 +81,6 @@
 
 	function selectPreset(presetValue: import('$lib/types').DesignPreset) {
 		posterStore.applyDesignPreset(presetValue);
-		customizeOpen = false;
 	}
 </script>
 
@@ -276,31 +287,20 @@
 		</section>
 
 		<section>
-			<button
-				type="button"
-				onclick={() => customizeOpen = !customizeOpen}
-				class="mb-2 flex w-full items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-gray-400 hover:text-gray-600"
-			>
-				<svg class="h-3 w-3 transition-transform {customizeOpen ? 'rotate-90' : ''}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-				</svg>
-				<span>Customize</span>
-			</button>
-
-			{#if customizeOpen}
-			<div class="space-y-2 pl-4">
+			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Advanced</h3>
+			<div class="space-y-3">
 				<div class="grid grid-cols-2 gap-2">
 					<div>
-						<span class="mb-0.5 block text-xs text-gray-500">Map Style</span>
+						<label for="map-style-select" class="mb-0.5 block text-xs text-gray-500">Map Style</label>
 						<div class="relative">
 							<button
 								type="button"
 								id="map-style-select"
 								onclick={() => mapStyleOpen = !mapStyleOpen}
-								class="flex w-full items-center justify-between rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none"
+								class="flex w-full items-center justify-between rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
 							>
 								<span class="truncate text-xs">{MAP_STYLES.find(s => s.value === posterStore.data.mapStyle)?.label}</span>
-								<svg class="h-3 w-3 flex-shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<svg class="h-3.5 w-3.5 flex-shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4 4 4-4" />
 								</svg>
 							</button>
@@ -320,16 +320,16 @@
 						</div>
 					</div>
 					<div>
-						<span class="mb-0.5 block text-xs text-gray-500">Map Filter</span>
+						<label for="map-filter-select" class="mb-0.5 block text-xs text-gray-500">Map Filter</label>
 						<div class="relative">
 							<button
 								type="button"
 								id="map-filter-select"
 								onclick={() => mapFilterOpen = !mapFilterOpen}
-								class="flex w-full items-center justify-between rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none"
+								class="flex w-full items-center justify-between rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
 							>
 								<span class="truncate text-xs">{MAP_FILTERS.find(f => f.value === posterStore.data.mapFilter)?.label}</span>
-								<svg class="h-3 w-3 flex-shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<svg class="h-3.5 w-3.5 flex-shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4 4 4-4" />
 								</svg>
 							</button>
@@ -351,71 +351,71 @@
 				</div>
 
 				<div>
-					<span class="mb-0.5 block text-xs text-gray-500">Background</span>
+					<span class="mb-1.5 block text-xs text-gray-500">Background</span>
 					<div class="flex flex-wrap items-center gap-1.5">
 						{#each BACKGROUND_PRESETS as bgPreset}
 							<button
 								type="button"
 								onclick={() => posterStore.setCustomBgColor(bgPreset.color)}
-								class="h-5 w-5 rounded-full border-2 transition-transform hover:scale-110 {posterStore.data.customBgColor === bgPreset.color ? 'border-blue-600 scale-110' : 'border-gray-300'}"
+								class="h-6 w-6 rounded-full border-2 transition-transform hover:scale-110 {posterStore.data.customBgColor === bgPreset.color ? 'border-blue-600 ring-2 ring-blue-200' : 'border-gray-300'}"
 								style="background-color: {bgPreset.color}"
 								title={bgPreset.label}
 							></button>
 						{/each}
-						<input
-							type="color"
-							id="customBgColor"
-							value={posterStore.effectiveBgColor}
-							oninput={(e) => posterStore.setCustomBgColor((e.target as HTMLInputElement).value)}
-							class="h-5 w-6 cursor-pointer rounded border border-gray-300"
-						/>
-						<span class="text-[9px] font-mono text-gray-400 uppercase">{posterStore.effectiveBgColor}</span>
+						<label class="color-picker-wrapper" title="Custom color">
+							<input
+								type="color"
+								value={posterStore.effectiveBgColor}
+								oninput={(e) => posterStore.setCustomBgColor((e.target as HTMLInputElement).value)}
+							/>
+						</label>
 					</div>
 				</div>
 
 				<div>
-					<span class="mb-0.5 block text-xs text-gray-500">Text</span>
-					<div class="flex items-center gap-1.5">
-						<input
-							type="color"
-							id="customTextColor"
-							value={posterStore.effectiveTextColor}
-							oninput={(e) => posterStore.setCustomTextColor((e.target as HTMLInputElement).value)}
-							class="h-5 w-6 cursor-pointer rounded border border-gray-300"
-						/>
-						<span class="text-[9px] font-mono text-gray-400 uppercase">{posterStore.effectiveTextColor}</span>
-						{#if posterStore.data.customTextColor}
-							<button type="button" onclick={() => posterStore.setCustomTextColor(null)} class="text-[9px] text-blue-600 hover:underline">Reset</button>
-						{/if}
+					<span class="mb-1.5 block text-xs text-gray-500">Text Color</span>
+					<div class="flex flex-wrap items-center gap-1.5">
+						{#each TEXT_COLOR_PRESETS as preset}
+							<button
+								type="button"
+								onclick={() => posterStore.setCustomTextColor(preset.color)}
+								class="h-6 w-6 rounded-full border-2 transition-transform hover:scale-110 {posterStore.data.customTextColor === preset.color ? 'border-blue-600 ring-2 ring-blue-200' : 'border-gray-300'}"
+								style="background-color: {preset.color}"
+								title={preset.label}
+							></button>
+						{/each}
+						<label class="color-picker-wrapper" title="Custom color">
+							<input
+								type="color"
+								value={posterStore.effectiveTextColor}
+								oninput={(e) => posterStore.setCustomTextColor((e.target as HTMLInputElement).value)}
+							/>
+						</label>
 					</div>
 				</div>
 
 				<div>
-					<span class="mb-0.5 block text-xs text-gray-500">Route</span>
-					<div class="flex flex-wrap items-center gap-1">
-						{#each ROUTE_COLOR_OPTIONS as color}
+					<span class="mb-1.5 block text-xs text-gray-500">Route Color</span>
+					<div class="flex flex-wrap items-center gap-1.5">
+						{#each ROUTE_COLOR_PRESETS as color}
 							<button
 								type="button"
 								onclick={() => { posterStore.setRouteColor(color.value); posterStore.setCustomRouteColor(null); }}
-								class="h-4 w-4 rounded-full border-2 transition-transform hover:scale-110 {posterStore.data.routeColor === color.value && !posterStore.data.customRouteColor ? 'border-blue-600 scale-110' : 'border-gray-300'}"
+								class="h-6 w-6 rounded-full border-2 transition-transform hover:scale-110 {posterStore.data.routeColor === color.value && !posterStore.data.customRouteColor ? 'border-blue-600 ring-2 ring-blue-200' : 'border-gray-300'}"
 								style="background-color: {color.color}"
 								title={color.label}
 							></button>
 						{/each}
-						<input
-							type="color"
-							id="customRouteColor"
-							value={posterStore.effectiveRouteColor}
-							oninput={(e) => posterStore.setCustomRouteColor((e.target as HTMLInputElement).value)}
-							class="h-4 w-5 cursor-pointer rounded border border-gray-300"
-						/>
-						{#if posterStore.data.customRouteColor}
-							<button type="button" onclick={() => posterStore.setCustomRouteColor(null)} class="text-[9px] text-blue-600 hover:underline">Reset</button>
-						{/if}
+						<label class="color-picker-wrapper" title="Custom color">
+							<input
+								type="color"
+								value={posterStore.effectiveRouteColor}
+								oninput={(e) => posterStore.setCustomRouteColor((e.target as HTMLInputElement).value)}
+							/>
+						</label>
 					</div>
 				</div>
 			</div>
-			{/if}
 		</section>
 	</div>
 
@@ -465,3 +465,38 @@
 		<ExportButton raceName={posterStore.data.raceName} date={posterStore.data.date} />
 	</section>
 </div>
+
+<style>
+	.color-picker-wrapper {
+		position: relative;
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 9999px;
+		background: conic-gradient(
+			from 0deg,
+			#ff0000,
+			#ffff00,
+			#00ff00,
+			#00ffff,
+			#0000ff,
+			#ff00ff,
+			#ff0000
+		);
+		cursor: pointer;
+		transition: transform 0.1s;
+		border: 2px solid #d1d5db;
+	}
+
+	.color-picker-wrapper:hover {
+		transform: scale(1.1);
+	}
+
+	.color-picker-wrapper input {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		cursor: pointer;
+	}
+</style>
