@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { posterStore } from '../stores/poster.svelte.js';
-	import { THEMES, ROUTE_COLOR_OPTIONS } from '$lib/constants/themes';
+	import { THEMES, ROUTE_COLOR_OPTIONS, MAP_STYLES } from '$lib/constants/themes';
 	import { LAYOUTS, getAspectRatiosForLayout } from '$lib/constants/poster';
 	import ExportButton from './ExportButton.svelte';
 
@@ -186,6 +186,34 @@
 						</span>
 					</span>
 					<span class="text-gray-700">{theme.label}</span>
+				</button>
+			{/each}
+		</div>
+	</section>
+
+	<section class="mb-6">
+		<h3 id="map-style-label" class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Map Style</h3>
+		<div class="grid grid-cols-2 gap-2" role="radiogroup" aria-labelledby="map-style-label">
+			{#each MAP_STYLES as style}
+				<button
+					type="button"
+					onclick={() => posterStore.setMapStyle(style.value)}
+					role="radio"
+					aria-checked={posterStore.data.mapStyle === style.value}
+					aria-label="{style.label} map style"
+					class="flex flex-col items-start rounded-md border-2 px-3 py-2 text-left transition-colors {posterStore.data.mapStyle === style.value
+						? 'border-blue-500'
+						: 'border-gray-200 hover:border-gray-300'}"
+				>
+					<div class="flex items-center gap-2">
+						<span
+							class="h-4 w-4 rounded-sm border border-gray-300"
+							style="background-color: {style.brightness === 'dark' ? '#1a1a1a' : '#f0f0f0'}"
+							aria-hidden="true"
+						></span>
+						<span class="font-medium text-gray-700">{style.label}</span>
+					</div>
+					<span class="mt-0.5 text-xs text-gray-500">{style.description}</span>
 				</button>
 			{/each}
 		</div>

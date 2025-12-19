@@ -4,10 +4,8 @@
 	import { posterStore } from '$lib/stores/poster.svelte';
 	import { exportReadyStore } from '$lib/stores/export-ready.svelte';
 	import {
-		TILE_URLS,
-		TILE_ATTRIBUTION,
-		THEME_TO_TILES,
-		ROUTE_COLORS,
+		getTileUrlForStyle,
+		getAttributionForStyle,
 		START_MARKER_COLOR,
 		toLatLngArray
 	} from '$lib/utils/map';
@@ -24,8 +22,11 @@
 	let loading = $state(true);
 
 	function getTileUrl(): string {
-		const tileType = THEME_TO_TILES[posterStore.data.theme];
-		return TILE_URLS[tileType];
+		return getTileUrlForStyle(posterStore.data.mapStyle);
+	}
+
+	function getTileAttribution(): string {
+		return getAttributionForStyle(posterStore.data.mapStyle);
 	}
 
 	function getRouteColor(): string {
@@ -47,7 +48,7 @@
 		});
 
 		tileLayer = L.tileLayer(getTileUrl(), {
-			attribution: TILE_ATTRIBUTION,
+			attribution: getTileAttribution(),
 			maxZoom: 19
 		}).addTo(map);
 
@@ -160,7 +161,7 @@
 	});
 
 	$effect(() => {
-		const _ = posterStore.data.theme;
+		const _ = posterStore.data.mapStyle;
 		updateTileLayer();
 	});
 

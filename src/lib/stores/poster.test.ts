@@ -89,6 +89,36 @@ describe('PosterStore', () => {
 		});
 	});
 
+	describe('setMapStyle', () => {
+		it('has default map style of positron', () => {
+			expect(posterStore.data.mapStyle).toBe('positron');
+		});
+
+		it('updates map style', () => {
+			posterStore.setMapStyle('dark-matter');
+			expect(posterStore.data.mapStyle).toBe('dark-matter');
+
+			posterStore.setMapStyle('opentopomap');
+			expect(posterStore.data.mapStyle).toBe('opentopomap');
+
+			posterStore.setMapStyle('voyager');
+			expect(posterStore.data.mapStyle).toBe('voyager');
+		});
+
+		it('map style is independent of theme', () => {
+			posterStore.setMapStyle('positron');
+			posterStore.setTheme('dark');
+			expect(posterStore.data.mapStyle).toBe('positron');
+			expect(posterStore.data.theme).toBe('dark');
+		});
+
+		it('reset clears map style to default', () => {
+			posterStore.setMapStyle('voyager');
+			posterStore.reset();
+			expect(posterStore.data.mapStyle).toBe('positron');
+		});
+	});
+
 	describe('setRouteColor', () => {
 		it('updates route color', () => {
 			posterStore.setRouteColor('cyan');

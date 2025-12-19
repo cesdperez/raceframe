@@ -10,6 +10,14 @@ export interface GPXData {
 
 export type Theme = 'light' | 'dark' | 'navy';
 export type RouteColor = 'orange' | 'blue' | 'cyan' | 'yellow' | 'pink';
+export type MapStyle =
+	| 'positron'
+	| 'positron-nolabels'
+	| 'dark-matter'
+	| 'dark-matter-nolabels'
+	| 'voyager'
+	| 'opentopomap'
+	| 'osm';
 export type Unit = 'km' | 'miles';
 export type Layout = 'classic' | 'medal-right';
 export type AspectRatio = '2:3' | '4:5' | '3:2' | '5:4';
@@ -26,6 +34,7 @@ export interface PosterData {
 	bibNumber: string;
 	layout: Layout;
 	theme: Theme;
+	mapStyle: MapStyle;
 	routeColor: RouteColor;
 	customBgColor: string | null;
 	customTextColor: string | null;

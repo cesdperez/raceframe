@@ -1,4 +1,4 @@
-import type { Theme, RouteColor } from '$lib/types';
+import type { Theme, RouteColor, MapStyle } from '$lib/types';
 
 export interface ThemeConfig {
 	value: Theme;
@@ -36,6 +36,85 @@ export const ROUTE_COLOR_OPTIONS: RouteColorConfig[] = [
 ];
 
 export const START_MARKER_COLOR = '#22c55e';
+
+export interface MapStyleConfig {
+	value: MapStyle;
+	label: string;
+	description: string;
+	tileUrl: string;
+	attribution: string;
+	brightness: 'light' | 'dark';
+}
+
+export const MAP_STYLES: MapStyleConfig[] = [
+	{
+		value: 'positron',
+		label: 'Light Clean',
+		description: 'Minimal light map with labels',
+		tileUrl: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+		attribution:
+			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		brightness: 'light'
+	},
+	{
+		value: 'positron-nolabels',
+		label: 'Light Minimal',
+		description: 'Ultra-clean light map, no labels',
+		tileUrl: 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',
+		attribution:
+			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		brightness: 'light'
+	},
+	{
+		value: 'dark-matter',
+		label: 'Dark Clean',
+		description: 'Minimal dark map with labels',
+		tileUrl: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+		attribution:
+			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		brightness: 'dark'
+	},
+	{
+		value: 'dark-matter-nolabels',
+		label: 'Dark Minimal',
+		description: 'Ultra-clean dark map, no labels',
+		tileUrl: 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
+		attribution:
+			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		brightness: 'dark'
+	},
+	{
+		value: 'voyager',
+		label: 'Voyager',
+		description: 'Colorful, detailed map',
+		tileUrl: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+		attribution:
+			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		brightness: 'light'
+	},
+	{
+		value: 'opentopomap',
+		label: 'Topographic',
+		description: 'Terrain with elevation contours',
+		tileUrl: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+		attribution:
+			'&copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+		brightness: 'light'
+	},
+	{
+		value: 'osm',
+		label: 'OSM Standard',
+		description: 'Classic OpenStreetMap style',
+		tileUrl: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+		attribution:
+			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+		brightness: 'light'
+	}
+];
+
+export function getMapStyleConfig(style: MapStyle): MapStyleConfig {
+	return MAP_STYLES.find((s) => s.value === style) ?? MAP_STYLES[0];
+}
 
 export type TileType = 'light' | 'dark';
 
