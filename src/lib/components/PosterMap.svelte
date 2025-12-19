@@ -80,7 +80,7 @@
 		}
 		routePolyline = L.polyline(latLngCoords, {
 			color: getRouteColor(),
-			weight: 5,
+			weight: 6,
 			opacity: 1
 		}).addTo(map);
 

@@ -75,17 +75,17 @@ export const DESIGN_PRESETS: DesignPresetConfig[] = [
 		mapFilter: 'none',
 		bgColor: '#18181b',
 		textColor: '#fafafa',
-		routeColor: 'cyan',
+		routeColor: 'orange',
 		previewImage: '/map-previews/preset-dark-mode.png'
 	},
 	{
 		value: 'minimal',
 		label: 'Minimal',
 		mapStyle: 'stamen-toner',
-		mapFilter: 'none',
+		mapFilter: 'navy',
 		bgColor: '#ffffff',
 		textColor: '#1a1a1a',
-		routeColor: 'black',
+		routeColor: 'orange',
 		previewImage: '/map-previews/preset-minimal.png'
 	},
 	{
@@ -93,7 +93,7 @@ export const DESIGN_PRESETS: DesignPresetConfig[] = [
 		label: 'Satellite',
 		mapStyle: 'esri-satellite',
 		mapFilter: 'none',
-		bgColor: '#000000',
+		bgColor: '#163a2e',
 		textColor: '#ffffff',
 		routeColor: 'yellow',
 		previewImage: '/map-previews/preset-satellite.png'

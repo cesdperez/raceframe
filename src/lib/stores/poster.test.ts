@@ -334,7 +334,7 @@ describe('PosterStore', () => {
 			expect(posterStore.data.mapFilter).toBe('none');
 			expect(posterStore.data.customBgColor).toBe('#18181b');
 			expect(posterStore.data.customTextColor).toBe('#fafafa');
-			expect(posterStore.data.routeColor).toBe('cyan');
+			expect(posterStore.data.routeColor).toBe('orange');
 			expect(posterStore.data.customRouteColor).toBeNull();
 		});
 
