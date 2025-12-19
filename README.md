@@ -2,7 +2,7 @@
 
 A free web app that generates printable race portrait posters from GPX files. Upload your race data, customize the design, and download a high-resolution image ready for printing.
 
-**Live:** https://cesdperez.github.io/raceframe
+**Live:** https://raceframe.pages.dev
 
 ## Features
 
