@@ -77,7 +77,7 @@ test.describe('Export Visual Fidelity', () => {
 
 	test('exported PNG matches preview - medal-right layout', async ({ page }) => {
 		// Switch to medal-right layout
-		await page.getByRole('radio', { name: /Medal Right/i }).click();
+		await page.getByRole('button', { name: /Medal Right/i }).click();
 		await page.waitForTimeout(500);
 
 		// Wait for map tiles to reload
@@ -185,11 +185,11 @@ test.describe('Export Visual Fidelity', () => {
 	});
 
 	test('all themes export correctly', async ({ page }) => {
-		const themeNames = ['light', 'dark', 'navy'] as const;
+		const themeNames = ['Clean Light', 'Dark Mode', 'Minimal'] as const;
 
 		for (const theme of themeNames) {
-			// Select theme - using more specific label match to avoid collision with map styles
-			await page.getByRole('radio', { name: new RegExp(`${theme} theme`, 'i') }).click();
+			// Select theme preset
+			await page.getByRole('button', { name: theme, exact: true }).click();
 			await page.waitForTimeout(300);
 
 			// Wait for map tiles to potentially reload

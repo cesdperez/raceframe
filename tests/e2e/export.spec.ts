@@ -62,7 +62,7 @@ test.describe('Export', () => {
 test.describe('Export - Medal Right Layout', () => {
 	test.beforeEach(async ({ editorPage, page }) => {
 		// editorPage fixture handles GPX upload
-		await page.getByRole('radio', { name: /Medal Right/i }).click();
+		await page.getByRole('button', { name: /Medal Right/i }).click();
 		await page.waitForTimeout(300);
 	});
 
