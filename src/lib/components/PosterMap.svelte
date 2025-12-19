@@ -136,32 +136,64 @@
 	}
 
 	let resizeObserver: ResizeObserver | null = null;
+	let lastWidth = 0;
+	let lastHeight = 0;
+	let resizeDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
-	function invalidateMapSize() {
+	function invalidateMapSize(refitBounds = true) {
 		if (!map || !routePolyline) return;
 
 		map.invalidateSize();
 
-		const bounds = routePolyline.getBounds();
-		if (bounds.isValid()) {
-			map.fitBounds(bounds, { padding: [20, 20] });
+		if (refitBounds) {
+			const bounds = routePolyline.getBounds();
+			if (bounds.isValid()) {
+				map.fitBounds(bounds, { padding: [20, 20] });
+			}
 		}
+	}
+
+	function handleResize(entries: ResizeObserverEntry[]) {
+		const entry = entries[0];
+		if (!entry) return;
+
+		const { width, height } = entry.contentRect;
+		const widthDiff = Math.abs(width - lastWidth);
+		const heightDiff = Math.abs(height - lastHeight);
+
+		// Only react to significant size changes (> 5px)
+		if (widthDiff < 5 && heightDiff < 5) return;
+
+		lastWidth = width;
+		lastHeight = height;
+
+		// Debounce to avoid rapid recalculations
+		if (resizeDebounceTimer) {
+			clearTimeout(resizeDebounceTimer);
+		}
+		resizeDebounceTimer = setTimeout(() => {
+			invalidateMapSize(true);
+		}, 100);
 	}
 
 	onMount(async () => {
 		L = await import('leaflet');
 		initializeMap();
 
-		resizeObserver = new ResizeObserver(() => {
-			invalidateMapSize();
-		});
+		resizeObserver = new ResizeObserver(handleResize);
 
 		if (mapContainer) {
+			const rect = mapContainer.getBoundingClientRect();
+			lastWidth = rect.width;
+			lastHeight = rect.height;
 			resizeObserver.observe(mapContainer);
 		}
 	});
 
 	onDestroy(() => {
+		if (resizeDebounceTimer) {
+			clearTimeout(resizeDebounceTimer);
+		}
 		resizeObserver?.disconnect();
 		resizeObserver = null;
 		map?.remove();

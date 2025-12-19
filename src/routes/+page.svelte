@@ -98,13 +98,13 @@
 			</div>
 		</main>
 	{:else if currentView === 'editor'}
-		<main id="main-content" class="flex-1 flex flex-col lg:flex-row min-h-0 view-fade-in">
-			<div class="flex-1 min-h-[50vh] md:min-h-[60vh] lg:min-h-0 bg-gray-100 relative" role="img" aria-label="Poster preview showing your race route and details">
+		<main id="main-content" class="flex-1 flex flex-col lg:flex-row min-h-0 view-fade-in overflow-hidden">
+			<div class="flex-1 min-h-[50vh] md:min-h-[60vh] lg:min-h-0 bg-gray-100 relative overflow-hidden" style="contain: strict" role="img" aria-label="Poster preview showing your race route and details">
 				<PosterPreview />
 			</div>
 
 			<aside
-				class="w-full lg:w-80 xl:w-96 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0 flex flex-col max-h-[50vh] md:max-h-[40vh] lg:max-h-none"
+				class="w-full lg:w-80 xl:w-96 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0 flex flex-col max-h-[50vh] md:max-h-[40vh] lg:max-h-none overflow-hidden"
 				aria-label="Poster customization options"
 			>
 				<div class="p-3 md:p-4 border-b border-gray-200 flex items-center justify-between">
