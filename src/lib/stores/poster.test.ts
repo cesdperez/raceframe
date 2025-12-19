@@ -76,19 +76,6 @@ describe('PosterStore', () => {
 		});
 	});
 
-	describe('setTheme', () => {
-		it('updates theme', () => {
-			posterStore.setTheme('dark');
-			expect(posterStore.data.theme).toBe('dark');
-
-			posterStore.setTheme('navy');
-			expect(posterStore.data.theme).toBe('navy');
-
-			posterStore.setTheme('light');
-			expect(posterStore.data.theme).toBe('light');
-		});
-	});
-
 	describe('setMapStyle', () => {
 		it('has default map style of positron', () => {
 			expect(posterStore.data.mapStyle).toBe('positron');
@@ -103,13 +90,6 @@ describe('PosterStore', () => {
 
 			posterStore.setMapStyle('esri-satellite');
 			expect(posterStore.data.mapStyle).toBe('esri-satellite');
-		});
-
-		it('map style is independent of theme', () => {
-			posterStore.setMapStyle('positron');
-			posterStore.setTheme('dark');
-			expect(posterStore.data.mapStyle).toBe('positron');
-			expect(posterStore.data.theme).toBe('dark');
 		});
 
 		it('reset clears map style to default', () => {
@@ -240,7 +220,6 @@ describe('PosterStore', () => {
 		it('clears all data to defaults', () => {
 			posterStore.loadFromGPX(mockGpxData);
 			posterStore.setRunnerName('John Doe');
-			posterStore.setTheme('dark');
 			posterStore.setRouteColor('cyan');
 
 			posterStore.reset();

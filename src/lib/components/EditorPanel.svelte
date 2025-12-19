@@ -1,20 +1,15 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { posterStore } from '../stores/poster.svelte.js';
-	import { clickOutside } from '../actions/clickOutside';
+	import Dropdown from './Dropdown.svelte';
 	import {
 		MAP_STYLES,
 		MAP_FILTERS,
 		DESIGN_PRESETS,
-		BACKGROUND_PRESETS,
+		BW_COLOR_PRESETS,
 		ROUTE_COLORS
 	} from '$lib/constants/themes';
-	import type { RouteColor } from '$lib/types';
-
-	const TEXT_COLOR_PRESETS = [
-		{ label: 'Black', color: '#000000' },
-		{ label: 'White', color: '#ffffff' }
-	];
+	import type { RouteColor, QrDotStyle, MapStyle, MapFilter } from '$lib/types';
 
 	const ROUTE_COLOR_PRESETS: { value: RouteColor; label: string; color: string }[] = [
 		{ value: 'orange', label: 'Orange', color: ROUTE_COLORS.orange },
@@ -30,17 +25,6 @@
 
 	let qrCodeInputValue = $state(posterStore.data.qrCodeUrl ?? '');
 	let qrDebounceTimer: ReturnType<typeof setTimeout> | null = null;
-
-	// Dropdown states
-	let mapStyleOpen = $state(false);
-	let mapFilterOpen = $state(false);
-	let qrStyleOpen = $state(false);
-
-	function closeAllDropdowns() {
-		mapStyleOpen = false;
-		mapFilterOpen = false;
-		qrStyleOpen = false;
-	}
 
 	const QR_STYLES = [
 		{ value: 'rounded', label: 'Rounded' },
@@ -220,42 +204,13 @@
 				</div>
 				<div class="flex items-center gap-3">
 					<div class="flex-1">
-						<label for="qrDotStyle" class="mb-0.5 block text-xs text-gray-500">Style</label>
-							<div class="relative" use:clickOutside={() => qrStyleOpen = false}>
-								<button
-									type="button"
-									id="qr-style-select"
-									onclick={() => {
-										const wasOpen = qrStyleOpen;
-										closeAllDropdowns();
-										qrStyleOpen = !wasOpen;
-									}}
-									class="flex w-full items-center justify-between rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none"
-									aria-haspopup="listbox"
-									aria-expanded={qrStyleOpen}
-									aria-labelledby="qrDotStyle-label qr-style-select"
-								>
-									<span>{QR_STYLES.find(s => s.value === posterStore.data.qrDotStyle)?.label ?? 'Rounded'}</span>
-									<svg class="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4 4 4-4" />
-									</svg>
-								</button>
-								{#if qrStyleOpen}
-									<div class="absolute z-50 mt-1 w-full rounded border border-gray-200 bg-white py-1 shadow-lg" role="listbox">
-										{#each QR_STYLES as style}
-											<button
-												type="button"
-												onclick={() => { posterStore.setQrDotStyle(style.value); qrStyleOpen = false; }}
-												class="flex w-full items-center gap-2 px-2 py-1.5 text-sm hover:bg-gray-50 {posterStore.data.qrDotStyle === style.value ? 'bg-blue-50 text-blue-700' : ''}"
-												role="option"
-												aria-selected={posterStore.data.qrDotStyle === style.value}
-											>
-												<span class="font-medium">{style.label}</span>
-											</button>
-										{/each}
-									</div>
-								{/if}
-							</div>
+						<label for="qr-style-select" class="mb-0.5 block text-xs text-gray-500">Style</label>
+						<Dropdown
+							id="qr-style-select"
+							options={QR_STYLES}
+							value={posterStore.data.qrDotStyle}
+							onchange={(v) => posterStore.setQrDotStyle(v as QrDotStyle)}
+						/>
 					</div>
 					<div class="pt-4">
 						<label class="flex cursor-pointer items-center gap-1.5 text-xs text-gray-600">
@@ -313,84 +268,28 @@
 				<div class="grid grid-cols-2 gap-2">
 					<div>
 						<label for="map-style-select" class="mb-0.5 block text-xs text-gray-500">Map Style</label>
-						<div class="relative" use:clickOutside={() => mapStyleOpen = false}>
-							<button
-								type="button"
-								id="map-style-select"
-								onclick={() => {
-									const wasOpen = mapStyleOpen;
-									closeAllDropdowns();
-									mapStyleOpen = !wasOpen;
-								}}
-								class="flex w-full items-center justify-between rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-								aria-haspopup="listbox"
-								aria-expanded={mapStyleOpen}
-							>
-								<span class="truncate text-xs">{MAP_STYLES.find(s => s.value === posterStore.data.mapStyle)?.label}</span>
-								<svg class="h-3.5 w-3.5 flex-shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4 4 4-4" />
-								</svg>
-							</button>
-							{#if mapStyleOpen}
-								<div class="absolute z-50 mt-1 w-full rounded border border-gray-200 bg-white py-1 shadow-lg" role="listbox">
-									{#each MAP_STYLES as style}
-										<button
-											type="button"
-											onclick={() => { posterStore.setMapStyle(style.value); mapStyleOpen = false; }}
-											class="flex w-full items-center px-2 py-1.5 text-xs hover:bg-gray-50 {posterStore.data.mapStyle === style.value ? 'bg-blue-50 text-blue-700' : ''}"
-											role="option"
-											aria-selected={posterStore.data.mapStyle === style.value}
-										>
-											{style.label}
-										</button>
-									{/each}
-								</div>
-							{/if}
-						</div>
+						<Dropdown
+							id="map-style-select"
+							options={MAP_STYLES}
+							value={posterStore.data.mapStyle}
+							onchange={(v) => posterStore.setMapStyle(v as MapStyle)}
+						/>
 					</div>
 					<div>
 						<label for="map-filter-select" class="mb-0.5 block text-xs text-gray-500">Map Filter</label>
-						<div class="relative" use:clickOutside={() => mapFilterOpen = false}>
-							<button
-								type="button"
-								id="map-filter-select"
-								onclick={() => {
-									const wasOpen = mapFilterOpen;
-									closeAllDropdowns();
-									mapFilterOpen = !wasOpen;
-								}}
-								class="flex w-full items-center justify-between rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-								aria-haspopup="listbox"
-								aria-expanded={mapFilterOpen}
-							>
-								<span class="truncate text-xs">{MAP_FILTERS.find(f => f.value === posterStore.data.mapFilter)?.label}</span>
-								<svg class="h-3.5 w-3.5 flex-shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4 4 4-4" />
-								</svg>
-							</button>
-							{#if mapFilterOpen}
-								<div class="absolute z-50 mt-1 w-full rounded border border-gray-200 bg-white py-1 shadow-lg" role="listbox">
-									{#each MAP_FILTERS as filter}
-										<button
-											type="button"
-											onclick={() => { posterStore.setMapFilter(filter.value); mapFilterOpen = false; }}
-											class="flex w-full items-center px-2 py-1.5 text-xs hover:bg-gray-50 {posterStore.data.mapFilter === filter.value ? 'bg-blue-50 text-blue-700' : ''}"
-											role="option"
-											aria-selected={posterStore.data.mapFilter === filter.value}
-										>
-											{filter.label}
-										</button>
-									{/each}
-								</div>
-							{/if}
-						</div>
+						<Dropdown
+							id="map-filter-select"
+							options={MAP_FILTERS}
+							value={posterStore.data.mapFilter}
+							onchange={(v) => posterStore.setMapFilter(v as MapFilter)}
+						/>
 					</div>
 				</div>
 
 				<div>
 					<span class="mb-1.5 block text-xs text-gray-500">Background</span>
 					<div class="flex flex-wrap items-center gap-1.5">
-						{#each BACKGROUND_PRESETS as bgPreset}
+						{#each BW_COLOR_PRESETS as bgPreset}
 							<button
 								type="button"
 								onclick={() => posterStore.setCustomBgColor(bgPreset.color)}
@@ -412,7 +311,7 @@
 				<div>
 					<span class="mb-1.5 block text-xs text-gray-500">Text Color</span>
 					<div class="flex flex-wrap items-center gap-1.5">
-						{#each TEXT_COLOR_PRESETS as preset}
+						{#each BW_COLOR_PRESETS as preset}
 							<button
 								type="button"
 								onclick={() => posterStore.setCustomTextColor(preset.color)}

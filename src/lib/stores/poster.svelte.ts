@@ -71,10 +71,6 @@ class PosterStore {
 		this.data.unit = 'km';
 	}
 
-	setTheme(theme: Theme): void {
-		this.data.theme = theme;
-	}
-
 	setMapStyle(style: MapStyle): void {
 		this.data.mapStyle = style;
 	}
@@ -195,11 +191,18 @@ class PosterStore {
 
 	get activePreset(): DesignPreset | null {
 		for (const preset of DESIGN_PRESETS) {
+			const bgMatches =
+				this.data.customBgColor === preset.bgColor ||
+				(this.data.customBgColor === null && preset.bgColor === this.currentThemeConfig?.bg);
+			const textMatches =
+				this.data.customTextColor === preset.textColor ||
+				(this.data.customTextColor === null && preset.textColor === this.currentThemeConfig?.text);
+
 			const matches =
 				this.data.mapStyle === preset.mapStyle &&
 				this.data.mapFilter === preset.mapFilter &&
-				this.data.customBgColor === preset.bgColor &&
-				this.data.customTextColor === preset.textColor &&
+				bgMatches &&
+				textMatches &&
 				this.data.routeColor === preset.routeColor &&
 				this.data.customRouteColor === null;
 
