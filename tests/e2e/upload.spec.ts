@@ -47,29 +47,30 @@ test.describe('Editor', () => {
 		await raceNameInput.fill('My Custom Race');
 		await expect(raceNameInput).toHaveValue('My Custom Race');
 
-		const runnerNameInput = page.getByLabel('Your Name');
+		const runnerNameInput = page.getByLabel('Name', { exact: true });
 		await runnerNameInput.fill('Test Runner');
 		await expect(runnerNameInput).toHaveValue('Test Runner');
 
-		const bibInput = page.getByLabel('Bib Number');
+		const bibInput = page.getByLabel('Bib', { exact: true });
 		await bibInput.fill('12345');
 		await expect(bibInput).toHaveValue('12345');
 	});
 
-	test('can change theme', async ({ page }) => {
-		const darkThemeButton = page.getByRole('radio', { name: /dark theme/i });
-		await darkThemeButton.click();
-		await expect(darkThemeButton).toHaveAttribute('aria-checked', 'true');
+	test('can apply design preset', async ({ page }) => {
+		const darkModePreset = page.getByRole('button', { name: /dark mode/i });
+		await darkModePreset.click();
+		// Selected preset has a checkmark or indicator
+		await expect(darkModePreset).toContainText('✓');
 	});
 
 	test('can switch distance units', async ({ page }) => {
-		const milesButton = page.getByRole('button', { name: 'mi' });
+		const milesButton = page.getByRole('button', { name: 'MI', exact: true });
 		await milesButton.click();
-		await expect(milesButton).toHaveAttribute('aria-pressed', 'true');
+		await expect(milesButton).toHaveClass(/bg-blue-600/);
 
-		const kmButton = page.getByRole('button', { name: 'km' });
+		const kmButton = page.getByRole('button', { name: 'KM', exact: true });
 		await kmButton.click();
-		await expect(kmButton).toHaveAttribute('aria-pressed', 'true');
+		await expect(kmButton).toHaveClass(/bg-blue-600/);
 	});
 
 	test('can edit distance manually and see it in preview', async ({ page }) => {

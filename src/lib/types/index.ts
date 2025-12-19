@@ -9,7 +9,8 @@ export interface GPXData {
 }
 
 export type Theme = 'light' | 'dark' | 'navy';
-export type RouteColor = 'orange' | 'blue' | 'cyan' | 'yellow' | 'pink';
+export type RouteColor = 'orange' | 'blue' | 'cyan' | 'yellow' | 'pink' | 'black' | 'white' | 'red';
+export type DesignPreset = 'clean-light' | 'dark-mode' | 'minimal' | 'satellite' | 'vintage';
 export type MapStyle =
 	| 'positron'
 	| 'dark-matter'

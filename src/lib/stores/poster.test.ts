@@ -304,6 +304,38 @@ describe('PosterStore', () => {
 		});
 	});
 
+	describe('Design Presets', () => {
+		it('applies a preset correctly', () => {
+			posterStore.applyDesignPreset('dark-mode');
+			expect(posterStore.data.mapStyle).toBe('dark-matter');
+			expect(posterStore.data.mapFilter).toBe('none');
+			expect(posterStore.data.customBgColor).toBe('#18181b');
+			expect(posterStore.data.customTextColor).toBe('#fafafa');
+			expect(posterStore.data.routeColor).toBe('cyan');
+			expect(posterStore.data.customRouteColor).toBeNull();
+		});
+
+		it('activePreset identifies the current preset', () => {
+			posterStore.applyDesignPreset('clean-light');
+			expect(posterStore.activePreset).toBe('clean-light');
+
+			posterStore.applyDesignPreset('satellite');
+			expect(posterStore.activePreset).toBe('satellite');
+		});
+
+		it('activePreset returns null if values are modified', () => {
+			posterStore.applyDesignPreset('clean-light');
+			posterStore.setCustomBgColor('#ff0000');
+			expect(posterStore.activePreset).toBeNull();
+		});
+
+		it('activePreset returns null if custom route color is set', () => {
+			posterStore.applyDesignPreset('clean-light');
+			posterStore.setCustomRouteColor('#ff0000');
+			expect(posterStore.activePreset).toBeNull();
+		});
+	});
+
 	describe('posterWidth and posterHeight', () => {
 		it('returns correct dimensions for portrait 2:3', () => {
 			posterStore.setAspectRatio('2:3');

@@ -1,7 +1,7 @@
-import type { GPXData, PosterData, Theme, RouteColor, Unit, AspectRatio, QrDotStyle, Layout, MapStyle, MapFilter } from '../types/index.js';
+import type { GPXData, PosterData, Theme, RouteColor, Unit, AspectRatio, QrDotStyle, Layout, MapStyle, MapFilter, DesignPreset } from '../types/index.js';
 import { formatTime, formatPace, formatDate, metersToKm, metersToMiles, kmToMeters, milesToMeters, parseTime } from '../utils/format.js';
 import { calculatePace } from '../utils/geo.js';
-import { THEMES, ROUTE_COLORS } from '../constants/themes.js';
+import { THEMES, ROUTE_COLORS, DESIGN_PRESETS } from '../constants/themes.js';
 import { getDimensions, getAspectRatiosForLayout, LAYOUTS } from '../constants/poster.js';
 
 function createDefaultPosterData(): PosterData {
@@ -179,6 +179,33 @@ class PosterStore {
 
 	setQrGradientEnabled(enabled: boolean): void {
 		this.data.qrGradientEnabled = enabled;
+	}
+
+	applyDesignPreset(presetValue: DesignPreset): void {
+		const preset = DESIGN_PRESETS.find((p) => p.value === presetValue);
+		if (!preset) return;
+
+		this.data.mapStyle = preset.mapStyle;
+		this.data.mapFilter = preset.mapFilter;
+		this.data.customBgColor = preset.bgColor;
+		this.data.customTextColor = preset.textColor;
+		this.data.routeColor = preset.routeColor;
+		this.data.customRouteColor = null;
+	}
+
+	get activePreset(): DesignPreset | null {
+		for (const preset of DESIGN_PRESETS) {
+			const matches =
+				this.data.mapStyle === preset.mapStyle &&
+				this.data.mapFilter === preset.mapFilter &&
+				this.data.customBgColor === preset.bgColor &&
+				this.data.customTextColor === preset.textColor &&
+				this.data.routeColor === preset.routeColor &&
+				this.data.customRouteColor === null;
+
+			if (matches) return preset.value;
+		}
+		return null;
 	}
 
 	get posterWidth(): number {
