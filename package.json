@@ -42,6 +42,7 @@
 		"@tmcw/togeojson": "^7.1.2",
 		"leaflet": "^1.9.4",
 		"modern-screenshot": "^4.6.7",
+		"posthog-js": "^1.309.1",
 		"qr-code-styling": "^1.9.2"
 	},
 	"pnpm": {
