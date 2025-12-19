@@ -57,7 +57,7 @@ test.describe('Editor', () => {
 	});
 
 	test('can apply design preset', async ({ page }) => {
-		const darkModePreset = page.getByRole('button', { name: /dark mode/i });
+		const darkModePreset = page.getByRole('radio', { name: /dark mode/i });
 		await darkModePreset.click();
 		// Selected preset has a checkmark or indicator
 		await expect(darkModePreset).toContainText('✓');

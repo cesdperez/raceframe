@@ -77,7 +77,7 @@ test.describe('Export Visual Fidelity', () => {
 
 	test('exported PNG matches preview - medal-right layout', async ({ page }) => {
 		// Switch to medal-right layout
-		await page.getByRole('button', { name: /Medal Right/i }).click();
+		await page.getByRole('radio', { name: /Medal Right/i }).click();
 		await page.waitForTimeout(500);
 
 		// Wait for map tiles to reload
@@ -189,7 +189,7 @@ test.describe('Export Visual Fidelity', () => {
 
 		for (const theme of themeNames) {
 			// Select theme preset
-			await page.getByRole('button', { name: theme, exact: true }).click();
+			await page.getByRole('radio', { name: theme, exact: true }).click();
 			await page.waitForTimeout(300);
 
 			// Wait for map tiles to potentially reload

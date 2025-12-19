@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { posterStore } from '../stores/poster.svelte.js';
+	import { clickOutside } from '../actions/clickOutside';
 	import {
 		MAP_STYLES,
 		MAP_FILTERS,
@@ -34,6 +35,12 @@
 	let mapStyleOpen = $state(false);
 	let mapFilterOpen = $state(false);
 	let qrStyleOpen = $state(false);
+
+	function closeAllDropdowns() {
+		mapStyleOpen = false;
+		mapFilterOpen = false;
+		qrStyleOpen = false;
+	}
 
 	const QR_STYLES = [
 		{ value: 'rounded', label: 'Rounded' },
@@ -170,13 +177,14 @@
 							min="0"
 							class="flex-1 rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
 						/>
-						<div class="flex rounded border border-gray-300" role="group">
+						<div class="flex rounded border border-gray-300">
 							<button
 								type="button"
 								onclick={() => posterStore.setUnit('km')}
 								class="px-2.5 py-1.5 text-xs font-bold transition-colors {posterStore.data.unit === 'km'
 									? 'bg-blue-600 text-white'
 									: 'bg-white text-gray-700 hover:bg-gray-50'} rounded-l"
+								aria-pressed={posterStore.data.unit === 'km'}
 							>
 								KM
 							</button>
@@ -186,6 +194,7 @@
 								class="px-2.5 py-1.5 text-xs font-bold transition-colors {posterStore.data.unit === 'miles'
 									? 'bg-blue-600 text-white'
 									: 'bg-white text-gray-700 hover:bg-gray-50'} rounded-r border-l border-gray-300"
+								aria-pressed={posterStore.data.unit === 'miles'}
 							>
 								MI
 							</button>
@@ -212,32 +221,41 @@
 				<div class="flex items-center gap-3">
 					<div class="flex-1">
 						<label for="qrDotStyle" class="mb-0.5 block text-xs text-gray-500">Style</label>
-						<div class="relative">
-							<button
-								type="button"
-								id="qr-style-select"
-								onclick={() => qrStyleOpen = !qrStyleOpen}
-								class="flex w-full items-center justify-between rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none"
-							>
-								<span>{QR_STYLES.find(s => s.value === posterStore.data.qrDotStyle)?.label ?? 'Rounded'}</span>
-								<svg class="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4 4 4-4" />
-								</svg>
-							</button>
-							{#if qrStyleOpen}
-								<div class="absolute z-50 mt-1 w-full rounded border border-gray-200 bg-white py-1 shadow-lg">
-									{#each QR_STYLES as style}
-										<button
-											type="button"
-											onclick={() => { posterStore.setQrDotStyle(style.value); qrStyleOpen = false; }}
-											class="flex w-full items-center gap-2 px-2 py-1.5 text-sm hover:bg-gray-50 {posterStore.data.qrDotStyle === style.value ? 'bg-blue-50 text-blue-700' : ''}"
-										>
-											<span class="font-medium">{style.label}</span>
-										</button>
-									{/each}
-								</div>
-							{/if}
-						</div>
+							<div class="relative" use:clickOutside={() => qrStyleOpen = false}>
+								<button
+									type="button"
+									id="qr-style-select"
+									onclick={() => {
+										const wasOpen = qrStyleOpen;
+										closeAllDropdowns();
+										qrStyleOpen = !wasOpen;
+									}}
+									class="flex w-full items-center justify-between rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none"
+									aria-haspopup="listbox"
+									aria-expanded={qrStyleOpen}
+									aria-labelledby="qrDotStyle-label qr-style-select"
+								>
+									<span>{QR_STYLES.find(s => s.value === posterStore.data.qrDotStyle)?.label ?? 'Rounded'}</span>
+									<svg class="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4 4 4-4" />
+									</svg>
+								</button>
+								{#if qrStyleOpen}
+									<div class="absolute z-50 mt-1 w-full rounded border border-gray-200 bg-white py-1 shadow-lg" role="listbox">
+										{#each QR_STYLES as style}
+											<button
+												type="button"
+												onclick={() => { posterStore.setQrDotStyle(style.value); qrStyleOpen = false; }}
+												class="flex w-full items-center gap-2 px-2 py-1.5 text-sm hover:bg-gray-50 {posterStore.data.qrDotStyle === style.value ? 'bg-blue-50 text-blue-700' : ''}"
+												role="option"
+												aria-selected={posterStore.data.qrDotStyle === style.value}
+											>
+												<span class="font-medium">{style.label}</span>
+											</button>
+										{/each}
+									</div>
+								{/if}
+							</div>
 					</div>
 					<div class="pt-4">
 						<label class="flex cursor-pointer items-center gap-1.5 text-xs text-gray-600">
@@ -261,12 +279,15 @@
 
 		<section class="mb-3">
 			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Presets</h3>
-			<div class="grid grid-cols-3 gap-1.5">
+			<div class="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Design Presets">
 				{#each DESIGN_PRESETS as preset}
 					<button
 						type="button"
 						onclick={() => selectPreset(preset.value)}
 						class="group relative flex flex-col items-center gap-1 rounded border-2 p-1.5 transition-all {posterStore.activePreset === preset.value ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white hover:border-gray-300'}"
+						role="radio"
+						aria-checked={posterStore.activePreset === preset.value}
+						aria-label={preset.label}
 					>
 						<div class="relative h-10 w-full overflow-hidden rounded" style="background-color: {preset.bgColor}">
 							<svg class="absolute inset-0 h-full w-full p-1.5" viewBox="0 0 40 40">
@@ -292,12 +313,18 @@
 				<div class="grid grid-cols-2 gap-2">
 					<div>
 						<label for="map-style-select" class="mb-0.5 block text-xs text-gray-500">Map Style</label>
-						<div class="relative">
+						<div class="relative" use:clickOutside={() => mapStyleOpen = false}>
 							<button
 								type="button"
 								id="map-style-select"
-								onclick={() => mapStyleOpen = !mapStyleOpen}
+								onclick={() => {
+									const wasOpen = mapStyleOpen;
+									closeAllDropdowns();
+									mapStyleOpen = !wasOpen;
+								}}
 								class="flex w-full items-center justify-between rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+								aria-haspopup="listbox"
+								aria-expanded={mapStyleOpen}
 							>
 								<span class="truncate text-xs">{MAP_STYLES.find(s => s.value === posterStore.data.mapStyle)?.label}</span>
 								<svg class="h-3.5 w-3.5 flex-shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -305,12 +332,14 @@
 								</svg>
 							</button>
 							{#if mapStyleOpen}
-								<div class="absolute z-50 mt-1 w-full rounded border border-gray-200 bg-white py-1 shadow-lg">
+								<div class="absolute z-50 mt-1 w-full rounded border border-gray-200 bg-white py-1 shadow-lg" role="listbox">
 									{#each MAP_STYLES as style}
 										<button
 											type="button"
 											onclick={() => { posterStore.setMapStyle(style.value); mapStyleOpen = false; }}
 											class="flex w-full items-center px-2 py-1.5 text-xs hover:bg-gray-50 {posterStore.data.mapStyle === style.value ? 'bg-blue-50 text-blue-700' : ''}"
+											role="option"
+											aria-selected={posterStore.data.mapStyle === style.value}
 										>
 											{style.label}
 										</button>
@@ -321,12 +350,18 @@
 					</div>
 					<div>
 						<label for="map-filter-select" class="mb-0.5 block text-xs text-gray-500">Map Filter</label>
-						<div class="relative">
+						<div class="relative" use:clickOutside={() => mapFilterOpen = false}>
 							<button
 								type="button"
 								id="map-filter-select"
-								onclick={() => mapFilterOpen = !mapFilterOpen}
+								onclick={() => {
+									const wasOpen = mapFilterOpen;
+									closeAllDropdowns();
+									mapFilterOpen = !wasOpen;
+								}}
 								class="flex w-full items-center justify-between rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+								aria-haspopup="listbox"
+								aria-expanded={mapFilterOpen}
 							>
 								<span class="truncate text-xs">{MAP_FILTERS.find(f => f.value === posterStore.data.mapFilter)?.label}</span>
 								<svg class="h-3.5 w-3.5 flex-shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -334,12 +369,14 @@
 								</svg>
 							</button>
 							{#if mapFilterOpen}
-								<div class="absolute z-50 mt-1 w-full rounded border border-gray-200 bg-white py-1 shadow-lg">
+								<div class="absolute z-50 mt-1 w-full rounded border border-gray-200 bg-white py-1 shadow-lg" role="listbox">
 									{#each MAP_FILTERS as filter}
 										<button
 											type="button"
 											onclick={() => { posterStore.setMapFilter(filter.value); mapFilterOpen = false; }}
 											class="flex w-full items-center px-2 py-1.5 text-xs hover:bg-gray-50 {posterStore.data.mapFilter === filter.value ? 'bg-blue-50 text-blue-700' : ''}"
+											role="option"
+											aria-selected={posterStore.data.mapFilter === filter.value}
 										>
 											{filter.label}
 										</button>
@@ -425,7 +462,7 @@
 
 		<section class="mb-3">
 			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Layout</h3>
-			<div class="grid grid-cols-2 gap-1.5">
+			<div class="grid grid-cols-2 gap-1.5" role="radiogroup" aria-label="Layout">
 				{#each LAYOUTS as layout}
 					<button
 						type="button"
@@ -433,6 +470,8 @@
 						class="flex flex-col items-center gap-0.5 rounded border-2 p-1.5 transition-colors {posterStore.data.layout === layout.value
 							? 'border-blue-600 bg-blue-50'
 							: 'border-gray-200 hover:border-gray-300'}"
+						role="radio"
+						aria-checked={posterStore.data.layout === layout.value}
 					>
 						<span class="text-xs font-semibold text-gray-700">{layout.label}</span>
 						<span class="text-[10px] text-gray-400">{layout.orientation}</span>
@@ -443,7 +482,7 @@
 
 		<section>
 			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Aspect Ratio</h3>
-			<div class="grid grid-cols-2 gap-1.5">
+			<div class="grid grid-cols-2 gap-1.5" role="radiogroup" aria-label="Aspect Ratio">
 				{#each currentAspectRatios as ratio}
 					<button
 						type="button"
@@ -451,6 +490,8 @@
 						class="flex flex-col items-center gap-0.5 rounded border-2 p-1.5 transition-colors {posterStore.data.aspectRatio === ratio.value
 							? 'border-blue-600 bg-blue-50'
 							: 'border-gray-200 hover:border-gray-300'}"
+						role="radio"
+						aria-checked={posterStore.data.aspectRatio === ratio.value}
 					>
 						<span class="text-xs font-semibold text-gray-700">{ratio.label}</span>
 						<span class="text-[10px] text-gray-400">{ratio.printSize}</span>

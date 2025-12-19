@@ -119,6 +119,29 @@ describe('PosterStore', () => {
 		});
 	});
 
+	describe('setMapFilter', () => {
+		it('has default map filter of none', () => {
+			expect(posterStore.data.mapFilter).toBe('none');
+		});
+
+		it('updates map filter', () => {
+			posterStore.setMapFilter('grayscale');
+			expect(posterStore.data.mapFilter).toBe('grayscale');
+
+			posterStore.setMapFilter('sepia');
+			expect(posterStore.data.mapFilter).toBe('sepia');
+
+			posterStore.setMapFilter('navy');
+			expect(posterStore.data.mapFilter).toBe('navy');
+		});
+
+		it('reset clears map filter to default', () => {
+			posterStore.setMapFilter('grayscale');
+			posterStore.reset();
+			expect(posterStore.data.mapFilter).toBe('none');
+		});
+	});
+
 	describe('setRouteColor', () => {
 		it('updates route color', () => {
 			posterStore.setRouteColor('cyan');
