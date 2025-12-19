@@ -1,4 +1,4 @@
-import type { Theme, RouteColor, MapStyle } from '$lib/types';
+import type { Theme, RouteColor, MapStyle, MapFilter } from '$lib/types';
 
 export interface ThemeConfig {
 	value: Theme;
@@ -109,11 +109,83 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		attribution:
 			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 		brightness: 'light'
+	},
+	{
+		value: 'stamen-watercolor',
+		label: 'Watercolor',
+		description: 'Artistic hand-painted style',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg',
+		attribution:
+			'&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://stamen.com/">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+		brightness: 'light'
+	},
+	{
+		value: 'stamen-toner',
+		label: 'Toner',
+		description: 'High-contrast black & white',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png',
+		attribution:
+			'&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://stamen.com/">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+		brightness: 'light'
+	},
+	{
+		value: 'esri-satellite',
+		label: 'Satellite',
+		description: 'Aerial imagery from ESRI',
+		tileUrl:
+			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+		attribution:
+			'&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics',
+		brightness: 'dark'
 	}
 ];
 
 export function getMapStyleConfig(style: MapStyle): MapStyleConfig {
 	return MAP_STYLES.find((s) => s.value === style) ?? MAP_STYLES[0];
+}
+
+export interface MapFilterConfig {
+	value: MapFilter;
+	label: string;
+	description: string;
+	css: string;
+}
+
+export const MAP_FILTERS: MapFilterConfig[] = [
+	{
+		value: 'none',
+		label: 'None',
+		description: 'Original colors',
+		css: 'none'
+	},
+	{
+		value: 'grayscale',
+		label: 'Grayscale',
+		description: 'Black & white',
+		css: 'grayscale(100%)'
+	},
+	{
+		value: 'sepia',
+		label: 'Sepia',
+		description: 'Warm vintage tone',
+		css: 'sepia(80%) saturate(80%)'
+	},
+	{
+		value: 'navy',
+		label: 'Navy',
+		description: 'Deep blue tint',
+		css: 'grayscale(100%) sepia(30%) hue-rotate(180deg) saturate(150%) brightness(90%)'
+	},
+	{
+		value: 'teal',
+		label: 'Teal',
+		description: 'Teal/forest tint',
+		css: 'grayscale(100%) sepia(40%) hue-rotate(120deg) saturate(120%) brightness(95%)'
+	}
+];
+
+export function getMapFilterConfig(filter: MapFilter): MapFilterConfig {
+	return MAP_FILTERS.find((f) => f.value === filter) ?? MAP_FILTERS[0];
 }
 
 export type TileType = 'light' | 'dark';

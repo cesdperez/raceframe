@@ -9,6 +9,7 @@
 		START_MARKER_COLOR,
 		toLatLngArray
 	} from '$lib/utils/map';
+	import { getMapFilterConfig } from '$lib/constants/themes';
 	import LoadingSpinner from './LoadingSpinner.svelte';
 
 	let mapContainer: HTMLDivElement;
@@ -55,6 +56,7 @@
 		tileLayer.on('load', () => {
 			loading = false;
 			exportReadyStore.setMapReady(true);
+			updateMapFilter();
 		});
 
 		tileLayer.on('loading', () => {
@@ -123,6 +125,16 @@
 		finishMarker.setStyle({ fillColor: color });
 	}
 
+	function updateMapFilter() {
+		if (!tileLayer) return;
+
+		const filterConfig = getMapFilterConfig(posterStore.data.mapFilter);
+		const container = tileLayer.getContainer();
+		if (container) {
+			container.style.filter = filterConfig.css === 'none' ? '' : filterConfig.css;
+		}
+	}
+
 	let resizeObserver: ResizeObserver | null = null;
 
 	function invalidateMapSize() {
@@ -163,6 +175,11 @@
 	$effect(() => {
 		const _ = posterStore.data.mapStyle;
 		updateTileLayer();
+	});
+
+	$effect(() => {
+		const _ = posterStore.data.mapFilter;
+		updateMapFilter();
 	});
 
 	$effect(() => {

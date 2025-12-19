@@ -1,4 +1,4 @@
-import type { GPXData, PosterData, Theme, RouteColor, Unit, AspectRatio, QrDotStyle, Layout, MapStyle } from '../types/index.js';
+import type { GPXData, PosterData, Theme, RouteColor, Unit, AspectRatio, QrDotStyle, Layout, MapStyle, MapFilter } from '../types/index.js';
 import { formatTime, formatPace, formatDate, metersToKm, metersToMiles, kmToMeters, milesToMeters, parseTime } from '../utils/format.js';
 import { calculatePace } from '../utils/geo.js';
 import { THEMES, ROUTE_COLORS } from '../constants/themes.js';
@@ -17,6 +17,7 @@ function createDefaultPosterData(): PosterData {
 		layout: 'classic',
 		theme: 'light',
 		mapStyle: 'positron',
+		mapFilter: 'none',
 		routeColor: 'orange',
 		customBgColor: null,
 		customTextColor: null,
@@ -76,6 +77,10 @@ class PosterStore {
 
 	setMapStyle(style: MapStyle): void {
 		this.data.mapStyle = style;
+	}
+
+	setMapFilter(filter: MapFilter): void {
+		this.data.mapFilter = filter;
 	}
 
 	setRouteColor(color: RouteColor): void {

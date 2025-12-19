@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { posterStore } from '../stores/poster.svelte.js';
-	import { THEMES, ROUTE_COLOR_OPTIONS, MAP_STYLES } from '$lib/constants/themes';
+	import { THEMES, ROUTE_COLOR_OPTIONS, MAP_STYLES, MAP_FILTERS } from '$lib/constants/themes';
 	import { LAYOUTS, getAspectRatiosForLayout } from '$lib/constants/poster';
 	import ExportButton from './ExportButton.svelte';
 
@@ -214,6 +214,27 @@
 						<span class="font-medium text-gray-700">{style.label}</span>
 					</div>
 					<span class="mt-0.5 text-xs text-gray-500">{style.description}</span>
+				</button>
+			{/each}
+		</div>
+	</section>
+
+	<section class="mb-6">
+		<h3 id="map-filter-label" class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Map Filter</h3>
+		<div class="grid grid-cols-2 gap-2" role="radiogroup" aria-labelledby="map-filter-label">
+			{#each MAP_FILTERS as filter}
+				<button
+					type="button"
+					onclick={() => posterStore.setMapFilter(filter.value)}
+					role="radio"
+					aria-checked={posterStore.data.mapFilter === filter.value}
+					aria-label="{filter.label} map filter"
+					class="flex flex-col items-start rounded-md border-2 px-3 py-2 text-left transition-colors {posterStore.data.mapFilter === filter.value
+						? 'border-blue-500'
+						: 'border-gray-200 hover:border-gray-300'}"
+				>
+					<span class="font-medium text-gray-700">{filter.label}</span>
+					<span class="mt-0.5 text-xs text-gray-500">{filter.description}</span>
 				</button>
 			{/each}
 		</div>

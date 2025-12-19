@@ -17,7 +17,12 @@ export type MapStyle =
 	| 'dark-matter-nolabels'
 	| 'voyager'
 	| 'opentopomap'
-	| 'osm';
+	| 'osm'
+	| 'stamen-watercolor'
+	| 'stamen-toner'
+	| 'esri-satellite';
+
+export type MapFilter = 'none' | 'grayscale' | 'sepia' | 'navy' | 'teal';
 export type Unit = 'km' | 'miles';
 export type Layout = 'classic' | 'medal-right';
 export type AspectRatio = '2:3' | '4:5' | '3:2' | '5:4';
@@ -35,6 +40,7 @@ export interface PosterData {
 	layout: Layout;
 	theme: Theme;
 	mapStyle: MapStyle;
+	mapFilter: MapFilter;
 	routeColor: RouteColor;
 	customBgColor: string | null;
 	customTextColor: string | null;
