@@ -57,15 +57,6 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		brightness: 'light'
 	},
 	{
-		value: 'positron-nolabels',
-		label: 'Light Minimal',
-		description: 'Ultra-clean light map, no labels',
-		tileUrl: 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',
-		attribution:
-			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-		brightness: 'light'
-	},
-	{
 		value: 'dark-matter',
 		label: 'Dark Clean',
 		description: 'Minimal dark map with labels',
@@ -73,42 +64,6 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		attribution:
 			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
 		brightness: 'dark'
-	},
-	{
-		value: 'dark-matter-nolabels',
-		label: 'Dark Minimal',
-		description: 'Ultra-clean dark map, no labels',
-		tileUrl: 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
-		attribution:
-			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-		brightness: 'dark'
-	},
-	{
-		value: 'voyager',
-		label: 'Voyager',
-		description: 'Colorful, detailed map',
-		tileUrl: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-		attribution:
-			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-		brightness: 'light'
-	},
-	{
-		value: 'opentopomap',
-		label: 'Topographic',
-		description: 'Terrain with elevation contours',
-		tileUrl: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-		attribution:
-			'&copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-		brightness: 'light'
-	},
-	{
-		value: 'osm',
-		label: 'OSM Standard',
-		description: 'Classic OpenStreetMap style',
-		tileUrl: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-		attribution:
-			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-		brightness: 'light'
 	},
 	{
 		value: 'stamen-watercolor',
@@ -187,19 +142,3 @@ export const MAP_FILTERS: MapFilterConfig[] = [
 export function getMapFilterConfig(filter: MapFilter): MapFilterConfig {
 	return MAP_FILTERS.find((f) => f.value === filter) ?? MAP_FILTERS[0];
 }
-
-export type TileType = 'light' | 'dark';
-
-export const TILE_URLS: Record<TileType, string> = {
-	light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-	dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-};
-
-export const TILE_ATTRIBUTION =
-	'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
-
-export const THEME_TO_TILES: Record<Theme, TileType> = {
-	light: 'light',
-	dark: 'dark',
-	navy: 'dark'
-};

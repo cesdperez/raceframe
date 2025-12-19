@@ -185,11 +185,11 @@ test.describe('Export Visual Fidelity', () => {
 	});
 
 	test('all themes export correctly', async ({ page }) => {
-		const themes = ['light', 'dark', 'navy'] as const;
+		const themeNames = ['light', 'dark', 'navy'] as const;
 
-		for (const theme of themes) {
-			// Select theme
-			await page.getByRole('radio', { name: new RegExp(theme, 'i') }).click();
+		for (const theme of themeNames) {
+			// Select theme - using more specific label match to avoid collision with map styles
+			await page.getByRole('radio', { name: new RegExp(`${theme} theme`, 'i') }).click();
 			await page.waitForTimeout(300);
 
 			// Wait for map tiles to potentially reload

@@ -98,11 +98,11 @@ describe('PosterStore', () => {
 			posterStore.setMapStyle('dark-matter');
 			expect(posterStore.data.mapStyle).toBe('dark-matter');
 
-			posterStore.setMapStyle('opentopomap');
-			expect(posterStore.data.mapStyle).toBe('opentopomap');
+			posterStore.setMapStyle('stamen-watercolor');
+			expect(posterStore.data.mapStyle).toBe('stamen-watercolor');
 
-			posterStore.setMapStyle('voyager');
-			expect(posterStore.data.mapStyle).toBe('voyager');
+			posterStore.setMapStyle('esri-satellite');
+			expect(posterStore.data.mapStyle).toBe('esri-satellite');
 		});
 
 		it('map style is independent of theme', () => {
@@ -113,7 +113,7 @@ describe('PosterStore', () => {
 		});
 
 		it('reset clears map style to default', () => {
-			posterStore.setMapStyle('voyager');
+			posterStore.setMapStyle('esri-satellite');
 			posterStore.reset();
 			expect(posterStore.data.mapStyle).toBe('positron');
 		});

@@ -2,9 +2,6 @@ import type { MapStyle } from '$lib/types';
 import { getMapStyleConfig } from '$lib/constants/themes';
 
 export {
-	TILE_URLS,
-	TILE_ATTRIBUTION,
-	THEME_TO_TILES,
 	ROUTE_COLORS,
 	START_MARKER_COLOR
 } from '$lib/constants/themes';

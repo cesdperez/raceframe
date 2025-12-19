@@ -12,12 +12,7 @@ export type Theme = 'light' | 'dark' | 'navy';
 export type RouteColor = 'orange' | 'blue' | 'cyan' | 'yellow' | 'pink';
 export type MapStyle =
 	| 'positron'
-	| 'positron-nolabels'
 	| 'dark-matter'
-	| 'dark-matter-nolabels'
-	| 'voyager'
-	| 'opentopomap'
-	| 'osm'
 	| 'stamen-watercolor'
 	| 'stamen-toner'
 	| 'esri-satellite';
