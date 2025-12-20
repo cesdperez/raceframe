@@ -4,7 +4,7 @@
 
 A free, static web application that generates printable race portrait posters from GPX files. Users upload their race data, customize the design, and download a high-resolution image ready for DIY printing and framing.
 
-**Live:** https://cesdperez.github.io/raceframe
+**Live:** https://raceframe.pages.dev
 
 ## Problem Statement
 
@@ -32,7 +32,9 @@ A client-side web app that:
 | Maps | Leaflet + CartoDB tiles | Free, no API key required |
 | GPX Parsing | @tmcw/togeojson | Maintained, ESM, handles GPX/KML/TCX |
 | Export | modern-screenshot | Fast rasterization |
-| Hosting | GitHub Pages | Free static hosting |
+| QR Codes | qr-code-styling | Customizable QR code generation |
+| Analytics | PostHog | Privacy-conscious analytics |
+| Hosting | Cloudflare Pages | Free static hosting with edge CDN |
 
 ---
 
@@ -112,14 +114,29 @@ Two-column layout with medal zone for displaying finisher medals.
 | 5:4 | 10×8", 20×16" |
 
 ### Themes & Customization
-- 3 themes: Light, Dark, Navy
-- 5 preset route colors + custom color picker
+
+**Design Presets:**
+- Clean Light, Dark Mode, Minimal, Satellite, Vintage
+
+**Map Styles:**
+- Light Clean (CartoDB Positron)
+- Dark Clean (CartoDB Dark Matter)
+- Watercolor (Stamen)
+- Toner (Stamen)
+- Satellite (ESRI)
+
+**Map Filters:**
+- None, Grayscale, Sepia, Navy, Teal
+
+**Other Options:**
+- 8 route colors + custom color picker
 - Custom background and text colors
+- Medal position toggle (left/right) for landscape layouts
 - Unit toggle (km/miles)
-- QR code styling (dot style, gradient)
+- Optional QR code linking to activity
 
 ### Export
-- PNG export at 2x (screen) and 4x (print at 300 DPI) resolution
+- PNG export at 4x scale (print at 300 DPI)
 - Filename includes race name and date
 
 ---
@@ -136,17 +153,29 @@ Two-column layout with medal zone for displaying finisher medals.
 | Stats values | Oswald | 500 |
 | Stats labels | Inter | 400 |
 
-### Themes
+### Design Presets
 
-| Theme | Background | Text | Map Tiles |
-|-------|------------|------|-----------|
-| Light | #FFFFFF | #1a1a1a | CartoDB Positron |
-| Dark | #18181b | #fafafa | CartoDB Dark Matter |
-| Navy | #0f172a | #f8fafc | CartoDB Dark Matter |
+| Preset | Map Style | Map Filter | Background | Text | Route |
+|--------|-----------|------------|------------|------|-------|
+| Clean Light | Positron | None | #ffffff | #1a1a1a | Orange |
+| Dark Mode | Dark Matter | None | #18181b | #fafafa | Orange |
+| Minimal | Stamen Toner | Navy | #ffffff | #1a1a1a | Orange |
+| Satellite | ESRI Satellite | None | #163a2e | #ffffff | Yellow |
+| Vintage | Stamen Watercolor | Sepia | #f5f5dc | #3d2914 | Orange |
+
+### Map Styles
+
+| Style | Provider | Brightness |
+|-------|----------|------------|
+| Light Clean | CartoDB Positron | Light |
+| Dark Clean | CartoDB Dark Matter | Dark |
+| Watercolor | Stadia/Stamen | Light |
+| Toner | Stadia/Stamen | Light |
+| Satellite | ESRI | Dark |
 
 ### Route Colors
 
-Orange (#FC5200), Blue (#3b82f6), Cyan (#00CED1), Yellow (#FFD700), Pink (#FF69B4)
+Orange (#fc5200), Blue (#3b82f6), Cyan (#00ced1), Yellow (#ffd700), Pink (#ff69b4), Black (#000000), White (#ffffff), Red (#ef4444)
 
 ---
 

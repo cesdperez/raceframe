@@ -18,11 +18,13 @@ Upload your race data, customize the design, and download a high-resolution imag
 
 ## Features
 
-- **Privacy First:** Completely client-side — no data uploaded to servers.
-- **Universal GPX Support:** Parse GPX files from Strava, Garmin, Polar, or any GPS device.
-- **High Resolution:** Export print-ready PNG at 300 DPI (4x scale).
-- **Customizable:** Adjust text, themes, route colors, and include a custom QR code for the activity.
-- **Interactive Map:** Leaflet-powered route visualization with CartoDB themes.
+- **Privacy First:** Completely client-side—no data uploaded to servers
+- **Universal GPX Support:** Parse GPX files from Strava, Garmin, Polar, or any GPS device
+- **High Resolution:** Export print-ready PNG at 300 DPI (4x scale)
+- **Customizable:** Adjust text, themes, route colors, and medal position
+- **QR Codes:** Optional QR code linking to your activity
+- **Interactive Map:** Leaflet-powered route visualization with CartoDB tiles
+- **Multiple Themes:** Light, dark, midnight, and forest themes
 
 ## Tech Stack
 
@@ -31,27 +33,31 @@ Upload your race data, customize the design, and download a high-resolution imag
 - **Maps:** [Leaflet](https://leafletjs.com) with CartoDB tiles
 - **GPX Parsing:** [@tmcw/togeojson](https://github.com/tmcw/togeojson)
 - **Export:** [modern-screenshot](https://github.com/we-bridge/modern-screenshot)
-- **QR Codes:** [qr-code-styling](https://github.com/SumiMakito/qr-code-styling)
-- **Analytics:** [PostHog](https://posthog.com) (Privacy-conscious)
+- **QR Codes:** [qr-code-styling](https://github.com/kozakdenys/qr-code-styling)
+- **Analytics:** [PostHog](https://posthog.com) (privacy-conscious)
+- **Hosting:** [Cloudflare Pages](https://pages.cloudflare.com)
 
 ## Development
 
 ```bash
-pnpm install
-pnpm dev
+pnpm install       # Install dependencies
+pnpm dev           # Start dev server
+pnpm check         # Type checking
 ```
 
 ## Build
 
 ```bash
-pnpm build
-pnpm preview
+pnpm build         # Build for production
+pnpm preview       # Preview production build
 ```
 
 ## Testing
 
 ```bash
-pnpm test:run      # Unit tests (Vitest)
+pnpm test          # Unit tests in watch mode
+pnpm test:run      # Unit tests once (Vitest)
 pnpm test:e2e      # E2E tests (Playwright)
+pnpm test:e2e:ui   # E2E tests with UI
 pnpm test:all      # Run all tests
 ```
