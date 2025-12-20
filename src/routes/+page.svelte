@@ -38,6 +38,14 @@
 		uploadError = null;
 		statusMessage = '';
 	}
+
+	async function handleDemoMode() {
+		posterStore.loadDemoData();
+		currentView = 'editor';
+		statusMessage = 'Demo mode loaded. Some features are limited.';
+		await tick();
+		editorHeading?.focus();
+	}
 </script>
 
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -64,9 +72,16 @@
 					for printing. Free, private, and works with any GPX source.
 				</p>
 
-				<div class="mb-4">
+				<div class="mb-6">
 					<FileUpload onSuccess={handleUploadSuccess} onError={handleUploadError} />
 				</div>
+
+				<button
+					onclick={handleDemoMode}
+					class="text-sm text-gray-500 hover:text-gray-700 underline underline-offset-2 decoration-gray-300 hover:decoration-gray-500 transition-colors"
+				>
+					No GPX file? Explore the editor →
+				</button>
 
 				{#if uploadError}
 					<div class="mb-8 max-w-md mx-auto">
@@ -103,11 +118,22 @@
 				<PosterPreview />
 			</div>
 
+			<button
+				onclick={handleStartOver}
+				class="fixed top-4 left-4 p-3 bg-white/90 backdrop-blur-sm text-gray-600 hover:text-gray-900 hover:bg-white transition-colors rounded-full shadow-lg z-50"
+				aria-label="Go back to upload"
+				title="Start over"
+			>
+				<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+				</svg>
+			</button>
+
 			<aside
 				class="w-full lg:w-80 xl:w-96 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0 flex flex-col max-h-[50vh] md:max-h-[40vh] lg:max-h-none overflow-hidden"
 				aria-label="Poster customization options"
 			>
-				<div class="p-3 md:p-4 border-b border-gray-200 flex items-center justify-between">
+				<div class="p-3 md:p-4 border-b border-gray-200">
 					<h2
 						bind:this={editorHeading}
 						tabindex="-1"
@@ -116,24 +142,9 @@
 					>
 						Customize
 					</h2>
-					<button
-						onclick={handleStartOver}
-						class="lg:hidden px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 transition-colors"
-					>
-						Start Over
-					</button>
 				</div>
 				<div class="flex-1 overflow-y-auto">
 					<EditorPanel />
-				</div>
-				<div class="hidden lg:block p-4 border-t border-gray-200">
-					<button
-						onclick={handleStartOver}
-						class="w-full px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 active:bg-gray-950 transition-colors min-h-[44px]"
-						style="font-family: var(--font-heading);"
-					>
-						Start Over
-					</button>
 				</div>
 			</aside>
 		</main>

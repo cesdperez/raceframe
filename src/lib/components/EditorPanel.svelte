@@ -23,6 +23,12 @@
 
 	const currentAspectRatios = $derived(getAspectRatiosForLayout(posterStore.data.layout));
 
+	const availableMapStyles = $derived(
+		posterStore.isDemo
+			? MAP_STYLES.filter((s) => posterStore.isMapStyleAllowedInDemo(s.value))
+			: MAP_STYLES
+	);
+
 	let qrCodeInputValue = $state(posterStore.data.qrCodeUrl ?? '');
 	let qrDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -76,6 +82,15 @@
 </script>
 
 <div class="flex h-full flex-col overflow-y-auto p-2 md:p-3">
+	{#if posterStore.isDemo}
+		<div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3" role="status">
+			<p class="text-sm font-medium text-amber-800">Demo Mode</p>
+			<p class="mt-1 text-xs text-amber-700">
+				Some map styles and export are disabled. Upload a GPX file to unlock all features.
+			</p>
+		</div>
+	{/if}
+
 	<!-- DATA SECTION -->
 	<div class="mb-5">
 		<h2 class="mb-3 text-sm font-bold text-gray-800">Data</h2>
@@ -236,13 +251,16 @@
 			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Presets</h3>
 			<div class="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Design Presets">
 				{#each DESIGN_PRESETS as preset}
+					{@const isDisabled = posterStore.isDemo && !posterStore.isPresetAllowedInDemo(preset.value)}
 					<button
 						type="button"
 						onclick={() => selectPreset(preset.value)}
-						class="group relative flex flex-col items-center gap-1 rounded border-2 p-1.5 transition-all {posterStore.activePreset === preset.value ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white hover:border-gray-300'}"
+						disabled={isDisabled}
+						class="group relative flex flex-col items-center gap-1 rounded border-2 p-1.5 transition-all {posterStore.activePreset === preset.value ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white hover:border-gray-300'} {isDisabled ? 'cursor-not-allowed opacity-50' : ''}"
 						role="radio"
 						aria-checked={posterStore.activePreset === preset.value}
 						aria-label={preset.label}
+						title={isDisabled ? 'Upload a GPX file to use this preset' : preset.label}
 					>
 						<div class="relative h-10 w-full overflow-hidden rounded" style="background-color: {preset.bgColor}">
 							<svg class="absolute inset-0 h-full w-full p-1.5" viewBox="0 0 40 40">
@@ -267,10 +285,15 @@
 			<div class="space-y-3">
 				<div class="grid grid-cols-2 gap-2">
 					<div>
-						<label for="map-style-select" class="mb-0.5 block text-xs text-gray-500">Map Style</label>
+						<label for="map-style-select" class="mb-0.5 block text-xs text-gray-500">
+							Map Style
+							{#if posterStore.isDemo}
+								<span class="text-amber-600">(limited)</span>
+							{/if}
+						</label>
 						<Dropdown
 							id="map-style-select"
-							options={MAP_STYLES}
+							options={availableMapStyles}
 							value={posterStore.data.mapStyle}
 							onchange={(v) => posterStore.setMapStyle(v as MapStyle)}
 						/>
@@ -402,7 +425,12 @@
 
 	<!-- EXPORT CTA -->
 	<section class="mt-auto border-t border-gray-100 bg-white pt-3">
-		<ExportButton raceName={posterStore.data.raceName} date={posterStore.data.date} />
+		<ExportButton 
+			raceName={posterStore.data.raceName} 
+			date={posterStore.data.date}
+			disabled={posterStore.isDemo}
+			disabledReason="Upload a GPX file to enable export"
+		/>
 	</section>
 </div>
 

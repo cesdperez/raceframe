@@ -95,10 +95,9 @@ test.describe('Editor', () => {
 		await expect(paceValue).toHaveText("3'00\"");
 	});
 
-	test('start over returns to landing page', async ({ page }) => {
-		await page.setViewportSize({ width: 1280, height: 720 });
-		const startOverButton = page.getByRole('button', { name: 'Start Over' }).first();
-		await startOverButton.click();
+	test('back button returns to landing page', async ({ page }) => {
+		const backButton = page.getByRole('button', { name: /go back to upload/i });
+		await backButton.click();
 
 		await expect(page.getByText('Drop your GPX file here')).toBeVisible();
 	});

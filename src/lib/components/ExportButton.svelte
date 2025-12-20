@@ -5,15 +5,18 @@
 	interface Props {
 		raceName: string;
 		date: Date | null;
+		disabled?: boolean;
+		disabledReason?: string;
 	}
 
-	let { raceName, date }: Props = $props();
+	let { raceName, date, disabled = false, disabledReason = '' }: Props = $props();
 
 	let isExporting = $state(false);
 	let error = $state<string | null>(null);
 	let exportStatus = $state('');
 
 	async function handleExport(scale: ExportScale) {
+		if (disabled) return;
 		isExporting = true;
 		error = null;
 		const resLabel = scale === 4 ? 'high-resolution' : 'standard';
@@ -37,13 +40,17 @@
 		{exportStatus}
 	</div>
 
+	{#if disabled && disabledReason}
+		<p class="text-center text-xs text-amber-600">{disabledReason}</p>
+	{/if}
+
 	<div>
 		<p class="mb-2 text-xs font-medium text-gray-600">Download PNG</p>
 		<div class="flex gap-2">
 			<button
 				type="button"
 				onclick={() => handleExport(2)}
-				disabled={isExporting}
+				disabled={isExporting || disabled}
 				aria-label="Download PNG at 2x resolution for web use"
 				class="flex flex-1 items-center justify-center gap-2 rounded-md bg-blue-500 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
 			>
@@ -59,7 +66,7 @@
 			<button
 				type="button"
 				onclick={() => handleExport(4)}
-				disabled={isExporting}
+				disabled={isExporting || disabled}
 				aria-label="Download PNG at 4x resolution for high-quality print"
 				class="flex flex-1 items-center justify-center gap-2 rounded-md border-2 border-blue-500 bg-white px-3 py-2 text-sm font-medium text-blue-500 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
 			>

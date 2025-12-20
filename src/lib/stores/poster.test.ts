@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { posterStore } from './poster.svelte.js';
 import type { GPXData } from '../types/index.js';
+import { DEMO_GPX_DATA, DEMO_RUNNER_NAME } from '../constants/demo.js';
 
 const mockGpxData: GPXData = {
 	coordinates: [
@@ -30,6 +31,7 @@ describe('PosterStore', () => {
 			expect(posterStore.data.unit).toBe('km');
 			expect(posterStore.data.layout).toBe('classic');
 			expect(posterStore.data.aspectRatio).toBe('2:3');
+			expect(posterStore.isDemo).toBe(false);
 		});
 
 		it('hasGpxData returns false when no GPX is loaded', () => {
@@ -73,6 +75,14 @@ describe('PosterStore', () => {
 			posterStore.loadFromGPX(gpxWithoutTime);
 			expect(posterStore.data.date).toBeNull();
 			expect(posterStore.data.finishTime).toBe('');
+		});
+
+		it('clears demo mode when loading real GPX', () => {
+			posterStore.loadDemoData();
+			expect(posterStore.isDemo).toBe(true);
+
+			posterStore.loadFromGPX(mockGpxData);
+			expect(posterStore.isDemo).toBe(false);
 		});
 	});
 
@@ -362,6 +372,89 @@ describe('PosterStore', () => {
 			posterStore.setAspectRatio('5:4');
 			expect(posterStore.posterWidth).toBe(2000);
 			expect(posterStore.posterHeight).toBe(1600);
+		});
+	});
+
+	describe('Demo Mode', () => {
+		it('loadDemoData sets isDemo to true', () => {
+			posterStore.loadDemoData();
+			expect(posterStore.isDemo).toBe(true);
+		});
+
+		it('loadDemoData populates with demo GPX data', () => {
+			posterStore.loadDemoData();
+			expect(posterStore.data.gpxData).toStrictEqual(DEMO_GPX_DATA);
+			expect(posterStore.data.raceName).toBe('Valencia Marathon');
+			expect(posterStore.data.runnerName).toBe(DEMO_RUNNER_NAME);
+		});
+
+		it('loadDemoData sets map style to positron (CARTO)', () => {
+			posterStore.loadDemoData();
+			expect(posterStore.data.mapStyle).toBe('positron');
+		});
+
+		it('setMapStyle blocks non-CARTO styles in demo mode', () => {
+			posterStore.loadDemoData();
+			posterStore.setMapStyle('stamen-watercolor');
+			expect(posterStore.data.mapStyle).toBe('positron');
+
+			posterStore.setMapStyle('alidade-satellite');
+			expect(posterStore.data.mapStyle).toBe('positron');
+		});
+
+		it('setMapStyle allows CARTO styles in demo mode', () => {
+			posterStore.loadDemoData();
+			posterStore.setMapStyle('dark-matter');
+			expect(posterStore.data.mapStyle).toBe('dark-matter');
+
+			posterStore.setMapStyle('positron');
+			expect(posterStore.data.mapStyle).toBe('positron');
+		});
+
+		it('setMapStyle allows all styles when not in demo mode', () => {
+			posterStore.loadFromGPX(mockGpxData);
+			posterStore.setMapStyle('stamen-watercolor');
+			expect(posterStore.data.mapStyle).toBe('stamen-watercolor');
+		});
+
+		it('applyDesignPreset blocks non-CARTO presets in demo mode', () => {
+			posterStore.loadDemoData();
+			const originalMapStyle = posterStore.data.mapStyle;
+
+			posterStore.applyDesignPreset('noir');
+			expect(posterStore.data.mapStyle).toBe(originalMapStyle);
+
+			posterStore.applyDesignPreset('watercolor');
+			expect(posterStore.data.mapStyle).toBe(originalMapStyle);
+		});
+
+		it('applyDesignPreset allows CARTO-based presets in demo mode', () => {
+			posterStore.loadDemoData();
+			posterStore.applyDesignPreset('paper');
+			expect(posterStore.data.mapStyle).toBe('positron');
+			expect(posterStore.activePreset).toBe('paper');
+		});
+
+		it('isPresetAllowedInDemo returns correct values', () => {
+			expect(posterStore.isPresetAllowedInDemo('paper')).toBe(true);
+			expect(posterStore.isPresetAllowedInDemo('noir')).toBe(false);
+			expect(posterStore.isPresetAllowedInDemo('watercolor')).toBe(false);
+			expect(posterStore.isPresetAllowedInDemo('orbital')).toBe(false);
+		});
+
+		it('isMapStyleAllowedInDemo returns correct values', () => {
+			expect(posterStore.isMapStyleAllowedInDemo('positron')).toBe(true);
+			expect(posterStore.isMapStyleAllowedInDemo('dark-matter')).toBe(true);
+			expect(posterStore.isMapStyleAllowedInDemo('stamen-watercolor')).toBe(false);
+			expect(posterStore.isMapStyleAllowedInDemo('alidade-satellite')).toBe(false);
+		});
+
+		it('reset clears demo mode', () => {
+			posterStore.loadDemoData();
+			expect(posterStore.isDemo).toBe(true);
+
+			posterStore.reset();
+			expect(posterStore.isDemo).toBe(false);
 		});
 	});
 });

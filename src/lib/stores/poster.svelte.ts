@@ -1,8 +1,9 @@
-import type { GPXData, PosterData, Theme, RouteColor, Unit, AspectRatio, QrDotStyle, Layout, MapStyle, MapFilter, DesignPreset } from '../types/index.js';
+import type { GPXData, PosterData, RouteColor, Unit, AspectRatio, QrDotStyle, Layout, MapStyle, MapFilter, DesignPreset } from '../types/index.js';
 import { formatTime, formatPace, formatDate, metersToKm, metersToMiles, kmToMeters, milesToMeters, parseTime } from '../utils/format.js';
 import { calculatePace } from '../utils/geo.js';
 import { THEMES, ROUTE_COLORS, DESIGN_PRESETS } from '../constants/themes.js';
 import { getDimensions, getAspectRatiosForLayout, LAYOUTS } from '../constants/poster.js';
+import { DEMO_GPX_DATA, DEMO_RUNNER_NAME, isCartoMapStyle } from '../constants/demo.js';
 
 function createDefaultPosterData(): PosterData {
 	return {
@@ -31,6 +32,7 @@ function createDefaultPosterData(): PosterData {
 
 class PosterStore {
 	data = $state<PosterData>(createDefaultPosterData());
+	isDemo = $state<boolean>(false);
 
 	get hasGpxData(): boolean {
 		return this.data.gpxData !== null;
@@ -69,9 +71,20 @@ class PosterStore {
 		this.data.finishTime = gpxData.elapsedTime ? formatTime(gpxData.elapsedTime) : '';
 		this.data.distance = metersToKm(gpxData.totalDistance);
 		this.data.unit = 'km';
+		this.isDemo = false;
+	}
+
+	loadDemoData(): void {
+		this.loadFromGPX(DEMO_GPX_DATA);
+		this.data.runnerName = DEMO_RUNNER_NAME;
+		this.data.mapStyle = 'positron';
+		this.isDemo = true;
 	}
 
 	setMapStyle(style: MapStyle): void {
+		if (this.isDemo && !isCartoMapStyle(style)) {
+			return;
+		}
 		this.data.mapStyle = style;
 	}
 
@@ -181,12 +194,26 @@ class PosterStore {
 		const preset = DESIGN_PRESETS.find((p) => p.value === presetValue);
 		if (!preset) return;
 
+		if (this.isDemo && !isCartoMapStyle(preset.mapStyle)) {
+			return;
+		}
+
 		this.data.mapStyle = preset.mapStyle;
 		this.data.mapFilter = preset.mapFilter;
 		this.data.customBgColor = preset.bgColor;
 		this.data.customTextColor = preset.textColor;
 		this.data.routeColor = preset.routeColor;
 		this.data.customRouteColor = null;
+	}
+
+	isPresetAllowedInDemo(presetValue: DesignPreset): boolean {
+		const preset = DESIGN_PRESETS.find((p) => p.value === presetValue);
+		if (!preset) return false;
+		return isCartoMapStyle(preset.mapStyle);
+	}
+
+	isMapStyleAllowedInDemo(style: MapStyle): boolean {
+		return isCartoMapStyle(style);
 	}
 
 	get activePreset(): DesignPreset | null {
@@ -221,6 +248,7 @@ class PosterStore {
 
 	reset(): void {
 		this.data = createDefaultPosterData();
+		this.isDemo = false;
 	}
 }
 
