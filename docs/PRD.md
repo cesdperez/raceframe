@@ -106,24 +106,31 @@ Two-column layout with medal zone for displaying finisher medals.
 |-------|-------------------|
 | 2:3 | 4×6", 8×12" |
 | 4:5 | 8×10", 16×20" |
+| 5:7 | 5×7", 10×14" |
+| ISO-A | A4, A3, A2 |
 
 **Landscape layouts (Medal Right):**
 | Ratio | Common Print Sizes |
 |-------|-------------------|
 | 3:2 | 6×4", 12×8" |
 | 5:4 | 10×8", 20×16" |
+| 7:5 | 7×5", 14×10" |
+| ISO-A | A4, A3, A2 |
 
 ### Themes & Customization
 
 **Design Presets:**
-- Clean Light, Dark Mode, Minimal, Satellite, Vintage
+- Paper, Noir, Blueprint, Orbital, Watercolor, Terrain
 
 **Map Styles:**
 - Light Clean (CartoDB Positron)
 - Dark Clean (CartoDB Dark Matter)
-- Watercolor (Stamen)
-- Toner (Stamen)
-- Satellite (ESRI)
+- Alidade Smooth / Dark / Satellite (Stadia)
+- Outdoors (Stadia)
+- Toner / Toner Lite / Toner Dark (Stadia/Stamen)
+- Terrain (Stadia/Stamen)
+- Watercolor (Stadia/Stamen)
+- OSM Bright (Stadia)
 
 **Map Filters:**
 - None, Grayscale, Sepia, Navy, Teal
@@ -131,13 +138,20 @@ Two-column layout with medal zone for displaying finisher medals.
 **Other Options:**
 - 8 route colors + custom color picker
 - Custom background and text colors
-- Medal position toggle (left/right) for landscape layouts
 - Unit toggle (km/miles)
-- Optional QR code linking to activity
+- Optional QR code with 4 dot styles (rounded, dots, classy, square) and gradient option
+
+### Demo Mode
+- Try the editor without uploading a GPX file
+- Pre-loaded with Valencia Marathon sample data
+- Restricted to CARTO map styles only
+- Export functionality disabled
+- All editing features available
 
 ### Export
-- PNG export at 4x scale (print at 300 DPI)
+- PNG export at 2x scale (~150 DPI for web) or 4x scale (300 DPI for print)
 - Filename includes race name and date
+- Fonts embedded in export for consistent rendering
 
 ---
 
@@ -157,11 +171,12 @@ Two-column layout with medal zone for displaying finisher medals.
 
 | Preset | Map Style | Map Filter | Background | Text | Route |
 |--------|-----------|------------|------------|------|-------|
-| Clean Light | Positron | None | #ffffff | #1a1a1a | Orange |
-| Dark Mode | Dark Matter | None | #18181b | #fafafa | Orange |
-| Minimal | Stamen Toner | Navy | #ffffff | #1a1a1a | Orange |
-| Satellite | ESRI Satellite | None | #163a2e | #ffffff | Yellow |
-| Vintage | Stamen Watercolor | Sepia | #f5f5dc | #3d2914 | Orange |
+| Paper | Positron | None | #ffffff | #1a1a1a | Orange |
+| Noir | Dark Matter | None | #18181b | #fafafa | Orange |
+| Blueprint | Toner Lite | Navy | #0f2b4a | #e0e7ef | Cyan |
+| Orbital | Alidade Satellite | None | #163a2e | #ffffff | Yellow |
+| Watercolor | Watercolor | Sepia | #f5f5dc | #3d2914 | Orange |
+| Terrain | Terrain | None | #e8e4d9 | #2d3b2d | Orange |
 
 ### Map Styles
 
@@ -169,9 +184,16 @@ Two-column layout with medal zone for displaying finisher medals.
 |-------|----------|------------|
 | Light Clean | CartoDB Positron | Light |
 | Dark Clean | CartoDB Dark Matter | Dark |
-| Watercolor | Stadia/Stamen | Light |
+| Alidade Smooth | Stadia | Light |
+| Alidade Smooth Dark | Stadia | Dark |
+| Alidade Satellite | Stadia | Dark |
+| Outdoors | Stadia | Light |
 | Toner | Stadia/Stamen | Light |
-| Satellite | ESRI | Dark |
+| Toner Lite | Stadia/Stamen | Light |
+| Toner Dark | Stadia/Stamen | Dark |
+| Terrain | Stadia/Stamen | Light |
+| Watercolor | Stadia/Stamen | Light |
+| OSM Bright | Stadia | Light |
 
 ### Route Colors
 
