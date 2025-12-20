@@ -3,6 +3,7 @@ import {
 	formatTime,
 	parseTime,
 	formatPace,
+	formatSpeed,
 	formatDate,
 	metersToKm,
 	metersToMiles,
@@ -128,5 +129,23 @@ describe('formatDate', () => {
 	it('formats date with double digit day', () => {
 		const date = new Date('2025-11-25');
 		expect(formatDate(date)).toBe('25 November 2025');
+	});
+});
+
+describe('formatSpeed', () => {
+	it('formats speed in km/h', () => {
+		expect(formatSpeed(7.5, 'km')).toBe('27.0');
+	});
+
+	it('formats speed in mph', () => {
+		expect(formatSpeed(7.5, 'miles')).toBe('16.8');
+	});
+
+	it('handles typical cycling speed', () => {
+		expect(formatSpeed(8.33, 'km')).toBe('30.0');
+	});
+
+	it('handles zero speed', () => {
+		expect(formatSpeed(0, 'km')).toBe('0.0');
 	});
 });

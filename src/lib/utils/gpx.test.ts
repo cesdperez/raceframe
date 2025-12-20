@@ -14,6 +14,11 @@ const valenciaMarathonGpx = readFileSync(
 	'utf-8'
 );
 
+const eindhovenCyclingGpx = readFileSync(
+	join(import.meta.dirname, '../test-fixtures/eindhoven_cycling.gpx'),
+	'utf-8'
+);
+
 describe('parseGPX', () => {
 	it('extracts coordinates from GPX file', () => {
 		const data = parseGPX(sampleGpx);
@@ -75,6 +80,34 @@ describe('parseGPX', () => {
 </gpx>`;
 		const data = parseGPX(gpxWithoutName);
 		expect(data.name).toBeNull();
+	});
+
+	it('defaults activity type to running when not specified', () => {
+		const data = parseGPX(sampleGpx);
+		expect(data.activityType).toBe('running');
+	});
+
+	it('extracts cycling activity type from GPX', () => {
+		const data = parseGPX(eindhovenCyclingGpx);
+		expect(data.activityType).toBe('cycling');
+	});
+
+	it('recognizes various cycling type values', () => {
+		const cyclingTypes = ['cycling', 'biking', 'ride', 'bike', 'bicycle'];
+		for (const type of cyclingTypes) {
+			const gpxWithType = `<?xml version="1.0"?>
+<gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1">
+  <trk>
+    <type>${type}</type>
+    <trkseg>
+      <trkpt lat="0" lon="0"></trkpt>
+      <trkpt lat="1" lon="1"></trkpt>
+    </trkseg>
+  </trk>
+</gpx>`;
+			const data = parseGPX(gpxWithType);
+			expect(data.activityType).toBe('cycling');
+		}
 	});
 
 	it('handles multiple track segments', () => {

@@ -1,3 +1,5 @@
+export type ActivityType = 'running' | 'cycling';
+
 export interface GPXData {
 	coordinates: [number, number][]; // [lng, lat][] - GeoJSON order
 	totalDistance: number; // meters
@@ -6,6 +8,7 @@ export interface GPXData {
 	elapsedTime: number | null; // seconds
 	elevationGain: number | null; // meters
 	name: string | null; // activity name from GPX
+	activityType: ActivityType;
 }
 
 export type Theme = 'light' | 'dark' | 'navy';
@@ -33,8 +36,9 @@ export type QrDotStyle = 'rounded' | 'dots' | 'classy' | 'classy-rounded' | 'squ
 
 export interface PosterData {
 	gpxData: GPXData | null;
-	runnerName: string;
-	raceName: string;
+	activityType: ActivityType;
+	athleteName: string;
+	eventName: string;
 	finishTime: string; // formatted HH:MM'SS"
 	date: Date | null;
 	distance: number; // in user's selected unit

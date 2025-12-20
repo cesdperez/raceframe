@@ -25,11 +25,11 @@ test.describe('Demo Mode', () => {
 		const demoButton = page.getByRole('button', { name: /No GPX file\? Explore the editor/i });
 		await demoButton.click();
 
-		const raceNameInput = page.getByLabel('Race Name');
-		await expect(raceNameInput).toHaveValue('Valencia Marathon');
+		const eventNameInput = page.getByLabel('Event Name');
+		await expect(eventNameInput).toHaveValue('Valencia Marathon');
 
-		const runnerNameInput = page.getByLabel('Name', { exact: true });
-		await expect(runnerNameInput).toHaveValue('Jon Snow');
+		const athleteNameInput = page.getByLabel('Name', { exact: true });
+		await expect(athleteNameInput).toHaveValue('Jon Snow');
 	});
 
 	test('demo mode shows limitation banner', async ({ page }) => {
@@ -90,13 +90,13 @@ test.describe('Demo Mode', () => {
 		const demoButton = page.getByRole('button', { name: /No GPX file\? Explore the editor/i });
 		await demoButton.click();
 
-		const raceNameInput = page.getByLabel('Race Name');
-		await raceNameInput.fill('My Custom Race');
-		await expect(raceNameInput).toHaveValue('My Custom Race');
+		const eventNameInput = page.getByLabel('Event Name');
+		await eventNameInput.fill('My Custom Race');
+		await expect(eventNameInput).toHaveValue('My Custom Race');
 
-		const runnerNameInput = page.getByLabel('Name', { exact: true });
-		await runnerNameInput.fill('Arya Stark');
-		await expect(runnerNameInput).toHaveValue('Arya Stark');
+		const athleteNameInput = page.getByLabel('Name', { exact: true });
+		await athleteNameInput.fill('Arya Stark');
+		await expect(athleteNameInput).toHaveValue('Arya Stark');
 	});
 
 	test('back button from demo mode returns to landing', async ({ page }) => {

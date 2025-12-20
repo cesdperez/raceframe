@@ -9,7 +9,12 @@
 		BW_COLOR_PRESETS,
 		ROUTE_COLORS
 	} from '$lib/constants/themes';
-	import type { RouteColor, QrDotStyle, MapStyle, MapFilter } from '$lib/types';
+	import type { ActivityType, RouteColor, QrDotStyle, MapStyle, MapFilter } from '$lib/types';
+
+	const ACTIVITY_TYPES = [
+		{ value: 'running', label: 'Running' },
+		{ value: 'cycling', label: 'Cycling' }
+	] as const;
 
 	const ROUTE_COLOR_PRESETS: { value: RouteColor; label: string; color: string }[] = [
 		{ value: 'orange', label: 'Orange', color: ROUTE_COLORS.orange },
@@ -97,15 +102,24 @@
 		<h2 class="mb-3 text-sm font-bold text-gray-800">Data</h2>
 
 		<section class="mb-4">
-			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Race Details</h3>
+			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Event Details</h3>
 			<div class="space-y-2">
 				<div>
-					<label for="raceName" class="mb-0.5 block text-xs text-gray-500">Race Name</label>
+					<label for="activityType" class="mb-0.5 block text-xs text-gray-500">Activity Type</label>
+					<Dropdown
+						id="activityType"
+						options={ACTIVITY_TYPES}
+						value={posterStore.data.activityType}
+						onchange={(v) => posterStore.setActivityType(v as ActivityType)}
+					/>
+				</div>
+				<div>
+					<label for="eventName" class="mb-0.5 block text-xs text-gray-500">Event Name</label>
 					<input
 						type="text"
-						id="raceName"
-						value={posterStore.data.raceName}
-						oninput={(e) => posterStore.setRaceName((e.target as HTMLInputElement).value)}
+						id="eventName"
+						value={posterStore.data.eventName}
+						oninput={(e) => posterStore.setEventName((e.target as HTMLInputElement).value)}
 						placeholder="e.g. Berlin Marathon"
 						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
 					/>
@@ -124,15 +138,15 @@
 		</section>
 
 		<section class="mb-4">
-			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Runner Info</h3>
+			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Athlete Info</h3>
 			<div class="grid grid-cols-2 gap-2">
 				<div>
-					<label for="runnerName" class="mb-0.5 block text-xs text-gray-500">Name</label>
+					<label for="athleteName" class="mb-0.5 block text-xs text-gray-500">Name</label>
 					<input
 						type="text"
-						id="runnerName"
-						value={posterStore.data.runnerName}
-						oninput={(e) => posterStore.setRunnerName((e.target as HTMLInputElement).value)}
+						id="athleteName"
+						value={posterStore.data.athleteName}
+						oninput={(e) => posterStore.setAthleteName((e.target as HTMLInputElement).value)}
 						placeholder="John Doe"
 						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
 					/>
@@ -431,7 +445,7 @@
 	<!-- EXPORT CTA -->
 	<section class="mt-auto border-t border-gray-100 bg-white pt-3">
 		<ExportButton 
-			raceName={posterStore.data.raceName} 
+			eventName={posterStore.data.eventName} 
 			date={posterStore.data.date}
 			disabled={posterStore.isDemo}
 			disabledReason="Upload a GPX file to enable export"

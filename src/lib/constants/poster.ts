@@ -31,8 +31,8 @@ export const LAYOUTS: LayoutConfig[] = [
 const CLASSIC_BOTTOM_CONTENT = {
 	divider: 3,
 	dividerMargin: 50,
-	runnerInfoHeight: 58, // 44px font × ~1.3 line-height
-	runnerInfoMargin: 50,
+	athleteInfoHeight: 58, // 44px font × ~1.3 line-height
+	athleteInfoMargin: 50,
 	statsValueHeight: 73, // 56px font × ~1.3 line-height
 	statsLabelHeight: 24, // 18px font × ~1.3 line-height
 	statsLabelMargin: 12,
@@ -65,8 +65,8 @@ export function calculateClassicLayout(
 	const {
 		divider,
 		dividerMargin,
-		runnerInfoHeight,
-		runnerInfoMargin,
+		athleteInfoHeight,
+		athleteInfoMargin,
 		statsValueHeight,
 		statsLabelHeight,
 		statsLabelMargin,
@@ -82,8 +82,8 @@ export function calculateClassicLayout(
 	const bottomContentHeight =
 		divider +
 		dividerMargin +
-		runnerInfoHeight +
-		runnerInfoMargin +
+		athleteInfoHeight +
+		athleteInfoMargin +
 		statsHeight +
 		safetyBuffer +
 		(hasQrCode ? qrCodeSize + qrCodeMargin : 0);

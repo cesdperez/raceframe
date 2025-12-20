@@ -112,10 +112,11 @@ export const DEMO_GPX_DATA: GPXData = {
 	endTime: new Date('2024-12-01T11:55:00Z'),
 	elapsedTime: 14100, // 3h55m in seconds
 	elevationGain: 42, // Valencia is flat
-	name: 'Valencia Marathon'
+	name: 'Valencia Marathon',
+	activityType: 'running'
 };
 
-export const DEMO_RUNNER_NAME = 'Jon Snow';
+export const DEMO_ATHLETE_NAME = 'Jon Snow';
 
 export const CARTO_MAP_STYLES = ['positron', 'dark-matter'] as const;
 

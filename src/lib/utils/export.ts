@@ -12,8 +12,8 @@ export function sanitizeForFilename(input: string): string {
 		.replace(/[<>:"/\\|?*]/g, '');
 }
 
-export function generateFilename(raceName: string, date: Date | null, scale: ExportScale): string {
-	const sanitizedName = sanitizeForFilename(raceName) || 'poster';
+export function generateFilename(eventName: string, date: Date | null, scale: ExportScale): string {
+	const sanitizedName = sanitizeForFilename(eventName) || 'poster';
 
 	const parts = [sanitizedName];
 
@@ -31,7 +31,7 @@ export function generateFilename(raceName: string, date: Date | null, scale: Exp
 
 export interface ExportOptions {
 	scale: ExportScale;
-	raceName: string;
+	eventName: string;
 	date: Date | null;
 }
 
@@ -131,12 +131,12 @@ export async function renderPosterToPng(scale: ExportScale): Promise<string> {
 }
 
 export async function exportPoster(options: ExportOptions): Promise<void> {
-	const { scale, raceName, date } = options;
+	const { scale, eventName, date } = options;
 
 	const dataUrl = await renderPosterToPng(scale);
 
 	const link = document.createElement('a');
-	link.download = generateFilename(raceName, date, scale);
+	link.download = generateFilename(eventName, date, scale);
 	link.href = dataUrl;
 	link.click();
 }

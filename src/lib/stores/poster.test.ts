@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { posterStore } from './poster.svelte.js';
 import type { GPXData } from '../types/index.js';
-import { DEMO_GPX_DATA, DEMO_RUNNER_NAME } from '../constants/demo.js';
+import { DEMO_GPX_DATA, DEMO_ATHLETE_NAME } from '../constants/demo.js';
 
 const mockGpxData: GPXData = {
 	coordinates: [
@@ -13,7 +13,22 @@ const mockGpxData: GPXData = {
 	endTime: new Date('2024-12-01T12:45:22Z'),
 	elapsedTime: 13522,
 	elevationGain: 125,
-	name: 'Valencia Marathon'
+	name: 'Valencia Marathon',
+	activityType: 'running'
+};
+
+const mockCyclingGpxData: GPXData = {
+	coordinates: [
+		[-0.3773, 39.4699],
+		[-0.3774, 39.47]
+	],
+	totalDistance: 50000,
+	startTime: new Date('2024-12-01T09:00:00Z'),
+	endTime: new Date('2024-12-01T11:00:00Z'),
+	elapsedTime: 7200,
+	elevationGain: 200,
+	name: 'Eindhoven Cycling',
+	activityType: 'cycling'
 };
 
 describe('PosterStore', () => {
@@ -24,8 +39,9 @@ describe('PosterStore', () => {
 	describe('initial state', () => {
 		it('has default values', () => {
 			expect(posterStore.data.gpxData).toBeNull();
-			expect(posterStore.data.runnerName).toBe('');
-			expect(posterStore.data.raceName).toBe('');
+			expect(posterStore.data.athleteName).toBe('');
+			expect(posterStore.data.eventName).toBe('');
+			expect(posterStore.data.activityType).toBe('running');
 			expect(posterStore.data.theme).toBe('light');
 			expect(posterStore.data.routeColor).toBe('orange');
 			expect(posterStore.data.unit).toBe('km');
@@ -48,10 +64,16 @@ describe('PosterStore', () => {
 			posterStore.loadFromGPX(mockGpxData);
 
 			expect(posterStore.data.gpxData).toStrictEqual(mockGpxData);
-			expect(posterStore.data.raceName).toBe('Valencia Marathon');
+			expect(posterStore.data.eventName).toBe('Valencia Marathon');
+			expect(posterStore.data.activityType).toBe('running');
 			expect(posterStore.data.date).toEqual(mockGpxData.startTime);
 			expect(posterStore.data.finishTime).toBe("3:45'22\"");
 			expect(posterStore.data.distance).toBeCloseTo(42.195, 2);
+		});
+
+		it('sets activity type from GPX data', () => {
+			posterStore.loadFromGPX(mockCyclingGpxData);
+			expect(posterStore.data.activityType).toBe('cycling');
 		});
 
 		it('hasGpxData returns true after loading GPX', () => {
@@ -62,7 +84,7 @@ describe('PosterStore', () => {
 		it('handles GPX without name gracefully', () => {
 			const gpxWithoutName: GPXData = { ...mockGpxData, name: null };
 			posterStore.loadFromGPX(gpxWithoutName);
-			expect(posterStore.data.raceName).toBe('');
+			expect(posterStore.data.eventName).toBe('');
 		});
 
 		it('handles GPX without timestamps gracefully', () => {
@@ -226,17 +248,66 @@ describe('PosterStore', () => {
 		});
 	});
 
+	describe('formattedSpeed', () => {
+		it('calculates correct speed for cycling', () => {
+			posterStore.loadFromGPX(mockCyclingGpxData);
+			// 50km in 2 hours = 25 km/h
+			expect(posterStore.formattedSpeed).toBe('25.0');
+		});
+
+		it('returns placeholder when time is zero', () => {
+			posterStore.setDistance(50);
+			posterStore.setFinishTime("0:00'00\"");
+			expect(posterStore.formattedSpeed).toBe('--.-');
+		});
+
+		it('returns placeholder when time is invalid', () => {
+			posterStore.setDistance(50);
+			posterStore.setFinishTime('invalid');
+			expect(posterStore.formattedSpeed).toBe('--.-');
+		});
+
+		it('converts to mph when unit is miles', () => {
+			posterStore.loadFromGPX(mockCyclingGpxData);
+			posterStore.setUnit('miles');
+			// 25 km/h ≈ 15.5 mph
+			expect(parseFloat(posterStore.formattedSpeed)).toBeCloseTo(15.5, 0);
+		});
+	});
+
+	describe('speedLabel', () => {
+		it('returns KM/H for km unit', () => {
+			expect(posterStore.speedLabel).toBe('KM/H');
+		});
+
+		it('returns MPH for miles unit', () => {
+			posterStore.setUnit('miles');
+			expect(posterStore.speedLabel).toBe('MPH');
+		});
+	});
+
+	describe('setActivityType', () => {
+		it('updates activity type', () => {
+			posterStore.setActivityType('cycling');
+			expect(posterStore.data.activityType).toBe('cycling');
+
+			posterStore.setActivityType('running');
+			expect(posterStore.data.activityType).toBe('running');
+		});
+	});
+
 	describe('reset', () => {
 		it('clears all data to defaults', () => {
 			posterStore.loadFromGPX(mockGpxData);
-			posterStore.setRunnerName('John Doe');
+			posterStore.setAthleteName('John Doe');
 			posterStore.setRouteColor('cyan');
 
 			posterStore.reset();
 
 			expect(posterStore.data.gpxData).toBeNull();
-			expect(posterStore.data.runnerName).toBe('');
-			expect(posterStore.data.raceName).toBe('');
+			expect(posterStore.data.athleteName).toBe('');
+			expect(posterStore.data.eventName).toBe('');
+			expect(posterStore.data.activityType).toBe('running');
 			expect(posterStore.data.theme).toBe('light');
 			expect(posterStore.data.routeColor).toBe('orange');
 			expect(posterStore.hasGpxData).toBe(false);
@@ -410,8 +481,8 @@ describe('PosterStore', () => {
 		it('loadDemoData populates with demo GPX data', () => {
 			posterStore.loadDemoData();
 			expect(posterStore.data.gpxData).toStrictEqual(DEMO_GPX_DATA);
-			expect(posterStore.data.raceName).toBe('Valencia Marathon');
-			expect(posterStore.data.runnerName).toBe(DEMO_RUNNER_NAME);
+			expect(posterStore.data.eventName).toBe('Valencia Marathon');
+			expect(posterStore.data.athleteName).toBe(DEMO_ATHLETE_NAME);
 		});
 
 		it('loadDemoData sets map style to positron (CARTO)', () => {

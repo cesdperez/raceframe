@@ -42,21 +42,27 @@
 		calculateScale();
 	});
 
-	const raceName = $derived(posterStore.data.raceName || 'RACE NAME');
-	const runnerName = $derived(posterStore.data.runnerName || 'RUNNER NAME');
+	const eventName = $derived(posterStore.data.eventName || 'EVENT NAME');
+	const athleteName = $derived(posterStore.data.athleteName || 'ATHLETE NAME');
 	const bibNumber = $derived(posterStore.data.bibNumber);
 	const formattedDate = $derived(posterStore.formattedDate);
 	const formattedDistance = $derived(posterStore.formattedDistance);
 	const finishTime = $derived(posterStore.data.finishTime || "--:--'--\"");
+	const activityType = $derived(posterStore.data.activityType);
 	const formattedPace = $derived(posterStore.formattedPace);
+	const formattedSpeed = $derived(posterStore.formattedSpeed);
 	const unit = $derived(posterStore.data.unit);
 	const paceLabel = $derived(posterStore.paceLabel);
+	const speedLabel = $derived(posterStore.speedLabel);
 	const theme = $derived(posterStore.data.theme);
 	const customBgColor = $derived(posterStore.data.customBgColor);
 	const customTextColor = $derived(posterStore.data.customTextColor);
 	const qrCodeUrl = $derived(posterStore.data.qrCodeUrl);
 	const qrDotStyle = $derived(posterStore.data.qrDotStyle);
 	const qrGradientEnabled = $derived(posterStore.data.qrGradientEnabled);
+
+	const paceOrSpeed = $derived(activityType === 'cycling' ? formattedSpeed : formattedPace);
+	const paceOrSpeedLabel = $derived(activityType === 'cycling' ? speedLabel : paceLabel);
 
 	const classicLayoutMetrics = $derived(
 		calculateClassicLayout(posterHeight, !!qrCodeUrl)
@@ -82,8 +88,8 @@
 			>
 				<div class="poster-column-left">
 					<header class="poster-header-landscape">
-						<h1 class="race-name-landscape">{raceName.toUpperCase()}</h1>
-						<p class="race-date-landscape">{formattedDate}</p>
+						<h1 class="event-name-landscape">{eventName.toUpperCase()}</h1>
+						<p class="event-date-landscape">{formattedDate}</p>
 					</header>
 
 					<div class="poster-map-container-landscape">
@@ -100,8 +106,8 @@
 					</div>
 
 					<div class="achievement-section">
-						<div class="runner-info-landscape">
-							<span class="runner-name-landscape">{runnerName.toUpperCase()}</span>
+						<div class="athlete-info-landscape">
+							<span class="athlete-name-landscape">{athleteName.toUpperCase()}</span>
 							{#if bibNumber}
 								<span class="bib-number-landscape">#{bibNumber}</span>
 							{/if}
@@ -117,8 +123,8 @@
 								<span class="stat-label-landscape">TIME</span>
 							</div>
 							<div class="stat-landscape">
-								<span class="stat-value-landscape">{formattedPace}</span>
-								<span class="stat-label-landscape">{paceLabel}</span>
+								<span class="stat-value-landscape">{paceOrSpeed}</span>
+								<span class="stat-label-landscape">{paceOrSpeedLabel}</span>
 							</div>
 						</div>
 
@@ -144,8 +150,8 @@
 				style:height="{posterHeight}px"
 			>
 				<header class="poster-header">
-					<h1 class="race-name">{raceName.toUpperCase()}</h1>
-					<p class="race-date">{formattedDate}</p>
+					<h1 class="event-name">{eventName.toUpperCase()}</h1>
+					<p class="event-date">{formattedDate}</p>
 				</header>
 
 				<div class="poster-map-container" style:height="{mapHeight}px">
@@ -154,8 +160,8 @@
 
 				<div class="poster-divider"></div>
 
-				<div class="runner-info">
-					<span class="runner-name">{runnerName.toUpperCase()}</span>
+				<div class="athlete-info">
+					<span class="athlete-name">{athleteName.toUpperCase()}</span>
 					{#if bibNumber}
 						<span class="bib-number">#{bibNumber}</span>
 					{/if}
@@ -171,8 +177,8 @@
 						<span class="stat-label">TIME</span>
 					</div>
 					<div class="stat">
-						<span class="stat-value">{formattedPace}</span>
-						<span class="stat-label">{paceLabel}</span>
+						<span class="stat-value">{paceOrSpeed}</span>
+						<span class="stat-label">{paceOrSpeedLabel}</span>
 					</div>
 				</div>
 
@@ -222,7 +228,7 @@
 		margin-bottom: 50px;
 	}
 
-	.race-name {
+	.event-name {
 		font-family: var(--font-heading);
 		font-weight: 600;
 		font-size: 72px;
@@ -231,7 +237,7 @@
 		line-height: 1.1;
 	}
 
-	.race-date {
+	.event-date {
 		font-family: var(--font-heading);
 		font-weight: 400;
 		font-size: 32px;
@@ -262,12 +268,12 @@
 		margin: 0 0 50px 0;
 	}
 
-	.runner-info {
+	.athlete-info {
 		text-align: center;
 		margin-bottom: 50px;
 	}
 
-	.runner-name {
+	.athlete-name {
 		font-family: var(--font-heading);
 		font-weight: 500;
 		font-size: 44px;
@@ -355,7 +361,7 @@
 		margin-bottom: 40px;
 	}
 
-	.race-name-landscape {
+	.event-name-landscape {
 		font-family: var(--font-heading);
 		font-weight: 600;
 		font-size: 52px;
@@ -364,7 +370,7 @@
 		line-height: 1.1;
 	}
 
-	.race-date-landscape {
+	.event-date-landscape {
 		font-family: var(--font-heading);
 		font-weight: 400;
 		font-size: 24px;
@@ -406,12 +412,12 @@
 		gap: 20px;
 	}
 
-	.runner-info-landscape {
+	.athlete-info-landscape {
 		text-align: center;
 		white-space: nowrap;
 	}
 
-	.runner-name-landscape {
+	.athlete-name-landscape {
 		font-family: var(--font-heading);
 		font-weight: 500;
 		font-size: 36px;

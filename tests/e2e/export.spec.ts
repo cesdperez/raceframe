@@ -21,9 +21,9 @@ test.describe('Export', () => {
 		expect(download.suggestedFilename()).toMatch(/Morning.Run.*\.png$/);
 	});
 
-	test('PNG filename includes custom race name', async ({ page }) => {
-		const raceNameInput = page.getByLabel('Race Name');
-		await raceNameInput.fill('Berlin Marathon 2024');
+	test('PNG filename includes custom event name', async ({ page }) => {
+		const eventNameInput = page.getByLabel('Event Name');
+		await eventNameInput.fill('Berlin Marathon 2024');
 
 		const downloadPromise = page.waitForEvent('download');
 		await page.locator('button:has-text("2x Web")').click();

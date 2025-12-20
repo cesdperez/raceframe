@@ -3,13 +3,13 @@
 	import LoadingSpinner from './LoadingSpinner.svelte';
 
 	interface Props {
-		raceName: string;
+		eventName: string;
 		date: Date | null;
 		disabled?: boolean;
 		disabledReason?: string;
 	}
 
-	let { raceName, date, disabled = false, disabledReason = '' }: Props = $props();
+	let { eventName, date, disabled = false, disabledReason = '' }: Props = $props();
 
 	let isExporting = $state(false);
 	let error = $state<string | null>(null);
@@ -24,7 +24,7 @@
 
 		try {
 			exportStatus = 'Generating PNG...';
-			await exportPoster({ scale, raceName, date });
+			await exportPoster({ scale, eventName, date });
 			exportStatus = 'Download started!';
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to export poster';

@@ -120,9 +120,9 @@ test.describe('Export Visual Fidelity', () => {
 	});
 
 	test('fonts render correctly in export (not fallback)', async ({ page }) => {
-		// Set a distinctive race name
-		const raceNameInput = page.getByLabel('Race Name');
-		await raceNameInput.fill('MARATHON TEST');
+		// Set a distinctive event name
+		const eventNameInput = page.getByLabel('Event Name');
+		await eventNameInput.fill('MARATHON TEST');
 
 		// Wait for fonts to fully load
 		await page.waitForFunction(() => document.fonts.ready);

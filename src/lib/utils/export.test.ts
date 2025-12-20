@@ -32,7 +32,7 @@ describe('sanitizeForFilename', () => {
 });
 
 describe('generateFilename', () => {
-	it('generates filename with race name and date', () => {
+	it('generates filename with event name and date', () => {
 		const date = new Date('2025-12-01');
 		expect(generateFilename('Berlin Marathon', date, 2)).toBe('Berlin-Marathon_2025-12-01_2x.png');
 	});
@@ -47,7 +47,7 @@ describe('generateFilename', () => {
 		expect(filename).toBe('Race-Name_2x.png');
 	});
 
-	it('sanitizes race name in filename', () => {
+	it('sanitizes event name in filename', () => {
 		const date = new Date('2025-06-20');
 		expect(generateFilename('Race/With:Special*Chars', date, 2)).toBe(
 			'RaceWithSpecialChars_2025-06-20_2x.png'
@@ -59,7 +59,7 @@ describe('generateFilename', () => {
 		expect(generateFilename('Race', date, 2)).toBe('Race_2025-01-05_2x.png');
 	});
 
-	it('uses "poster" as fallback for empty race name', () => {
+	it('uses "poster" as fallback for empty event name', () => {
 		const date = new Date('2025-12-01');
 		expect(generateFilename('', date, 2)).toBe('poster_2025-12-01_2x.png');
 	});

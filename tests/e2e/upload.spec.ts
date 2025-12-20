@@ -17,8 +17,8 @@ test.describe('Landing Page', () => {
 		await fileInput.setInputFiles(FIXTURE_PATH);
 
 		await expect(page.getByRole('heading', { name: 'Customize', exact: true })).toBeVisible();
-		const raceNameInput = page.getByLabel('Race Name');
-		await expect(raceNameInput).toHaveValue('Morning Run');
+		const eventNameInput = page.getByLabel('Event Name');
+		await expect(eventNameInput).toHaveValue('Morning Run');
 		await expect(page.getByRole('img', { name: /poster preview/i })).toBeVisible();
 	});
 
@@ -43,13 +43,13 @@ test.describe('Editor', () => {
 	});
 
 	test('can edit race details', async ({ page }) => {
-		const raceNameInput = page.getByLabel('Race Name');
-		await raceNameInput.fill('My Custom Race');
-		await expect(raceNameInput).toHaveValue('My Custom Race');
+		const eventNameInput = page.getByLabel('Event Name');
+		await eventNameInput.fill('My Custom Race');
+		await expect(eventNameInput).toHaveValue('My Custom Race');
 
-		const runnerNameInput = page.getByLabel('Name', { exact: true });
-		await runnerNameInput.fill('Test Runner');
-		await expect(runnerNameInput).toHaveValue('Test Runner');
+		const athleteNameInput = page.getByLabel('Name', { exact: true });
+		await athleteNameInput.fill('Test Runner');
+		await expect(athleteNameInput).toHaveValue('Test Runner');
 
 		const bibInput = page.getByLabel('Bib', { exact: true });
 		await bibInput.fill('12345');

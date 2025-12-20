@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { tick } from 'svelte';
+	import { tick, onMount } from 'svelte';
+	import { fade, fly } from 'svelte/transition';
 	import type { AppView, UploadError, GPXData } from '$lib/types/index.js';
 	import { posterStore } from '$lib/stores/poster.svelte.js';
 	import FileUpload from '$lib/components/FileUpload.svelte';
@@ -12,6 +13,20 @@
 	let statusMessage = $state('');
 
 	let editorHeading = $state<HTMLHeadingElement | null>(null);
+
+	const activities = ['running', 'cycling'];
+	let activityIndex = $state(0);
+
+	onMount(() => {
+		const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+		if (mediaQuery.matches) return;
+
+		const interval = setInterval(() => {
+			activityIndex = (activityIndex + 1) % activities.length;
+		}, 3000);
+
+		return () => clearInterval(interval);
+	});
 
 	async function handleUploadSuccess(gpxData: GPXData) {
 		posterStore.loadFromGPX(gpxData);
@@ -64,8 +79,23 @@
 				>
 					RaceFrame
 				</h1>
-				<p class="text-xl md:text-2xl text-gray-600 mb-8">
-					Create beautiful race posters from your GPX files
+				<p class="text-xl md:text-2xl text-gray-600 mb-8 min-h-[1.5em] flex items-center justify-center gap-2">
+					Create beautiful 
+					<span class="relative inline-flex flex-col items-center text-blue-600">
+						<span class="sr-only">running and cycling</span>
+						{#key activityIndex}
+							<span 
+								in:fly={{ y: 12, duration: 400, delay: 100 }} 
+								out:fly={{ y: -12, duration: 400 }} 
+								class="absolute font-semibold italic"
+								aria-hidden="true"
+							>
+								{activities[activityIndex]}
+							</span>
+						{/key}
+						<span class="invisible font-semibold italic" aria-hidden="true">running</span>
+					</span>
+					posters from your GPX files
 				</p>
 				<p class="text-gray-500 mb-12 max-w-lg mx-auto">
 					Upload your race data, customize the design, and download a high-resolution image ready

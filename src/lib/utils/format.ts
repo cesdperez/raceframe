@@ -59,3 +59,9 @@ export function formatDate(date: Date): string {
 		year: 'numeric'
 	});
 }
+
+export function formatSpeed(metersPerSecond: number, unit: Unit): string {
+	const kmPerHour = metersPerSecond * 3.6;
+	const speed = unit === 'km' ? kmPerHour : kmPerHour / 1.609344;
+	return speed.toFixed(1);
+}

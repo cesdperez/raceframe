@@ -1,15 +1,16 @@
-import type { GPXData, PosterData, RouteColor, Unit, AspectRatio, QrDotStyle, Layout, MapStyle, MapFilter, DesignPreset } from '../types/index.js';
-import { formatTime, formatPace, formatDate, metersToKm, metersToMiles, kmToMeters, milesToMeters, parseTime } from '../utils/format.js';
+import type { ActivityType, GPXData, PosterData, RouteColor, Unit, AspectRatio, QrDotStyle, Layout, MapStyle, MapFilter, DesignPreset } from '../types/index.js';
+import { formatTime, formatPace, formatSpeed, formatDate, metersToKm, metersToMiles, kmToMeters, milesToMeters, parseTime } from '../utils/format.js';
 import { calculatePace } from '../utils/geo.js';
 import { THEMES, ROUTE_COLORS, DESIGN_PRESETS } from '../constants/themes.js';
 import { getDimensions, getAspectRatiosForLayout, LAYOUTS } from '../constants/poster.js';
-import { DEMO_GPX_DATA, DEMO_RUNNER_NAME, isCartoMapStyle } from '../constants/demo.js';
+import { DEMO_GPX_DATA, DEMO_ATHLETE_NAME, isCartoMapStyle } from '../constants/demo.js';
 
 function createDefaultPosterData(): PosterData {
 	return {
 		gpxData: null,
-		runnerName: '',
-		raceName: '',
+		activityType: 'running',
+		athleteName: '',
+		eventName: '',
 		finishTime: '',
 		date: null,
 		distance: 0,
@@ -60,13 +61,31 @@ class PosterStore {
 		return this.data.unit === 'km' ? '/KM' : '/MI';
 	}
 
+	get formattedSpeed(): string {
+		const elapsedSeconds = parseTime(this.data.finishTime);
+		if (elapsedSeconds === null || elapsedSeconds === 0 || this.data.distance <= 0) return '--.-';
+
+		const distanceMeters =
+			this.data.unit === 'km'
+				? kmToMeters(this.data.distance)
+				: milesToMeters(this.data.distance);
+
+		const metersPerSecond = distanceMeters / elapsedSeconds;
+		return formatSpeed(metersPerSecond, this.data.unit);
+	}
+
+	get speedLabel(): string {
+		return this.data.unit === 'km' ? 'KM/H' : 'MPH';
+	}
+
 	get formattedDate(): string {
 		return this.data.date ? formatDate(this.data.date) : '';
 	}
 
 	loadFromGPX(gpxData: GPXData): void {
 		this.data.gpxData = gpxData;
-		this.data.raceName = gpxData.name ?? '';
+		this.data.activityType = gpxData.activityType;
+		this.data.eventName = gpxData.name ?? '';
 		this.data.date = gpxData.startTime;
 		this.data.finishTime = gpxData.elapsedTime ? formatTime(gpxData.elapsedTime) : '';
 		this.data.distance = metersToKm(gpxData.totalDistance);
@@ -76,7 +95,7 @@ class PosterStore {
 
 	loadDemoData(): void {
 		this.loadFromGPX(DEMO_GPX_DATA);
-		this.data.runnerName = DEMO_RUNNER_NAME;
+		this.data.athleteName = DEMO_ATHLETE_NAME;
 		this.data.mapStyle = 'positron';
 		this.isDemo = true;
 	}
@@ -136,12 +155,16 @@ class PosterStore {
 		this.data.unit = unit;
 	}
 
-	setRunnerName(name: string): void {
-		this.data.runnerName = name;
+	setActivityType(activityType: ActivityType): void {
+		this.data.activityType = activityType;
 	}
 
-	setRaceName(name: string): void {
-		this.data.raceName = name;
+	setAthleteName(name: string): void {
+		this.data.athleteName = name;
+	}
+
+	setEventName(name: string): void {
+		this.data.eventName = name;
 	}
 
 	setBibNumber(bib: string): void {

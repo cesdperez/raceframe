@@ -1,5 +1,5 @@
 import { gpx } from '@tmcw/togeojson';
-import type { GPXData } from '../types/index.js';
+import type { ActivityType, GPXData } from '../types/index.js';
 import { calculateDistance, calculateElapsedTime } from './geo.js';
 
 export function parseGPX(gpxString: string): GPXData {
@@ -21,6 +21,7 @@ export function parseGPX(gpxString: string): GPXData {
 	const { start: startTime, end: endTime } = extractTimes(geoJson);
 	const name = extractName(geoJson);
 	const elevationGain = calculateElevationGain(geoJson);
+	const activityType = extractActivityType(doc);
 
 	return {
 		coordinates,
@@ -29,7 +30,8 @@ export function parseGPX(gpxString: string): GPXData {
 		endTime,
 		elapsedTime: calculateElapsedTime(startTime, endTime),
 		elevationGain,
-		name
+		name,
+		activityType
 	};
 }
 
@@ -115,4 +117,20 @@ function calculateElevationGain(geoJson: GeoJSON.FeatureCollection): number | nu
 	}
 
 	return hasElevation ? totalGain : null;
+}
+
+function extractActivityType(doc: Document): ActivityType {
+	const typeElement = doc.querySelector('trk > type');
+	if (!typeElement?.textContent) {
+		return 'running';
+	}
+
+	const typeValue = typeElement.textContent.toLowerCase().trim();
+
+	const cyclingTypes = ['cycling', 'biking', 'ride', 'bike', 'bicycle'];
+	if (cyclingTypes.includes(typeValue)) {
+		return 'cycling';
+	}
+
+	return 'running';
 }
