@@ -117,8 +117,8 @@ describe('PosterStore', () => {
 			posterStore.setMapStyle('dark-matter');
 			expect(posterStore.data.mapStyle).toBe('dark-matter');
 
-			posterStore.setMapStyle('stamen-watercolor');
-			expect(posterStore.data.mapStyle).toBe('stamen-watercolor');
+			posterStore.setMapStyle('stamen-terrain');
+			expect(posterStore.data.mapStyle).toBe('stamen-terrain');
 
 			posterStore.setMapStyle('alidade-satellite');
 			expect(posterStore.data.mapStyle).toBe('alidade-satellite');
@@ -492,7 +492,7 @@ describe('PosterStore', () => {
 
 		it('setMapStyle blocks non-CARTO styles in demo mode', () => {
 			posterStore.loadDemoData();
-			posterStore.setMapStyle('stamen-watercolor');
+			posterStore.setMapStyle('stamen-terrain');
 			expect(posterStore.data.mapStyle).toBe('positron');
 
 			posterStore.setMapStyle('alidade-satellite');
@@ -510,8 +510,8 @@ describe('PosterStore', () => {
 
 		it('setMapStyle allows all styles when not in demo mode', () => {
 			posterStore.loadFromGPX(mockGpxData);
-			posterStore.setMapStyle('stamen-watercolor');
-			expect(posterStore.data.mapStyle).toBe('stamen-watercolor');
+			posterStore.setMapStyle('stamen-terrain');
+			expect(posterStore.data.mapStyle).toBe('stamen-terrain');
 		});
 
 		it('applyDesignPreset blocks non-CARTO presets in demo mode', () => {
@@ -521,7 +521,7 @@ describe('PosterStore', () => {
 			posterStore.applyDesignPreset('noir');
 			expect(posterStore.data.mapStyle).toBe(originalMapStyle);
 
-			posterStore.applyDesignPreset('watercolor');
+			posterStore.applyDesignPreset('terrain');
 			expect(posterStore.data.mapStyle).toBe(originalMapStyle);
 		});
 
@@ -535,14 +535,14 @@ describe('PosterStore', () => {
 		it('isPresetAllowedInDemo returns correct values', () => {
 			expect(posterStore.isPresetAllowedInDemo('paper')).toBe(true);
 			expect(posterStore.isPresetAllowedInDemo('noir')).toBe(false);
-			expect(posterStore.isPresetAllowedInDemo('watercolor')).toBe(false);
+			expect(posterStore.isPresetAllowedInDemo('terrain')).toBe(false);
 			expect(posterStore.isPresetAllowedInDemo('orbital')).toBe(false);
 		});
 
 		it('isMapStyleAllowedInDemo returns correct values', () => {
 			expect(posterStore.isMapStyleAllowedInDemo('positron')).toBe(true);
 			expect(posterStore.isMapStyleAllowedInDemo('dark-matter')).toBe(true);
-			expect(posterStore.isMapStyleAllowedInDemo('stamen-watercolor')).toBe(false);
+			expect(posterStore.isMapStyleAllowedInDemo('stamen-terrain')).toBe(false);
 			expect(posterStore.isMapStyleAllowedInDemo('alidade-satellite')).toBe(false);
 		});
 

@@ -1,4 +1,5 @@
 import type { AspectRatio, Layout } from '../types/index.js';
+import type { ExportScale } from '../utils/export.js';
 
 export const POSTER_WIDTH = 1600;
 export const POSTER_HEIGHT = 2400;
@@ -106,44 +107,44 @@ export function calculateClassicLayout(
 
 export interface AspectRatioConfig {
 	value: AspectRatio;
+	ratio: string;
 	label: string;
 	width: number;
 	height: number;
-	printSize: string;
 	tooltip: string;
 }
 
 export const PORTRAIT_ASPECT_RATIOS: AspectRatioConfig[] = [
 	{
 		value: '2:3',
+		ratio: '2:3',
 		label: 'Photo Print',
 		width: 1600,
 		height: 2400,
-		printSize: '4×6", 8×12", 20×30"',
 		tooltip: 'Most common photo format. Fits standard photo frames.'
 	},
 	{
 		value: '4:5',
+		ratio: '4:5',
 		label: 'Frame Standard',
 		width: 1600,
 		height: 2000,
-		printSize: '8×10", 16×20"',
 		tooltip: 'Popular for portrait photos and framed wall art.'
 	},
 	{
 		value: '5:7',
+		ratio: '5:7',
 		label: 'Portrait Frame',
 		width: 1400,
 		height: 2000,
-		printSize: '5×7", 10×14"',
 		tooltip: 'Classic portrait size. Frames widely available.'
 	},
 	{
 		value: 'iso-a',
+		ratio: '1:√2',
 		label: 'A4 / A3 / A2',
 		width: 1414,
 		height: 2000,
-		printSize: 'A4, A3, A2 paper',
 		tooltip: 'ISO standard paper sizes. Perfect for home printing.'
 	}
 ];
@@ -151,34 +152,34 @@ export const PORTRAIT_ASPECT_RATIOS: AspectRatioConfig[] = [
 export const LANDSCAPE_ASPECT_RATIOS: AspectRatioConfig[] = [
 	{
 		value: '3:2',
+		ratio: '3:2',
 		label: 'Photo Print',
 		width: 2400,
 		height: 1600,
-		printSize: '6×4", 12×8"',
 		tooltip: 'Most common photo format. Fits standard photo frames.'
 	},
 	{
 		value: '5:4',
+		ratio: '5:4',
 		label: 'Frame Standard',
 		width: 2000,
 		height: 1600,
-		printSize: '10×8", 20×16"',
 		tooltip: 'Popular for landscape photos and framed wall art.'
 	},
 	{
 		value: '7:5',
+		ratio: '7:5',
 		label: 'Landscape Frame',
 		width: 2000,
 		height: 1400,
-		printSize: '7×5", 14×10"',
 		tooltip: 'Classic landscape size. Frames widely available.'
 	},
 	{
 		value: 'iso-a-landscape',
+		ratio: '√2:1',
 		label: 'A4 / A3 / A2',
 		width: 2000,
 		height: 1414,
-		printSize: 'A4, A3, A2 paper',
 		tooltip: 'ISO standard paper sizes. Perfect for home printing.'
 	}
 ];
@@ -199,3 +200,27 @@ export function getAspectRatiosForLayout(layout: Layout): AspectRatioConfig[] {
 		? LANDSCAPE_ASPECT_RATIOS
 		: PORTRAIT_ASPECT_RATIOS;
 }
+
+export interface ExportScaleConfig {
+	value: ExportScale;
+	label: string;
+	printGuidance: string;
+}
+
+export const EXPORT_SCALES: ExportScaleConfig[] = [
+	{
+		value: 1,
+		label: 'Standard',
+		printGuidance: 'prints ≤18cm'
+	},
+	{
+		value: 2,
+		label: 'Large',
+		printGuidance: 'prints ≤45cm'
+	},
+	{
+		value: 4,
+		label: 'Extra Large',
+		printGuidance: 'prints >45cm'
+	}
+];

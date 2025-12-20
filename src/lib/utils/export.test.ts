@@ -42,6 +42,11 @@ describe('generateFilename', () => {
 		expect(generateFilename('My Race', date, 4)).toBe('My-Race_2025-01-15_4x.png');
 	});
 
+	it('generates filename with 1x scale', () => {
+		const date = new Date('2025-03-10');
+		expect(generateFilename('My Race', date, 1)).toBe('My-Race_2025-03-10_1x.png');
+	});
+
 	it('handles null date', () => {
 		const filename = generateFilename('Race Name', null, 2);
 		expect(filename).toBe('Race-Name_2x.png');

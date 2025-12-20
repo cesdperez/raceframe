@@ -433,8 +433,8 @@
 							role="radio"
 							aria-checked={posterStore.data.aspectRatio === ratio.value}
 						>
-							<span class="text-xs font-semibold text-gray-700">{ratio.label}</span>
-							<span class="text-[10px] text-gray-400">{ratio.printSize}</span>
+							<span class="text-xs font-semibold text-gray-700">{ratio.ratio}</span>
+							<span class="text-[10px] text-gray-400">{ratio.label}</span>
 						</button>
 					</Tooltip>
 				{/each}

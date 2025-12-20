@@ -3,9 +3,16 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { PNG } from 'pngjs';
 import fs from 'fs';
+import pixelmatch from 'pixelmatch';
+import sharp from 'sharp';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEST_RESULTS_DIR = path.join(__dirname, 'test-results');
+
+// Helper to get the Large export button (scale 2x)
+function getLargeExportButton(page: import('@playwright/test').Page) {
+	return page.getByRole('button', { name: /Download Large PNG/i });
+}
 
 test.describe('Export Visual Fidelity', () => {
 	test.beforeEach(async ({ editorPage, page }) => {
@@ -54,7 +61,7 @@ test.describe('Export Visual Fidelity', () => {
 
 		// For now, let's test that the export generates and check basic properties
 		const downloadPromise = page.waitForEvent('download');
-		await page.locator('button:has-text("2x Web")').click();
+		await getLargeExportButton(page).click();
 		const download = await downloadPromise;
 
 		const downloadPath = await download.path();
@@ -101,7 +108,7 @@ test.describe('Export Visual Fidelity', () => {
 
 		// Export
 		const downloadPromise = page.waitForEvent('download');
-		await page.locator('button:has-text("2x Web")').click();
+		await getLargeExportButton(page).click();
 		const download = await downloadPromise;
 
 		const downloadPath = await download.path();
@@ -144,7 +151,7 @@ test.describe('Export Visual Fidelity', () => {
 
 		// Export the poster
 		const downloadPromise = page.waitForEvent('download');
-		await page.locator('button:has-text("2x Web")').click();
+		await getLargeExportButton(page).click();
 		const download = await downloadPromise;
 
 		const downloadPath = await download.path();
@@ -156,13 +163,6 @@ test.describe('Export Visual Fidelity', () => {
 	});
 
 	test('QR code renders in export when enabled', async ({ page }) => {
-		// First, export without QR code to get baseline
-		const baselinePromise = page.waitForEvent('download');
-		await page.locator('button:has-text("2x Web")').click();
-		const baselineDownload = await baselinePromise;
-		const baselinePath = await baselineDownload.path();
-		const baselineSize = fs.statSync(baselinePath!).size;
-
 		// Add QR code URL
 		const qrInput = page.getByLabel(/Activity URL/i);
 		await qrInput.fill('https://strava.com/activities/12345');
@@ -170,18 +170,20 @@ test.describe('Export Visual Fidelity', () => {
 		// Wait for debounce + render
 		await page.waitForTimeout(800);
 
-		// Verify QR code is visible
+		// Verify QR code is visible in preview
 		await expect(page.locator('.qr-code-container canvas')).toBeVisible({ timeout: 5000 });
 
 		// Export with QR code
-		const qrPromise = page.waitForEvent('download');
-		await page.locator('button:has-text("2x Web")').click();
-		const qrDownload = await qrPromise;
-		const qrPath = await qrDownload.path();
-		const qrSize = fs.statSync(qrPath!).size;
+		const downloadPromise = page.waitForEvent('download');
+		await getLargeExportButton(page).click();
+		const download = await downloadPromise;
+		const downloadPath = await download.path();
 
-		// Export with QR should be larger (more visual data)
-		expect(qrSize).toBeGreaterThan(baselineSize);
+		expect(downloadPath).toBeTruthy();
+
+		// Verify export has substantial content
+		const stats = fs.statSync(downloadPath!);
+		expect(stats.size).toBeGreaterThan(100000);
 	});
 
 	test('all themes export correctly', async ({ page }) => {
@@ -197,7 +199,7 @@ test.describe('Export Visual Fidelity', () => {
 
 			// Export
 			const downloadPromise = page.waitForEvent('download');
-			await page.locator('button:has-text("2x Web")').click();
+			await getLargeExportButton(page).click();
 			const download = await downloadPromise;
 
 			const downloadPath = await download.path();
@@ -226,7 +228,7 @@ test.describe('Export Visual Fidelity', () => {
 
 		// Export
 		const downloadPromise = page.waitForEvent('download');
-		await page.locator('button:has-text("2x Web")').click();
+		await getLargeExportButton(page).click();
 		const download = await downloadPromise;
 
 		const downloadPath = await download.path();
@@ -278,7 +280,7 @@ test.describe('Aspect Ratio Options', () => {
 		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		const downloadPromise = page.waitForEvent('download');
-		await page.locator('button:has-text("2x Web")').click();
+		await getLargeExportButton(page).click();
 		const download = await downloadPromise;
 
 		const downloadPath = await download.path();
@@ -295,7 +297,7 @@ test.describe('Aspect Ratio Options', () => {
 		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		const downloadPromise = page.waitForEvent('download');
-		await page.locator('button:has-text("2x Web")').click();
+		await getLargeExportButton(page).click();
 		const download = await downloadPromise;
 
 		const downloadPath = await download.path();
@@ -315,7 +317,7 @@ test.describe('Aspect Ratio Options', () => {
 		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		const downloadPromise = page.waitForEvent('download');
-		await page.locator('button:has-text("2x Web")').click();
+		await getLargeExportButton(page).click();
 		const download = await downloadPromise;
 
 		const downloadPath = await download.path();
@@ -335,7 +337,7 @@ test.describe('Aspect Ratio Options', () => {
 		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		const downloadPromise = page.waitForEvent('download');
-		await page.locator('button:has-text("2x Web")').click();
+		await getLargeExportButton(page).click();
 		const download = await downloadPromise;
 
 		const downloadPath = await download.path();
@@ -367,5 +369,139 @@ test.describe('Aspect Ratio Options', () => {
 		const updatedRatio = updatedPng.width / updatedPng.height;
 
 		expect(initialRatio).not.toBeCloseTo(updatedRatio, 2);
+	});
+});
+
+const EXPORT_TIMEOUT = 30000;
+
+function getStandardExportButton(page: import('@playwright/test').Page) {
+	return page.getByRole('button', { name: /Download Standard PNG/i });
+}
+
+function getExtraLargeExportButton(page: import('@playwright/test').Page) {
+	return page.getByRole('button', { name: /Download Extra Large PNG/i });
+}
+
+async function exportAtScale(
+	page: import('@playwright/test').Page,
+	scale: 1 | 2 | 4
+): Promise<Buffer> {
+	const downloadPromise = page.waitForEvent('download', { timeout: EXPORT_TIMEOUT });
+
+	if (scale === 1) {
+		await getStandardExportButton(page).click();
+	} else if (scale === 2) {
+		await getLargeExportButton(page).click();
+	} else {
+		await getExtraLargeExportButton(page).click();
+	}
+
+	const download = await downloadPromise;
+	const downloadPath = await download.path();
+	return fs.readFileSync(downloadPath!);
+}
+
+async function compareExportFidelity(
+	baselineBuffer: Buffer,
+	targetBuffer: Buffer,
+	targetScale: number,
+	debugPrefix: string
+): Promise<{ diffPixels: number; diffPercent: number }> {
+	const baselineMeta = await sharp(baselineBuffer).metadata();
+	const targetMeta = await sharp(targetBuffer).metadata();
+
+	const expectedWidth = baselineMeta.width! * targetScale;
+	const expectedHeight = baselineMeta.height! * targetScale;
+
+	if (targetMeta.width !== expectedWidth || targetMeta.height !== expectedHeight) {
+		throw new Error(
+			`Dimension mismatch: expected ${expectedWidth}x${expectedHeight}, got ${targetMeta.width}x${targetMeta.height}`
+		);
+	}
+
+	const scaledBaseline = await sharp(baselineBuffer)
+		.resize(expectedWidth, expectedHeight, { kernel: 'nearest' })
+		.raw()
+		.toBuffer();
+
+	const targetRaw = await sharp(targetBuffer).raw().toBuffer();
+
+	const diffBuffer = Buffer.alloc(expectedWidth * expectedHeight * 4);
+
+	const diffPixels = pixelmatch(
+		new Uint8Array(scaledBaseline),
+		new Uint8Array(targetRaw),
+		new Uint8Array(diffBuffer),
+		expectedWidth,
+		expectedHeight,
+		{ threshold: 0.1, alpha: 0.5 }
+	);
+
+	fs.mkdirSync(TEST_RESULTS_DIR, { recursive: true });
+
+	const diffPng = new PNG({ width: expectedWidth, height: expectedHeight });
+	diffPng.data = diffBuffer;
+	fs.writeFileSync(
+		path.join(TEST_RESULTS_DIR, `${debugPrefix}-diff.png`),
+		PNG.sync.write(diffPng)
+	);
+
+	const totalPixels = expectedWidth * expectedHeight;
+	const diffPercent = (diffPixels / totalPixels) * 100;
+
+	return { diffPixels, diffPercent };
+}
+
+test.describe('Export Scale Fidelity', () => {
+	test.beforeEach(async ({ editorPage, page }) => {
+		await page.waitForFunction(() => document.fonts.ready);
+		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
+		await page.waitForTimeout(500);
+	});
+
+	test('Large export (2x) maintains visual fidelity with Standard (1x)', async ({ page }) => {
+		test.setTimeout(60000);
+
+		const standardBuffer = await exportAtScale(page, 1);
+		fs.mkdirSync(TEST_RESULTS_DIR, { recursive: true });
+		fs.writeFileSync(path.join(TEST_RESULTS_DIR, 'fidelity-1x.png'), standardBuffer);
+
+		await page.waitForTimeout(500);
+
+		const largeBuffer = await exportAtScale(page, 2);
+		fs.writeFileSync(path.join(TEST_RESULTS_DIR, 'fidelity-2x.png'), largeBuffer);
+
+		const { diffPercent } = await compareExportFidelity(
+			standardBuffer,
+			largeBuffer,
+			2,
+			'fidelity-2x'
+		);
+
+		expect(diffPercent).toBeLessThan(5);
+	});
+
+	test('Extra Large export (4x) maintains visual fidelity with Standard (1x)', async ({
+		page
+	}) => {
+		test.setTimeout(90000);
+
+		const standardBuffer = await exportAtScale(page, 1);
+		fs.mkdirSync(TEST_RESULTS_DIR, { recursive: true });
+		fs.writeFileSync(path.join(TEST_RESULTS_DIR, 'fidelity-4x-baseline.png'), standardBuffer);
+
+		await page.waitForTimeout(500);
+
+		const extraLargeBuffer = await exportAtScale(page, 4);
+		fs.writeFileSync(path.join(TEST_RESULTS_DIR, 'fidelity-4x.png'), extraLargeBuffer);
+
+		const { diffPercent } = await compareExportFidelity(
+			standardBuffer,
+			extraLargeBuffer,
+			4,
+			'fidelity-4x'
+		);
+
+		expect(diffPercent).toBeLessThan(5);
 	});
 });

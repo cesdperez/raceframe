@@ -13,7 +13,7 @@ export interface GPXData {
 
 export type Theme = 'light' | 'dark' | 'navy';
 export type RouteColor = 'orange' | 'blue' | 'cyan' | 'yellow' | 'pink' | 'black' | 'white' | 'red';
-export type DesignPreset = 'paper' | 'noir' | 'blueprint' | 'orbital' | 'watercolor' | 'terrain';
+export type DesignPreset = 'paper' | 'noir' | 'blueprint' | 'orbital' | 'terrain';
 export type MapStyle =
 	| 'positron'
 	| 'dark-matter'
@@ -25,7 +25,6 @@ export type MapStyle =
 	| 'stamen-toner-lite'
 	| 'stamen-toner-dark'
 	| 'stamen-terrain'
-	| 'stamen-watercolor'
 	| 'osm-bright';
 
 export type MapFilter = 'none' | 'grayscale' | 'sepia' | 'navy' | 'teal';

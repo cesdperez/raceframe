@@ -1,6 +1,29 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import { exportPoster, type ExportScale } from '../utils/export.js';
+	import { EXPORT_SCALES } from '../constants/poster.js';
+	import { posterStore } from '../stores/poster.svelte.js';
 	import LoadingSpinner from './LoadingSpinner.svelte';
+
+	const EXPORT_PHRASES = [
+		'Warming up your pixels...',
+		'Lacing up the details...',
+		'Pushing to the finish...',
+		'Hydrating your poster...',
+		'Finding your pace...',
+		'Crossing the finish line...',
+		'Climbing the final hill...',
+		'Stretching the canvas...',
+		'Drawing your masterpiece...',
+		'Cooking up something nice...',
+		'Brewing your artwork...',
+		'Polishing your moment...',
+		'Adding finishing touches...',
+		'Mixing the perfect colors...',
+		'Teaching pixels to run...',
+		'Making memories permanent...',
+		'Capturing your glory...'
+	];
 
 	interface Props {
 		eventName: string;
@@ -13,78 +36,106 @@
 
 	let isExporting = $state(false);
 	let error = $state<string | null>(null);
-	let exportStatus = $state('');
+	let screenReaderStatus = $state('');
+	let currentPhrase = $state(EXPORT_PHRASES[0]);
+	let phraseInterval: ReturnType<typeof setInterval> | null = null;
+	let currentExportScale = $state<ExportScale | null>(null);
+	let showLoadingOverlay = $derived(isExporting && currentExportScale !== null && currentExportScale > 1);
+
+	function startPhraseRotation() {
+		let index = Math.floor(Math.random() * EXPORT_PHRASES.length);
+		currentPhrase = EXPORT_PHRASES[index];
+		phraseInterval = setInterval(() => {
+			index = (index + 1) % EXPORT_PHRASES.length;
+			currentPhrase = EXPORT_PHRASES[index];
+		}, 2000);
+	}
+
+	function stopPhraseRotation() {
+		if (phraseInterval) {
+			clearInterval(phraseInterval);
+			phraseInterval = null;
+		}
+	}
+
+	onDestroy(stopPhraseRotation);
+
+	function getResolutionLabel(scale: ExportScale): string {
+		const config = EXPORT_SCALES.find((s) => s.value === scale);
+		return config?.label.toLowerCase() ?? 'standard';
+	}
+
+	function getPixelDimensions(scale: ExportScale): string {
+		const width = posterStore.posterWidth * scale;
+		const height = posterStore.posterHeight * scale;
+		return `${width}×${height}`;
+	}
 
 	async function handleExport(scale: ExportScale) {
 		if (disabled) return;
 		isExporting = true;
+		currentExportScale = scale;
 		error = null;
-		const resLabel = scale === 4 ? 'high-resolution' : 'standard';
-		exportStatus = `Preparing ${resLabel} export...`;
+		screenReaderStatus = `Preparing ${getResolutionLabel(scale)} export...`;
+
+		if (scale > 1) {
+			startPhraseRotation();
+		}
 
 		try {
-			exportStatus = 'Generating PNG...';
-			await exportPoster({ scale, eventName, date });
-			exportStatus = 'Download started!';
+			await exportPoster({ scale, eventName, date }, (message) => {
+				screenReaderStatus = message;
+			});
+			screenReaderStatus = 'Download started!';
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to export poster';
-			exportStatus = `Export failed: ${error}`;
+			screenReaderStatus = `Export failed: ${error}`;
 		} finally {
 			isExporting = false;
+			currentExportScale = null;
+			stopPhraseRotation();
 		}
 	}
 </script>
 
 <div class="space-y-3">
 	<div aria-live="polite" aria-atomic="true" class="sr-only">
-		{exportStatus}
+		{screenReaderStatus}
 	</div>
 
 	{#if disabled && disabledReason}
 		<p class="text-center text-xs text-amber-600">{disabledReason}</p>
 	{/if}
 
-	<div>
-		<p class="mb-2 text-xs font-medium text-gray-600">Download PNG</p>
-		<div class="flex gap-2">
-			<button
-				type="button"
-				onclick={() => handleExport(2)}
-				disabled={isExporting || disabled}
-				aria-label="Download PNG at 2x resolution for web use"
-				class="flex flex-1 items-center justify-center gap-2 rounded-md bg-blue-500 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
-			>
-				{#if isExporting}
-					<LoadingSpinner size="sm" />
-				{:else}
-					<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-					</svg>
-				{/if}
-				2x Web
-			</button>
-			<button
-				type="button"
-				onclick={() => handleExport(4)}
-				disabled={isExporting || disabled}
-				aria-label="Download PNG at 4x resolution for high-quality print"
-				class="flex flex-1 items-center justify-center gap-2 rounded-md border-2 border-blue-500 bg-white px-3 py-2 text-sm font-medium text-blue-500 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
-			>
-				{#if isExporting}
-					<LoadingSpinner size="sm" />
-				{:else}
-					<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-					</svg>
-				{/if}
-				4x Print
-			</button>
+	<div class="relative">
+		<h3 class="mb-2 text-sm font-bold text-blue-600">Export PNG</h3>
+
+		<div class="relative">
+			{#if showLoadingOverlay}
+				<div class="absolute inset-0 z-10 flex items-center justify-center gap-2 rounded-lg bg-gray-900/95 backdrop-blur-sm">
+					<LoadingSpinner size="sm" class="text-white" />
+					<span class="text-sm font-medium text-white">{currentPhrase}</span>
+				</div>
+			{/if}
+
+			<div class="flex gap-2">
+				{#each EXPORT_SCALES as scaleConfig}
+					<button
+						type="button"
+						onclick={() => handleExport(scaleConfig.value)}
+						disabled={isExporting || disabled}
+						aria-label="Download {scaleConfig.label} PNG at {getPixelDimensions(scaleConfig.value)} pixels, recommended for {scaleConfig.printGuidance}"
+						class="btn-export group"
+					>
+						<span class="text-xs font-bold text-gray-700 group-hover:text-blue-700">{scaleConfig.label}</span>
+						<span class="text-[10px] font-medium text-gray-500 group-hover:text-blue-600">{getPixelDimensions(scaleConfig.value)}</span>
+						<span class="text-[9px] text-gray-400 group-hover:text-blue-500">{scaleConfig.printGuidance}</span>
+					</button>
+				{/each}
+			</div>
 		</div>
 	</div>
 
-	<p class="text-center text-xs text-gray-500">
-		2x for web/screen (~150 DPI), 4x for print (300 DPI)
-	</p>
 	{#if error}
 		<p class="text-center text-sm text-red-500" role="alert">{error}</p>
 	{/if}

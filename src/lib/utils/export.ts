@@ -2,8 +2,11 @@ import { domToPng } from 'modern-screenshot';
 import { posterStore } from '$lib/stores/poster.svelte';
 import { exportReadyStore } from '$lib/stores/export-ready.svelte';
 import { waitForFonts, getEmbeddedFontCss } from './fonts.js';
+import { renderExportMap } from './export-map.js';
 
-export type ExportScale = 2 | 4;
+export type ExportScale = 1 | 2 | 4;
+
+export type ExportProgressCallback = (message: string) => void;
 
 export function sanitizeForFilename(input: string): string {
 	return input
@@ -41,52 +44,44 @@ export interface ClonedPoster {
 	cleanup: () => void;
 }
 
-function copyCanvasContent(source: Element, clone: HTMLElement): void {
-	const sourceCanvases = source.querySelectorAll('canvas');
-	const cloneCanvases = clone.querySelectorAll('canvas');
-
-	sourceCanvases.forEach((sourceCanvas, index) => {
-		const cloneCanvas = cloneCanvases[index] as HTMLCanvasElement;
-		if (cloneCanvas && sourceCanvas.width > 0 && sourceCanvas.height > 0) {
-			cloneCanvas.width = sourceCanvas.width;
-			cloneCanvas.height = sourceCanvas.height;
-			const ctx = cloneCanvas.getContext('2d');
-			if (ctx) {
-				ctx.drawImage(sourceCanvas, 0, 0);
-			}
-		}
-	});
+export interface ClonePosterOptions {
+	scale: ExportScale;
 }
 
-export function clonePosterElement(): ClonedPoster {
+export function clonePosterElement(options: ClonePosterOptions): ClonedPoster {
+	const { scale } = options;
 	const element = document.querySelector('[data-poster-export]');
 	if (!element) {
 		throw new Error('Poster element not found');
 	}
 
-	const width = posterStore.posterWidth;
-	const height = posterStore.posterHeight;
+	const baseWidth = posterStore.posterWidth;
+	const baseHeight = posterStore.posterHeight;
+	const exportWidth = baseWidth * scale;
+	const exportHeight = baseHeight * scale;
 
 	const clone = element.cloneNode(true) as HTMLElement;
-	copyCanvasContent(element, clone);
 	const container = document.createElement('div');
 
 	container.style.cssText = `
 		position: fixed;
 		left: -99999px;
 		top: 0;
-		width: ${width}px;
-		height: ${height}px;
-		overflow: visible;
+		width: ${exportWidth}px;
+		height: ${exportHeight}px;
+		overflow: hidden;
 		pointer-events: none;
 	`;
 
-	// Apply effective colors (uses custom colors if set, otherwise theme defaults)
+	clone.style.width = `${baseWidth}px`;
+	clone.style.height = `${baseHeight}px`;
+	clone.style.transform = `scale(${scale})`;
+	clone.style.transformOrigin = 'top left';
+
 	clone.style.setProperty('--color-bg', posterStore.effectiveBgColor);
 	clone.style.setProperty('--color-text', posterStore.effectiveTextColor);
 	clone.style.setProperty('--color-route', posterStore.effectiveRouteColor);
 
-	// Hide medal zone placeholder in export (remove visual indicators but keep size)
 	const medalZone = clone.querySelector('[data-medal-zone]') as HTMLElement | null;
 	if (medalZone) {
 		medalZone.style.border = 'none';
@@ -103,21 +98,44 @@ export function clonePosterElement(): ClonedPoster {
 	};
 }
 
-export async function renderPosterToPng(scale: ExportScale): Promise<string> {
+export async function renderPosterToPng(
+	scale: ExportScale,
+	onProgress?: ExportProgressCallback
+): Promise<string> {
+	onProgress?.('Loading fonts...');
 	const [, fontCss] = await Promise.all([waitForFonts(), getEmbeddedFontCss()]);
+
+	onProgress?.('Waiting for resources...');
 	await exportReadyStore.waitUntilReady(5000);
 	await new Promise((resolve) => requestAnimationFrame(resolve));
 
-	const { clone, cleanup } = clonePosterElement();
-	const width = posterStore.posterWidth;
-	const height = posterStore.posterHeight;
+	onProgress?.('Preparing export canvas...');
+	const { clone, cleanup } = clonePosterElement({ scale });
+
+	const exportWidth = posterStore.posterWidth * scale;
+	const exportHeight = posterStore.posterHeight * scale;
+
+	await new Promise((resolve) => requestAnimationFrame(resolve));
+	await new Promise((resolve) => setTimeout(resolve, 50));
+
+	let mapCleanup: (() => void) | null = null;
 
 	try {
+		mapCleanup = (
+			await renderExportMap({
+				container: clone,
+				scale,
+				onProgress
+			})
+		).cleanup;
+
+		onProgress?.('Rendering final image...');
+
 		return await domToPng(clone, {
-			scale,
+			scale: 1,
 			quality: 1,
-			width,
-			height,
+			width: exportWidth,
+			height: exportHeight,
 			font: fontCss ? { cssText: fontCss } : undefined,
 			fetch: {
 				requestInit: {
@@ -126,15 +144,20 @@ export async function renderPosterToPng(scale: ExportScale): Promise<string> {
 			}
 		});
 	} finally {
+		mapCleanup?.();
 		cleanup();
 	}
 }
 
-export async function exportPoster(options: ExportOptions): Promise<void> {
+export async function exportPoster(
+	options: ExportOptions,
+	onProgress?: ExportProgressCallback
+): Promise<void> {
 	const { scale, eventName, date } = options;
 
-	const dataUrl = await renderPosterToPng(scale);
+	const dataUrl = await renderPosterToPng(scale, onProgress);
 
+	onProgress?.('Starting download...');
 	const link = document.createElement('a');
 	link.download = generateFilename(eventName, date, scale);
 	link.href = dataUrl;

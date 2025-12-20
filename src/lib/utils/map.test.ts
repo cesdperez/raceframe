@@ -54,9 +54,9 @@ describe('getTileUrlForStyle', () => {
 		expect(url).toContain('dark_all');
 	});
 
-	it('returns correct URL for stamen-watercolor', () => {
-		const url = getTileUrlForStyle('stamen-watercolor');
-		expect(url).toContain('stamen_watercolor');
+	it('returns correct URL for stamen-terrain', () => {
+		const url = getTileUrlForStyle('stamen-terrain');
+		expect(url).toContain('stamen_terrain');
 	});
 
 	it('returns correct URL for stamen-toner', () => {
@@ -78,7 +78,7 @@ describe('getAttributionForStyle', () => {
 	});
 
 	it('returns Stadia/Stamen attribution for Stamen styles', () => {
-		const attr = getAttributionForStyle('stamen-watercolor');
+		const attr = getAttributionForStyle('stamen-terrain');
 		expect(attr).toContain('Stadia Maps');
 		expect(attr).toContain('Stamen Design');
 	});

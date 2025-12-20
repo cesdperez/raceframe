@@ -77,15 +77,6 @@ export const DESIGN_PRESETS: DesignPresetConfig[] = [
 		routeColor: 'yellow'
 	},
 	{
-		value: 'watercolor',
-		label: 'Watercolor',
-		mapStyle: 'stamen-watercolor',
-		mapFilter: 'none',
-		bgColor: '#f9e1d4',
-		textColor: '#3d2914',
-		routeColor: 'orange'
-	},
-	{
 		value: 'terrain',
 		label: 'Terrain',
 		mapStyle: 'stamen-terrain',
@@ -120,7 +111,7 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		value: 'positron',
 		label: 'Positron',
 		description: 'CARTO light map',
-		tileUrl: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+		tileUrl: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
 		attribution: CARTO_ATTRIBUTION,
 		brightness: 'light'
 	},
@@ -128,7 +119,7 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		value: 'dark-matter',
 		label: 'Dark Matter',
 		description: 'CARTO dark map',
-		tileUrl: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+		tileUrl: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
 		attribution: CARTO_ATTRIBUTION,
 		brightness: 'dark'
 	},
@@ -137,7 +128,7 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		value: 'alidade-smooth',
 		label: 'Alidade Smooth',
 		description: 'Minimal light map for overlays',
-		tileUrl: 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}@2x.png',
 		attribution: STADIA_ATTRIBUTION,
 		brightness: 'light'
 	},
@@ -145,7 +136,7 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		value: 'alidade-smooth-dark',
 		label: 'Alidade Smooth Dark',
 		description: 'Minimal dark map for overlays',
-		tileUrl: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}@2x.png',
 		attribution: STADIA_ATTRIBUTION,
 		brightness: 'dark'
 	},
@@ -153,7 +144,7 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		value: 'alidade-satellite',
 		label: 'Alidade Satellite',
 		description: 'Satellite imagery with labels',
-		tileUrl: 'https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.jpg',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}@2x.jpg',
 		attribution:
 			'&copy; CNES, Distribution Airbus DS, &copy; Airbus DS, &copy; PlanetObserver (Contains Copernicus Data) | ' +
 			STADIA_ATTRIBUTION,
@@ -164,7 +155,7 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		value: 'outdoors',
 		label: 'Outdoors',
 		description: 'Trails, parks, natural features',
-		tileUrl: 'https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}@2x.png',
 		attribution: STADIA_ATTRIBUTION,
 		brightness: 'light'
 	},
@@ -173,7 +164,7 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		value: 'stamen-toner',
 		label: 'Stamen Toner',
 		description: 'High-contrast B&W',
-		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}@2x.png',
 		attribution: STADIA_STAMEN_ATTRIBUTION,
 		brightness: 'light'
 	},
@@ -181,7 +172,7 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		value: 'stamen-toner-lite',
 		label: 'Stamen Toner Lite',
 		description: 'Lighter B&W variant',
-		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}@2x.png',
 		attribution: STADIA_STAMEN_ATTRIBUTION,
 		brightness: 'light'
 	},
@@ -189,7 +180,7 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		value: 'stamen-toner-dark',
 		label: 'Stamen Toner Dark',
 		description: 'Inverted B&W variant',
-		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_toner_dark/{z}/{x}/{y}{r}.png',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_toner_dark/{z}/{x}/{y}@2x.png',
 		attribution: STADIA_STAMEN_ATTRIBUTION,
 		brightness: 'dark'
 	},
@@ -197,15 +188,7 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		value: 'stamen-terrain',
 		label: 'Stamen Terrain',
 		description: 'Hill shading & vegetation',
-		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png',
-		attribution: STADIA_STAMEN_ATTRIBUTION,
-		brightness: 'light'
-	},
-	{
-		value: 'stamen-watercolor',
-		label: 'Stamen Watercolor',
-		description: 'Artistic hand-painted style',
-		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}@2x.png',
 		attribution: STADIA_STAMEN_ATTRIBUTION,
 		brightness: 'light'
 	},
@@ -214,7 +197,7 @@ export const MAP_STYLES: MapStyleConfig[] = [
 		value: 'osm-bright',
 		label: 'OSM Bright',
 		description: 'Classic OSM with POIs',
-		tileUrl: 'https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}@2x.png',
 		attribution: STADIA_ATTRIBUTION,
 		brightness: 'light'
 	}
