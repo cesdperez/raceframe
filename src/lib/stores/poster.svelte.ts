@@ -146,11 +146,19 @@ class PosterStore {
 		return ROUTE_COLORS[this.data.routeColor];
 	}
 
+	get paceOrSpeed(): string {
+		return this.data.activityType === 'cycling' ? this.formattedSpeed : this.formattedPace;
+	}
+
+	get paceOrSpeedLabel(): string {
+		return this.data.activityType === 'cycling' ? this.speedLabel : this.paceLabel;
+	}
+
 	setUnit(unit: Unit): void {
-		if (this.data.unit !== unit && this.data.gpxData) {
-			const distanceMeters = this.data.gpxData.totalDistance;
+		if (this.data.unit !== unit) {
+			const currentDistance = this.data.distance;
 			this.data.distance =
-				unit === 'km' ? metersToKm(distanceMeters) : metersToMiles(distanceMeters);
+				unit === 'km' ? metersToKm(milesToMeters(currentDistance)) : metersToMiles(kmToMeters(currentDistance));
 		}
 		this.data.unit = unit;
 	}

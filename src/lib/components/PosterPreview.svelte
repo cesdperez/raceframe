@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { posterStore } from '$lib/stores/poster.svelte';
-	import { calculateClassicLayout } from '$lib/constants/poster';
+	import { calculateClassicLayout } from '$lib/constants/poster.js';
 	import PosterMap from './PosterMap.svelte';
 	import QrCode from './QrCode.svelte';
 
@@ -37,8 +37,6 @@
 	});
 
 	$effect(() => {
-		posterWidth;
-		posterHeight;
 		calculateScale();
 	});
 
@@ -61,8 +59,8 @@
 	const qrDotStyle = $derived(posterStore.data.qrDotStyle);
 	const qrGradientEnabled = $derived(posterStore.data.qrGradientEnabled);
 
-	const paceOrSpeed = $derived(activityType === 'cycling' ? formattedSpeed : formattedPace);
-	const paceOrSpeedLabel = $derived(activityType === 'cycling' ? speedLabel : paceLabel);
+	const paceOrSpeed = $derived(posterStore.paceOrSpeed);
+	const paceOrSpeedLabel = $derived(posterStore.paceOrSpeedLabel);
 
 	const classicLayoutMetrics = $derived(
 		calculateClassicLayout(posterHeight, !!qrCodeUrl)

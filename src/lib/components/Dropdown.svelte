@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { clickOutside } from '../actions/clickOutside';
+	import { clickOutside } from '../actions/clickOutside.js';
 
 	interface Option {
 		value: string;
@@ -32,7 +32,7 @@
 		aria-haspopup="listbox"
 		aria-expanded={open}
 	>
-		<span class="truncate text-xs">{selectedLabel}</span>
+		<span class="truncate text-sm">{selectedLabel}</span>
 		<svg
 			class="h-3.5 w-3.5 flex-shrink-0 text-gray-400"
 			fill="none"
@@ -54,7 +54,7 @@
 						onchange(option.value);
 						open = false;
 					}}
-					class="flex w-full items-center px-2 py-1.5 text-xs hover:bg-gray-50 {value === option.value
+					class="flex w-full items-center px-2 py-1.5 text-sm hover:bg-gray-50 {value === option.value
 						? 'bg-blue-50 text-blue-700'
 						: ''}"
 					role="option"

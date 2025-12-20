@@ -1,7 +1,7 @@
 import { domToPng } from 'modern-screenshot';
 import { posterStore } from '$lib/stores/poster.svelte';
 import { exportReadyStore } from '$lib/stores/export-ready.svelte';
-import { waitForFonts, getEmbeddedFontCss } from './fonts';
+import { waitForFonts, getEmbeddedFontCss } from './fonts.js';
 
 export type ExportScale = 2 | 4;
 

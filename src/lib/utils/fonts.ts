@@ -1,4 +1,4 @@
-import { warnDev } from './logger';
+import { warnDev } from './logger.js';
 
 export interface FontSpec {
 	family: string;

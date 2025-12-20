@@ -55,6 +55,10 @@ function extractCoordinates(geoJson: GeoJSON.FeatureCollection): [number, number
 	return coords;
 }
 
+function isValidDate(date: Date): boolean {
+	return date instanceof Date && !isNaN(date.getTime());
+}
+
 function extractTimes(geoJson: GeoJSON.FeatureCollection): { start: Date | null; end: Date | null } {
 	let start: Date | null = null;
 	let end: Date | null = null;
@@ -67,8 +71,12 @@ function extractTimes(geoJson: GeoJSON.FeatureCollection): { start: Date | null;
 				const firstTime = new Date(times[0]);
 				const lastTime = new Date(times[times.length - 1]);
 
-				if (!start || firstTime < start) start = firstTime;
-				if (!end || lastTime > end) end = lastTime;
+				if (isValidDate(firstTime)) {
+					if (!start || firstTime < start) start = firstTime;
+				}
+				if (isValidDate(lastTime)) {
+					if (!end || lastTime > end) end = lastTime;
+				}
 			}
 		}
 	}

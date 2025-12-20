@@ -3,7 +3,7 @@ import {
 	calculateClassicLayout,
 	getDimensions,
 	getAspectRatiosForLayout
-} from './poster';
+} from './poster.js';
 
 describe('calculateClassicLayout', () => {
 	const POSTER_2_3_HEIGHT = 2400;
