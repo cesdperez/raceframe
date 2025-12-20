@@ -88,12 +88,12 @@ describe('PosterStore', () => {
 			posterStore.setMapStyle('stamen-watercolor');
 			expect(posterStore.data.mapStyle).toBe('stamen-watercolor');
 
-			posterStore.setMapStyle('esri-satellite');
-			expect(posterStore.data.mapStyle).toBe('esri-satellite');
+			posterStore.setMapStyle('alidade-satellite');
+			expect(posterStore.data.mapStyle).toBe('alidade-satellite');
 		});
 
 		it('reset clears map style to default', () => {
-			posterStore.setMapStyle('esri-satellite');
+			posterStore.setMapStyle('alidade-satellite');
 			posterStore.reset();
 			expect(posterStore.data.mapStyle).toBe('positron');
 		});
@@ -308,31 +308,31 @@ describe('PosterStore', () => {
 
 	describe('Design Presets', () => {
 		it('applies a preset correctly', () => {
-			posterStore.applyDesignPreset('dark-mode');
-			expect(posterStore.data.mapStyle).toBe('dark-matter');
+			posterStore.applyDesignPreset('noir');
+			expect(posterStore.data.mapStyle).toBe('stamen-toner-dark');
 			expect(posterStore.data.mapFilter).toBe('none');
-			expect(posterStore.data.customBgColor).toBe('#18181b');
-			expect(posterStore.data.customTextColor).toBe('#fafafa');
+			expect(posterStore.data.customBgColor).toBe('#000000');
+			expect(posterStore.data.customTextColor).toBe('#ffffff');
 			expect(posterStore.data.routeColor).toBe('orange');
 			expect(posterStore.data.customRouteColor).toBeNull();
 		});
 
 		it('activePreset identifies the current preset', () => {
-			posterStore.applyDesignPreset('clean-light');
-			expect(posterStore.activePreset).toBe('clean-light');
+			posterStore.applyDesignPreset('paper');
+			expect(posterStore.activePreset).toBe('paper');
 
-			posterStore.applyDesignPreset('satellite');
-			expect(posterStore.activePreset).toBe('satellite');
+			posterStore.applyDesignPreset('orbital');
+			expect(posterStore.activePreset).toBe('orbital');
 		});
 
 		it('activePreset returns null if values are modified', () => {
-			posterStore.applyDesignPreset('clean-light');
+			posterStore.applyDesignPreset('paper');
 			posterStore.setCustomBgColor('#ff0000');
 			expect(posterStore.activePreset).toBeNull();
 		});
 
 		it('activePreset returns null if custom route color is set', () => {
-			posterStore.applyDesignPreset('clean-light');
+			posterStore.applyDesignPreset('paper');
 			posterStore.setCustomRouteColor('#ff0000');
 			expect(posterStore.activePreset).toBeNull();
 		});

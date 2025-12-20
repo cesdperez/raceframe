@@ -64,9 +64,9 @@ describe('getTileUrlForStyle', () => {
 		expect(url).toContain('stamen_toner');
 	});
 
-	it('returns correct URL for esri-satellite', () => {
-		const url = getTileUrlForStyle('esri-satellite');
-		expect(url).toContain('ArcGIS');
+	it('returns correct URL for alidade-satellite', () => {
+		const url = getTileUrlForStyle('alidade-satellite');
+		expect(url).toContain('alidade_satellite');
 	});
 });
 
@@ -83,9 +83,10 @@ describe('getAttributionForStyle', () => {
 		expect(attr).toContain('Stamen Design');
 	});
 
-	it('returns Esri attribution for satellite style', () => {
-		const attr = getAttributionForStyle('esri-satellite');
-		expect(attr).toContain('Esri');
+	it('returns Stadia attribution for satellite style', () => {
+		const attr = getAttributionForStyle('alidade-satellite');
+		expect(attr).toContain('Stadia Maps');
+		expect(attr).toContain('CNES');
 	});
 });
 

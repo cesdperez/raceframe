@@ -10,13 +10,20 @@ export interface GPXData {
 
 export type Theme = 'light' | 'dark' | 'navy';
 export type RouteColor = 'orange' | 'blue' | 'cyan' | 'yellow' | 'pink' | 'black' | 'white' | 'red';
-export type DesignPreset = 'clean-light' | 'dark-mode' | 'minimal' | 'satellite' | 'vintage';
+export type DesignPreset = 'paper' | 'noir' | 'blueprint' | 'orbital' | 'watercolor' | 'terrain';
 export type MapStyle =
 	| 'positron'
 	| 'dark-matter'
-	| 'stamen-watercolor'
+	| 'alidade-smooth'
+	| 'alidade-smooth-dark'
+	| 'alidade-satellite'
+	| 'outdoors'
 	| 'stamen-toner'
-	| 'esri-satellite';
+	| 'stamen-toner-lite'
+	| 'stamen-toner-dark'
+	| 'stamen-terrain'
+	| 'stamen-watercolor'
+	| 'osm-bright';
 
 export type MapFilter = 'none' | 'grayscale' | 'sepia' | 'navy' | 'teal';
 export type Unit = 'km' | 'miles';

@@ -41,8 +41,8 @@ export const ROUTE_COLORS: Record<RouteColor, string> = {
 
 export const DESIGN_PRESETS: DesignPresetConfig[] = [
 	{
-		value: 'clean-light',
-		label: 'Clean Light',
+		value: 'paper',
+		label: 'Paper',
 		mapStyle: 'positron',
 		mapFilter: 'none',
 		bgColor: '#ffffff',
@@ -50,17 +50,17 @@ export const DESIGN_PRESETS: DesignPresetConfig[] = [
 		routeColor: 'orange'
 	},
 	{
-		value: 'dark-mode',
-		label: 'Dark Mode',
-		mapStyle: 'dark-matter',
+		value: 'noir',
+		label: 'Noir',
+		mapStyle: 'stamen-toner-dark',
 		mapFilter: 'none',
-		bgColor: '#18181b',
-		textColor: '#fafafa',
+		bgColor: '#000000',
+		textColor: '#ffffff',
 		routeColor: 'orange'
 	},
 	{
-		value: 'minimal',
-		label: 'Minimal',
+		value: 'blueprint',
+		label: 'Blueprint',
 		mapStyle: 'stamen-toner',
 		mapFilter: 'navy',
 		bgColor: '#ffffff',
@@ -68,22 +68,31 @@ export const DESIGN_PRESETS: DesignPresetConfig[] = [
 		routeColor: 'orange'
 	},
 	{
-		value: 'satellite',
-		label: 'Satellite',
-		mapStyle: 'esri-satellite',
+		value: 'orbital',
+		label: 'Orbital',
+		mapStyle: 'alidade-satellite',
 		mapFilter: 'none',
-		bgColor: '#163a2e',
+		bgColor: '#06242f',
 		textColor: '#ffffff',
 		routeColor: 'yellow'
 	},
 	{
-		value: 'vintage',
-		label: 'Vintage',
+		value: 'watercolor',
+		label: 'Watercolor',
 		mapStyle: 'stamen-watercolor',
-		mapFilter: 'sepia',
-		bgColor: '#f5f5dc',
+		mapFilter: 'none',
+		bgColor: '#f9e1d4',
 		textColor: '#3d2914',
 		routeColor: 'orange'
+	},
+	{
+		value: 'terrain',
+		label: 'Terrain',
+		mapStyle: 'stamen-terrain',
+		mapFilter: 'none',
+		bgColor: '#dbdebc',
+		textColor: '#000000',
+		routeColor: 'black'
 	}
 ];
 
@@ -98,52 +107,116 @@ export interface MapStyleConfig {
 	brightness: 'light' | 'dark';
 }
 
+const STADIA_ATTRIBUTION =
+	'&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+const STADIA_STAMEN_ATTRIBUTION =
+	'&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://stamen.com/">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+const CARTO_ATTRIBUTION =
+	'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
 export const MAP_STYLES: MapStyleConfig[] = [
+	// CARTO styles (fallback)
 	{
 		value: 'positron',
-		label: 'Light Clean',
-		description: 'Minimal light map with labels',
+		label: 'Positron',
+		description: 'CARTO light map',
 		tileUrl: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-		attribution:
-			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		attribution: CARTO_ATTRIBUTION,
 		brightness: 'light'
 	},
 	{
 		value: 'dark-matter',
-		label: 'Dark Clean',
-		description: 'Minimal dark map with labels',
+		label: 'Dark Matter',
+		description: 'CARTO dark map',
 		tileUrl: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-		attribution:
-			'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		attribution: CARTO_ATTRIBUTION,
 		brightness: 'dark'
+	},
+	// Stadia Alidade styles
+	{
+		value: 'alidade-smooth',
+		label: 'Alidade Smooth',
+		description: 'Minimal light map for overlays',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png',
+		attribution: STADIA_ATTRIBUTION,
+		brightness: 'light'
+	},
+	{
+		value: 'alidade-smooth-dark',
+		label: 'Alidade Smooth Dark',
+		description: 'Minimal dark map for overlays',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',
+		attribution: STADIA_ATTRIBUTION,
+		brightness: 'dark'
+	},
+	{
+		value: 'alidade-satellite',
+		label: 'Alidade Satellite',
+		description: 'Satellite imagery with labels',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.jpg',
+		attribution:
+			'&copy; CNES, Distribution Airbus DS, &copy; Airbus DS, &copy; PlanetObserver (Contains Copernicus Data) | ' +
+			STADIA_ATTRIBUTION,
+		brightness: 'dark'
+	},
+	// Stadia Outdoors
+	{
+		value: 'outdoors',
+		label: 'Outdoors',
+		description: 'Trails, parks, natural features',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png',
+		attribution: STADIA_ATTRIBUTION,
+		brightness: 'light'
+	},
+	// Stadia x Stamen styles
+	{
+		value: 'stamen-toner',
+		label: 'Stamen Toner',
+		description: 'High-contrast B&W',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png',
+		attribution: STADIA_STAMEN_ATTRIBUTION,
+		brightness: 'light'
+	},
+	{
+		value: 'stamen-toner-lite',
+		label: 'Stamen Toner Lite',
+		description: 'Lighter B&W variant',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png',
+		attribution: STADIA_STAMEN_ATTRIBUTION,
+		brightness: 'light'
+	},
+	{
+		value: 'stamen-toner-dark',
+		label: 'Stamen Toner Dark',
+		description: 'Inverted B&W variant',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_toner_dark/{z}/{x}/{y}{r}.png',
+		attribution: STADIA_STAMEN_ATTRIBUTION,
+		brightness: 'dark'
+	},
+	{
+		value: 'stamen-terrain',
+		label: 'Stamen Terrain',
+		description: 'Hill shading & vegetation',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png',
+		attribution: STADIA_STAMEN_ATTRIBUTION,
+		brightness: 'light'
 	},
 	{
 		value: 'stamen-watercolor',
-		label: 'Watercolor',
+		label: 'Stamen Watercolor',
 		description: 'Artistic hand-painted style',
 		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg',
-		attribution:
-			'&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://stamen.com/">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+		attribution: STADIA_STAMEN_ATTRIBUTION,
 		brightness: 'light'
 	},
+	// Classic OSM style
 	{
-		value: 'stamen-toner',
-		label: 'Toner',
-		description: 'High-contrast black & white',
-		tileUrl: 'https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png',
-		attribution:
-			'&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://stamen.com/">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+		value: 'osm-bright',
+		label: 'OSM Bright',
+		description: 'Classic OSM with POIs',
+		tileUrl: 'https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png',
+		attribution: STADIA_ATTRIBUTION,
 		brightness: 'light'
-	},
-	{
-		value: 'esri-satellite',
-		label: 'Satellite',
-		description: 'Aerial imagery from ESRI',
-		tileUrl:
-			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-		attribution:
-			'&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics',
-		brightness: 'dark'
 	}
 ];
 

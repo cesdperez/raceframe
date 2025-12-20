@@ -57,10 +57,9 @@ test.describe('Editor', () => {
 	});
 
 	test('can apply design preset', async ({ page }) => {
-		const darkModePreset = page.getByRole('radio', { name: /dark mode/i });
-		await darkModePreset.click();
-		// Selected preset has a checkmark or indicator
-		await expect(darkModePreset).toContainText('✓');
+		const noirPreset = page.getByRole('radio', { name: /noir/i });
+		await noirPreset.click();
+		await expect(noirPreset).toContainText('✓');
 	});
 
 	test('can switch distance units', async ({ page }) => {

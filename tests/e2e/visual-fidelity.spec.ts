@@ -15,7 +15,7 @@ test.describe('Export Visual Fidelity', () => {
 		await page.waitForFunction(() => document.fonts.ready);
 
 		// Wait for map tiles to load (loading overlay should disappear)
-		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 15000 });
+		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		// Extra wait for map to stabilize
 		await page.waitForTimeout(500);
@@ -81,7 +81,7 @@ test.describe('Export Visual Fidelity', () => {
 		await page.waitForTimeout(500);
 
 		// Wait for map tiles to reload
-		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 15000 });
+		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		// Remove scale transform
 		await page.evaluate(() => {
@@ -185,7 +185,7 @@ test.describe('Export Visual Fidelity', () => {
 	});
 
 	test('all themes export correctly', async ({ page }) => {
-		const themeNames = ['Clean Light', 'Dark Mode', 'Minimal'] as const;
+		const themeNames = ['Paper', 'Noir', 'Blueprint'] as const;
 
 		for (const theme of themeNames) {
 			// Select theme preset
@@ -193,7 +193,7 @@ test.describe('Export Visual Fidelity', () => {
 			await page.waitForTimeout(300);
 
 			// Wait for map tiles to potentially reload
-			await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 15000 });
+			await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 			// Export
 			const downloadPromise = page.waitForEvent('download');
