@@ -243,3 +243,129 @@ test.describe('Export Visual Fidelity', () => {
 		expect(Math.abs(previewRatio - exportRatio)).toBeLessThan(0.001);
 	});
 });
+
+test.describe('Aspect Ratio Options', () => {
+	test.beforeEach(async ({ editorPage, page }) => {
+		await page.waitForFunction(() => document.fonts.ready);
+		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
+		await page.waitForTimeout(500);
+	});
+
+	test('displays all portrait aspect ratio options for classic layout', async ({ page }) => {
+		const aspectRatioSection = page.locator('section', { has: page.getByText('Aspect Ratio') });
+
+		await expect(aspectRatioSection.getByRole('radio', { name: /Photo Print/i })).toBeVisible();
+		await expect(aspectRatioSection.getByRole('radio', { name: /Frame Standard/i })).toBeVisible();
+		await expect(aspectRatioSection.getByRole('radio', { name: /Portrait Frame/i })).toBeVisible();
+		await expect(aspectRatioSection.getByRole('radio', { name: /A4.*A3.*A2/i })).toBeVisible();
+	});
+
+	test('displays all landscape aspect ratio options for medal-right layout', async ({ page }) => {
+		await page.getByRole('radio', { name: /Medal Right/i }).click();
+		await page.waitForTimeout(300);
+
+		const aspectRatioSection = page.locator('section', { has: page.getByText('Aspect Ratio') });
+
+		await expect(aspectRatioSection.getByRole('radio', { name: /Photo Print/i })).toBeVisible();
+		await expect(aspectRatioSection.getByRole('radio', { name: /Frame Standard/i })).toBeVisible();
+		await expect(aspectRatioSection.getByRole('radio', { name: /Landscape Frame/i })).toBeVisible();
+		await expect(aspectRatioSection.getByRole('radio', { name: /A4.*A3.*A2/i })).toBeVisible();
+	});
+
+	test('exports correct dimensions for portrait 5:7 ratio', async ({ page }) => {
+		await page.getByRole('radio', { name: /Portrait Frame/i }).click();
+		await page.waitForTimeout(300);
+		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
+
+		const downloadPromise = page.waitForEvent('download');
+		await page.locator('button:has-text("2x Web")').click();
+		const download = await downloadPromise;
+
+		const downloadPath = await download.path();
+		const exportBuffer = fs.readFileSync(downloadPath!);
+		const exportPng = PNG.sync.read(exportBuffer);
+
+		expect(exportPng.width).toBe(2800);
+		expect(exportPng.height).toBe(4000);
+	});
+
+	test('exports correct dimensions for portrait ISO A ratio', async ({ page }) => {
+		await page.getByRole('radio', { name: /A4.*A3.*A2/i }).click();
+		await page.waitForTimeout(300);
+		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
+
+		const downloadPromise = page.waitForEvent('download');
+		await page.locator('button:has-text("2x Web")').click();
+		const download = await downloadPromise;
+
+		const downloadPath = await download.path();
+		const exportBuffer = fs.readFileSync(downloadPath!);
+		const exportPng = PNG.sync.read(exportBuffer);
+
+		expect(exportPng.width).toBe(2828);
+		expect(exportPng.height).toBe(4000);
+	});
+
+	test('exports correct dimensions for landscape 7:5 ratio', async ({ page }) => {
+		await page.getByRole('radio', { name: /Medal Right/i }).click();
+		await page.waitForTimeout(300);
+
+		await page.getByRole('radio', { name: /Landscape Frame/i }).click();
+		await page.waitForTimeout(300);
+		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
+
+		const downloadPromise = page.waitForEvent('download');
+		await page.locator('button:has-text("2x Web")').click();
+		const download = await downloadPromise;
+
+		const downloadPath = await download.path();
+		const exportBuffer = fs.readFileSync(downloadPath!);
+		const exportPng = PNG.sync.read(exportBuffer);
+
+		expect(exportPng.width).toBe(4000);
+		expect(exportPng.height).toBe(2800);
+	});
+
+	test('exports correct dimensions for landscape ISO A ratio', async ({ page }) => {
+		await page.getByRole('radio', { name: /Medal Right/i }).click();
+		await page.waitForTimeout(300);
+
+		await page.getByRole('radio', { name: /A4.*A3.*A2/i }).click();
+		await page.waitForTimeout(300);
+		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
+
+		const downloadPromise = page.waitForEvent('download');
+		await page.locator('button:has-text("2x Web")').click();
+		const download = await downloadPromise;
+
+		const downloadPath = await download.path();
+		const exportBuffer = fs.readFileSync(downloadPath!);
+		const exportPng = PNG.sync.read(exportBuffer);
+
+		expect(exportPng.width).toBe(4000);
+		expect(exportPng.height).toBe(2828);
+	});
+
+	test('preview updates dimensions when switching aspect ratios', async ({ page }) => {
+		await page.evaluate(() => {
+			const scaleWrapper = document.querySelector('.poster-scale-wrapper') as HTMLElement;
+			scaleWrapper.style.transform = 'none';
+		});
+
+		const poster = page.locator('[data-poster-export]');
+
+		const initialScreenshot = await poster.screenshot();
+		const initialPng = PNG.sync.read(initialScreenshot);
+		const initialRatio = initialPng.width / initialPng.height;
+
+		await page.getByRole('radio', { name: /Frame Standard/i }).click();
+		await page.waitForTimeout(300);
+		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
+
+		const updatedScreenshot = await poster.screenshot();
+		const updatedPng = PNG.sync.read(updatedScreenshot);
+		const updatedRatio = updatedPng.width / updatedPng.height;
+
+		expect(initialRatio).not.toBeCloseTo(updatedRatio, 2);
+	});
+});

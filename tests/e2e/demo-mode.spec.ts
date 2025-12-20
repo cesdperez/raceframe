@@ -80,7 +80,7 @@ test.describe('Demo Mode', () => {
 		const watercolorPreset = page.getByRole('radio', { name: /watercolor/i });
 		await expect(watercolorPreset).toBeDisabled();
 
-		const paperPreset = page.getByRole('radio', { name: /paper/i });
+		const paperPreset = page.getByRole('radio', { name: 'Paper', exact: true });
 		await expect(paperPreset).toBeEnabled();
 	});
 

@@ -20,6 +20,7 @@
 	];
 	import { LAYOUTS, getAspectRatiosForLayout } from '$lib/constants/poster';
 	import ExportButton from './ExportButton.svelte';
+	import Tooltip from './Tooltip.svelte';
 
 	const currentAspectRatios = $derived(getAspectRatiosForLayout(posterStore.data.layout));
 
@@ -386,18 +387,20 @@
 			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Layout</h3>
 			<div class="grid grid-cols-2 gap-1.5" role="radiogroup" aria-label="Layout">
 				{#each LAYOUTS as layout}
-					<button
-						type="button"
-						onclick={() => posterStore.setLayout(layout.value)}
-						class="flex flex-col items-center gap-0.5 rounded border-2 p-1.5 transition-colors {posterStore.data.layout === layout.value
-							? 'border-blue-600 bg-blue-50'
-							: 'border-gray-200 hover:border-gray-300'}"
-						role="radio"
-						aria-checked={posterStore.data.layout === layout.value}
-					>
-						<span class="text-xs font-semibold text-gray-700">{layout.label}</span>
-						<span class="text-[10px] text-gray-400">{layout.orientation}</span>
-					</button>
+					<Tooltip text={layout.tooltip}>
+						<button
+							type="button"
+							onclick={() => posterStore.setLayout(layout.value)}
+							class="flex w-full flex-col items-center gap-0.5 rounded border-2 p-1.5 transition-colors {posterStore.data.layout === layout.value
+								? 'border-blue-600 bg-blue-50'
+								: 'border-gray-200 hover:border-gray-300'}"
+							role="radio"
+							aria-checked={posterStore.data.layout === layout.value}
+						>
+							<span class="text-xs font-semibold text-gray-700">{layout.label}</span>
+							<span class="text-[10px] text-gray-400">{layout.orientation}</span>
+						</button>
+					</Tooltip>
 				{/each}
 			</div>
 		</section>
@@ -406,18 +409,20 @@
 			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Aspect Ratio</h3>
 			<div class="grid grid-cols-2 gap-1.5" role="radiogroup" aria-label="Aspect Ratio">
 				{#each currentAspectRatios as ratio}
-					<button
-						type="button"
-						onclick={() => posterStore.setAspectRatio(ratio.value)}
-						class="flex flex-col items-center gap-0.5 rounded border-2 p-1.5 transition-colors {posterStore.data.aspectRatio === ratio.value
-							? 'border-blue-600 bg-blue-50'
-							: 'border-gray-200 hover:border-gray-300'}"
-						role="radio"
-						aria-checked={posterStore.data.aspectRatio === ratio.value}
-					>
-						<span class="text-xs font-semibold text-gray-700">{ratio.label}</span>
-						<span class="text-[10px] text-gray-400">{ratio.printSize}</span>
-					</button>
+					<Tooltip text={ratio.tooltip}>
+						<button
+							type="button"
+							onclick={() => posterStore.setAspectRatio(ratio.value)}
+							class="flex w-full flex-col items-center gap-0.5 rounded border-2 p-1.5 transition-colors {posterStore.data.aspectRatio === ratio.value
+								? 'border-blue-600 bg-blue-50'
+								: 'border-gray-200 hover:border-gray-300'}"
+							role="radio"
+							aria-checked={posterStore.data.aspectRatio === ratio.value}
+						>
+							<span class="text-xs font-semibold text-gray-700">{ratio.label}</span>
+							<span class="text-[10px] text-gray-400">{ratio.printSize}</span>
+						</button>
+					</Tooltip>
 				{/each}
 			</div>
 		</section>

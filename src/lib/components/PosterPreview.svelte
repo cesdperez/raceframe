@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { posterStore } from '$lib/stores/poster.svelte';
+	import { calculateClassicLayout } from '$lib/constants/poster';
 	import PosterMap from './PosterMap.svelte';
 	import QrCode from './QrCode.svelte';
 
@@ -57,7 +58,10 @@
 	const qrDotStyle = $derived(posterStore.data.qrDotStyle);
 	const qrGradientEnabled = $derived(posterStore.data.qrGradientEnabled);
 
-	const mapMaxHeight = $derived(Math.round(posterHeight * 0.58));
+	const classicLayoutMetrics = $derived(
+		calculateClassicLayout(posterHeight, !!qrCodeUrl)
+	);
+	const mapHeight = $derived(classicLayoutMetrics.mapHeight);
 </script>
 
 <div class="poster-viewport" bind:this={containerEl}>
@@ -144,7 +148,7 @@
 					<p class="race-date">{formattedDate}</p>
 				</header>
 
-				<div class="poster-map-container" style:max-height="{mapMaxHeight}px">
+				<div class="poster-map-container" style:height="{mapHeight}px">
 					<PosterMap />
 				</div>
 
@@ -237,7 +241,7 @@
 	}
 
 	.poster-map-container {
-		flex: 1;
+		flex-shrink: 0;
 		min-height: 0;
 		margin: 0 0 50px 0;
 		border-radius: 12px;

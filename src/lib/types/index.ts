@@ -28,7 +28,7 @@ export type MapStyle =
 export type MapFilter = 'none' | 'grayscale' | 'sepia' | 'navy' | 'teal';
 export type Unit = 'km' | 'miles';
 export type Layout = 'classic' | 'medal-right';
-export type AspectRatio = '2:3' | '4:5' | '3:2' | '5:4';
+export type AspectRatio = '2:3' | '4:5' | '5:7' | 'iso-a' | '3:2' | '5:4' | '7:5' | 'iso-a-landscape';
 export type QrDotStyle = 'rounded' | 'dots' | 'classy' | 'classy-rounded' | 'square' | 'extra-rounded';
 
 export interface PosterData {

@@ -361,6 +361,18 @@ describe('PosterStore', () => {
 			expect(posterStore.posterHeight).toBe(2000);
 		});
 
+		it('returns correct dimensions for portrait 5:7', () => {
+			posterStore.setAspectRatio('5:7');
+			expect(posterStore.posterWidth).toBe(1400);
+			expect(posterStore.posterHeight).toBe(2000);
+		});
+
+		it('returns correct dimensions for portrait iso-a', () => {
+			posterStore.setAspectRatio('iso-a');
+			expect(posterStore.posterWidth).toBe(1414);
+			expect(posterStore.posterHeight).toBe(2000);
+		});
+
 		it('returns correct dimensions for landscape 3:2', () => {
 			posterStore.setLayout('medal-right');
 			expect(posterStore.posterWidth).toBe(2400);
@@ -372,6 +384,20 @@ describe('PosterStore', () => {
 			posterStore.setAspectRatio('5:4');
 			expect(posterStore.posterWidth).toBe(2000);
 			expect(posterStore.posterHeight).toBe(1600);
+		});
+
+		it('returns correct dimensions for landscape 7:5', () => {
+			posterStore.setLayout('medal-right');
+			posterStore.setAspectRatio('7:5');
+			expect(posterStore.posterWidth).toBe(2000);
+			expect(posterStore.posterHeight).toBe(1400);
+		});
+
+		it('returns correct dimensions for landscape iso-a-landscape', () => {
+			posterStore.setLayout('medal-right');
+			posterStore.setAspectRatio('iso-a-landscape');
+			expect(posterStore.posterWidth).toBe(2000);
+			expect(posterStore.posterHeight).toBe(1414);
 		});
 	});
 
