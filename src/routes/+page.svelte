@@ -79,7 +79,7 @@
 				>
 					RaceFrame
 				</h1>
-				<p class="text-xl md:text-2xl text-gray-600 mb-8 min-h-[1.5em] flex items-center justify-center gap-2">
+				<p class="text-xl md:text-2xl text-gray-600 mb-8 min-h-[1.5em] text-center leading-relaxed">
 					Create beautiful 
 					<span class="relative inline-flex flex-col items-center text-blue-600">
 						<span class="sr-only">running and cycling</span>
