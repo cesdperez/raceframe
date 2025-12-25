@@ -21,11 +21,17 @@
 		const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 		if (mediaQuery.matches) return;
 
-		const interval = setInterval(() => {
+		const timeout = setTimeout(() => {
 			activityIndex = (activityIndex + 1) % activities.length;
-		}, 3000);
+			const interval = setInterval(() => {
+				activityIndex = (activityIndex + 1) % activities.length;
+			}, 3000);
+			return () => {
+				clearInterval(interval);
+			};
+		}, 2000);
 
-		return () => clearInterval(interval);
+		return () => clearTimeout(timeout);
 	});
 
 	async function handleUploadSuccess(gpxData: GPXData) {
