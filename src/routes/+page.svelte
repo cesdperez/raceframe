@@ -19,6 +19,7 @@
 
 	let isMobile = $derived(isMobileRaw);
 	let editorHeading = $state<HTMLHeadingElement | null>(null);
+	let animationInterval: ReturnType<typeof setInterval> | null = null;
 
 	function checkIsMobile() {
 		isMobileRaw = window.innerWidth < 1024;
@@ -64,33 +65,29 @@
 			{ threshold: 0 }
 		);
 
-		// Observe footer when available
-		const checkFooter = setInterval(() => {
+		$effect(() => {
 			if (footerElement) {
 				observer.observe(footerElement);
-				clearInterval(checkFooter);
+				return () => observer.disconnect();
 			}
-		}, 50);
+		});
 
 		const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 		if (mediaQuery.matches) return;
 
 		const timeout = setTimeout(() => {
 			activityIndex = (activityIndex + 1) % activities.length;
-			const interval = setInterval(() => {
+			animationInterval = setInterval(() => {
 				activityIndex = (activityIndex + 1) % activities.length;
 			}, 3000);
-			return () => {
-				clearInterval(interval);
-			};
 		}, 2000);
 
 		return () => {
 			clearTimeout(timeout);
+			if (animationInterval) clearInterval(animationInterval);
 			resizeMedia.removeEventListener('change', handleResize);
 			window.removeEventListener('resize', handleWindowResize);
 			observer.disconnect();
-			clearInterval(checkFooter);
 		};
 	});
 
