@@ -100,3 +100,36 @@ test.describe('Mobile Responsive Behavior', () => {
 		await expect(previewToggle).toBeVisible();
 	});
 });
+
+test.describe('Desktop Layout Behavior', () => {
+	test('desktop body does not have overflow hidden in editor', async ({ page }) => {
+		await page.setViewportSize({ width: 1280, height: 800 });
+		await page.goto('/');
+
+		const fileInput = page.locator('input[type="file"][data-upload-ready]');
+		await fileInput.waitFor({ state: 'attached' });
+		await fileInput.setInputFiles(FIXTURE_PATH);
+
+		await expect(page.getByRole('heading', { name: 'Customize', exact: true })).toBeVisible();
+
+		const bodyOverflow = await page.evaluate(() =>
+			window.getComputedStyle(document.body).overflow
+		);
+		expect(bodyOverflow).not.toBe('hidden');
+	});
+
+	test('desktop preview has minimum height', async ({ page }) => {
+		await page.setViewportSize({ width: 1280, height: 800 });
+		await page.goto('/');
+
+		const fileInput = page.locator('input[type="file"][data-upload-ready]');
+		await fileInput.waitFor({ state: 'attached' });
+		await fileInput.setInputFiles(FIXTURE_PATH);
+
+		const preview = page.getByRole('img', { name: /poster preview/i });
+		await expect(preview).toBeVisible();
+
+		const previewBox = await preview.boundingBox();
+		expect(previewBox!.height).toBeGreaterThanOrEqual(400);
+	});
+});

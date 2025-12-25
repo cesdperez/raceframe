@@ -140,7 +140,7 @@
 </div>
 
 <svelte:head>
-	{#if currentView === 'editor' && (!isMobile || isPreviewEnlarged)}
+	{#if currentView === 'editor' && isMobile && isPreviewEnlarged}
 		<style>
 			html {
 				overflow: hidden !important;
@@ -154,7 +154,7 @@
 	{/if}
 </svelte:head>
 
-<div class="min-h-screen flex flex-col {currentView === 'editor' && !isMobile ? 'h-full' : ''}">
+<div class="min-h-screen flex flex-col">
 	{#if currentView === 'landing'}
 		<main id="main-content" class="flex-1 flex flex-col items-center justify-center px-4 py-12 view-fade-in">
 			<div class="max-w-2xl mx-auto text-center">
