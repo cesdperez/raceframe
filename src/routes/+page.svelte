@@ -69,7 +69,22 @@
 	{statusMessage}
 </div>
 
-<div class="min-h-screen flex flex-col">
+<svelte:head>
+	{#if currentView === 'editor'}
+		<style>
+			html {
+				overflow: hidden !important;
+				height: 100% !important;
+			}
+			body {
+				height: 100% !important;
+				overflow: hidden !important;
+			}
+		</style>
+	{/if}
+</svelte:head>
+
+<div class="{currentView === 'editor' ? 'h-screen overflow-hidden' : 'min-h-screen'} flex flex-col">
 	{#if currentView === 'landing'}
 		<main id="main-content" class="flex-1 flex flex-col items-center justify-center px-4 py-12 view-fade-in">
 			<div class="max-w-2xl mx-auto text-center">

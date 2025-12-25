@@ -92,7 +92,7 @@
 	}
 </script>
 
-<div class="flex h-full flex-col overflow-y-auto p-2 md:p-3">
+<div class="flex h-full flex-col overflow-y-auto p-2 md:p-3 pb-20">
 	{#if posterStore.isDemo}
 		<div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3" role="status">
 			<p class="text-sm font-medium text-amber-800">Demo Mode</p>
