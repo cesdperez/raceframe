@@ -12,82 +12,35 @@
 	let uploadError = $state<UploadError | null>(null);
 	let statusMessage = $state('');
 
-	let showFooter = $state(false);
-	let isMobileRaw = $state(false);
+	let isMobile = $state(false);
 	let isPreviewEnlarged = $state(false);
-	let footerElement = $state<HTMLElement | null>(null);
 
-	let isMobile = $derived(isMobileRaw);
 	let editorHeading = $state<HTMLHeadingElement | null>(null);
-	let animationInterval: ReturnType<typeof setInterval> | null = null;
-
-	function checkIsMobile() {
-		isMobileRaw = window.innerWidth < 1024;
-	}
 
 	const activities = ['running', 'cycling'];
 	let activityIndex = $state(0);
 
 	onMount(() => {
-		// Initialize mobile detection
-		checkIsMobile();
+		const mobileMediaQuery = window.matchMedia('(max-width: 1023px)');
+		isMobile = mobileMediaQuery.matches;
 
-		// Set initial footer state
-		if (!isMobileRaw) {
-			showFooter = true;
+		const handleMobileChange = (e: MediaQueryListEvent) => {
+			isMobile = e.matches;
+		};
+		mobileMediaQuery.addEventListener('change', handleMobileChange);
+
+		const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+		if (reducedMotionQuery.matches) {
+			return () => mobileMediaQuery.removeEventListener('change', handleMobileChange);
 		}
 
-		// Listen for resize with multiple approaches for better compatibility
-		const resizeMedia = window.matchMedia('(max-width: 1023px)');
-		const handleResize = (e: MediaQueryListEvent) => {
-			checkIsMobile();
-			if (!isMobileRaw) showFooter = true;
-		};
-		resizeMedia.addEventListener('change', handleResize);
-
-		// Also listen to window resize for better compatibility
-		const handleWindowResize = () => {
-			checkIsMobile();
-			if (!isMobileRaw) showFooter = true;
-		};
-		window.addEventListener('resize', handleWindowResize);
-
-		// Use Intersection Observer for footer visibility on mobile
-		const observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (isMobileRaw) {
-						// Show footer when it enters viewport
-						showFooter = entry.isIntersecting;
-					}
-				});
-			},
-			{ threshold: 0 }
-		);
-
-		$effect(() => {
-			if (footerElement) {
-				observer.observe(footerElement);
-				return () => observer.disconnect();
-			}
-		});
-
-		const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-		if (mediaQuery.matches) return;
-
-		const timeout = setTimeout(() => {
+		const interval = setInterval(() => {
 			activityIndex = (activityIndex + 1) % activities.length;
-			animationInterval = setInterval(() => {
-				activityIndex = (activityIndex + 1) % activities.length;
-			}, 3000);
-		}, 2000);
+		}, 3000);
 
 		return () => {
-			clearTimeout(timeout);
-			if (animationInterval) clearInterval(animationInterval);
-			resizeMedia.removeEventListener('change', handleResize);
-			window.removeEventListener('resize', handleWindowResize);
-			observer.disconnect();
+			mobileMediaQuery.removeEventListener('change', handleMobileChange);
+			clearInterval(interval);
 		};
 	});
 
@@ -128,6 +81,16 @@
 	function togglePreviewEnlarged() {
 		isPreviewEnlarged = !isPreviewEnlarged;
 	}
+
+	let isPreviewEnlargedOnMobile = $derived(isMobile && isPreviewEnlarged);
+
+	$effect(() => {
+		if (currentView === 'editor' && isPreviewEnlargedOnMobile) {
+			document.body.classList.add('scroll-locked');
+		} else {
+			document.body.classList.remove('scroll-locked');
+		}
+	});
 </script>
 
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -135,21 +98,6 @@
 <div aria-live="polite" aria-atomic="true" class="sr-only">
 	{statusMessage}
 </div>
-
-<svelte:head>
-	{#if currentView === 'editor' && isMobile && isPreviewEnlarged}
-		<style>
-			html {
-				overflow: hidden !important;
-				height: 100% !important;
-			}
-			body {
-				height: 100% !important;
-				overflow: hidden !important;
-			}
-		</style>
-	{/if}
-</svelte:head>
 
 <div class="min-h-screen flex flex-col">
 	{#if currentView === 'landing'}
@@ -250,9 +198,10 @@
 			</div>
 		</main>
 	{:else if currentView === 'editor'}
-		<main id="main-content" class="flex-1 flex flex-col lg:flex-row min-h-0 view-fade-in {isMobile && isPreviewEnlarged ? 'h-screen overflow-hidden' : 'overflow-hidden h-full'}">
+		<main id="main-content" class="editor-main flex-1 flex flex-col lg:flex-row min-h-0 view-fade-in overflow-hidden">
 			<div
-				class="{isMobile ? (isPreviewEnlarged ? 'h-screen' : 'h-[50vh] md:h-[60vh]') : 'flex-1 lg:min-h-0'} bg-gray-100 relative overflow-hidden"
+				class="preview-container bg-gray-100 relative overflow-hidden"
+				class:preview-enlarged={isPreviewEnlargedOnMobile}
 				role="img"
 				aria-label="Poster preview showing your race route and details"
 			>
@@ -271,7 +220,8 @@
 			</button>
 
 			<aside
-				class="w-full lg:w-80 xl:w-96 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0 flex flex-col {isMobile ? (isPreviewEnlarged ? 'h-0 border-t-0 opacity-0 overflow-hidden' : 'h-auto opacity-100') : ''}"
+				class="editor-aside w-full lg:w-80 xl:w-96 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0 flex flex-col"
+				class:editor-aside-hidden={isPreviewEnlargedOnMobile}
 				aria-label="Poster customization options"
 			>
 				<div class="p-3 md:p-4 border-b border-gray-200 flex-shrink-0">
@@ -292,11 +242,8 @@
 	{/if}
 
 	<footer
-		bind:this={footerElement}
 		class="py-6 text-center text-sm text-gray-400 transition-opacity duration-300"
-		class:opacity-0={isMobile && (!showFooter || isPreviewEnlarged)}
-		class:pointer-events-none={isMobile && (!showFooter || isPreviewEnlarged)}
-		class:opacity-100={!isMobile || (showFooter && !isPreviewEnlarged)}
+		class:footer-hidden={isPreviewEnlargedOnMobile}
 	>
 		<a
 			href="https://github.com/cesdperez/raceframe"
@@ -311,3 +258,40 @@
 		</a>
 	</footer>
 </div>
+
+<style>
+	.preview-container {
+		flex: 1;
+		min-height: 400px;
+	}
+
+	@media (max-width: 1023px) {
+		.preview-container {
+			flex: none;
+			height: 50vh;
+			min-height: 0;
+		}
+
+		.preview-container.preview-enlarged {
+			height: 100vh;
+		}
+	}
+
+	@media (min-width: 768px) and (max-width: 1023px) {
+		.preview-container {
+			height: 60vh;
+		}
+	}
+
+	.editor-aside-hidden {
+		height: 0;
+		border-top-width: 0;
+		opacity: 0;
+		overflow: hidden;
+	}
+
+	.footer-hidden {
+		opacity: 0;
+		pointer-events: none;
+	}
+</style>

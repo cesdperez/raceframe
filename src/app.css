@@ -29,6 +29,10 @@ body {
 	overscroll-behavior-y: none;
 }
 
+body.scroll-locked {
+	overflow: hidden;
+}
+
 body {
 	font-family: var(--font-body);
 	background-color: var(--color-bg, #ffffff);
