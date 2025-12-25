@@ -132,7 +132,7 @@
 					for printing. Free, private, and works with any GPX source.
 				</p>
 
-				<div class="mb-6">
+				<div class="mb-4 md:mb-6">
 					<FileUpload onSuccess={handleUploadSuccess} onError={handleUploadError} />
 				</div>
 
