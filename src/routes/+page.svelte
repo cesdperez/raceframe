@@ -140,7 +140,7 @@
 </div>
 
 <svelte:head>
-	{#if currentView === 'editor' && !isMobile}
+	{#if currentView === 'editor' && (!isMobile || isPreviewEnlarged)}
 		<style>
 			html {
 				overflow: hidden !important;
@@ -253,9 +253,9 @@
 			</div>
 		</main>
 	{:else if currentView === 'editor'}
-		<main id="main-content" class="flex-1 flex flex-col lg:flex-row min-h-0 view-fade-in overflow-hidden h-full">
+		<main id="main-content" class="flex-1 flex flex-col lg:flex-row min-h-0 view-fade-in {isMobile && isPreviewEnlarged ? 'h-screen overflow-hidden' : 'overflow-hidden h-full'}">
 			<div
-				class="{isMobile ? (isPreviewEnlarged ? 'h-[85vh]' : 'h-[50vh] md:h-[60vh]') : 'flex-1 lg:min-h-0'} bg-gray-100 relative overflow-hidden"
+				class="{isMobile ? (isPreviewEnlarged ? 'h-screen' : 'h-[50vh] md:h-[60vh]') : 'flex-1 lg:min-h-0'} bg-gray-100 relative overflow-hidden"
 				role="img"
 				aria-label="Poster preview showing your race route and details"
 			>
@@ -297,9 +297,9 @@
 	<footer
 		bind:this={footerElement}
 		class="py-6 text-center text-sm text-gray-400 transition-opacity duration-300"
-		class:opacity-0={isMobile && !showFooter}
-		class:pointer-events-none={isMobile && !showFooter}
-		class:opacity-100={!isMobile || showFooter}
+		class:opacity-0={isMobile && (!showFooter || isPreviewEnlarged)}
+		class:pointer-events-none={isMobile && (!showFooter || isPreviewEnlarged)}
+		class:opacity-100={!isMobile || (showFooter && !isPreviewEnlarged)}
 	>
 		<a
 			href="https://github.com/cesdperez/raceframe"
