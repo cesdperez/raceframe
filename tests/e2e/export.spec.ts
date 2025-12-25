@@ -107,7 +107,7 @@ test.describe('Export - Hi-Res Quality', () => {
 		const downloadLarge = await downloadLargePromise;
 		const pathLarge = await downloadLarge.path();
 
-		await page.waitForTimeout(500);
+		await expect(page.getByRole('button', { name: /Large.*3200×4800/i })).toBeEnabled();
 
 		const downloadXLPromise = page.waitForEvent('download', { timeout: EXPORT_TIMEOUT });
 		await page.getByRole('button', { name: /Extra Large.*6400×9600/i }).click();
@@ -143,7 +143,7 @@ test.describe('Export - Medal Right Layout', () => {
 	test.beforeEach(async ({ editorPage, page }) => {
 		// editorPage fixture handles GPX upload
 		await page.getByRole('radio', { name: /Medal Right/i }).click();
-		await page.waitForTimeout(300);
+		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 	});
 
 	test('exports PNG with landscape dimensions', async ({ page }) => {

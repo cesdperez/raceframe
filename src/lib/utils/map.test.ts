@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { toLatLng, toLatLngArray, getTileUrlForStyle, getAttributionForStyle } from './map.js';
+import { toLatLng, toLatLngArray } from './map.js';
 
 describe('toLatLng', () => {
 	it('converts [lng, lat] to [lat, lng]', () => {
@@ -39,54 +39,6 @@ describe('toLatLngArray', () => {
 	it('handles single coordinate', () => {
 		const result = toLatLngArray([[10, 20]]);
 		expect(result).toEqual([[20, 10]]);
-	});
-});
-
-describe('getTileUrlForStyle', () => {
-	it('returns correct URL for positron', () => {
-		const url = getTileUrlForStyle('positron');
-		expect(url).toContain('basemaps.cartocdn.com');
-		expect(url).toContain('light_all');
-	});
-
-	it('returns correct URL for dark-matter', () => {
-		const url = getTileUrlForStyle('dark-matter');
-		expect(url).toContain('dark_all');
-	});
-
-	it('returns correct URL for stamen-terrain', () => {
-		const url = getTileUrlForStyle('stamen-terrain');
-		expect(url).toContain('stamen_terrain');
-	});
-
-	it('returns correct URL for stamen-toner', () => {
-		const url = getTileUrlForStyle('stamen-toner');
-		expect(url).toContain('stamen_toner');
-	});
-
-	it('returns correct URL for alidade-satellite', () => {
-		const url = getTileUrlForStyle('alidade-satellite');
-		expect(url).toContain('alidade_satellite');
-	});
-});
-
-describe('getAttributionForStyle', () => {
-	it('returns CARTO attribution for CartoDB styles', () => {
-		const attr = getAttributionForStyle('positron');
-		expect(attr).toContain('CARTO');
-		expect(attr).toContain('OpenStreetMap');
-	});
-
-	it('returns Stadia/Stamen attribution for Stamen styles', () => {
-		const attr = getAttributionForStyle('stamen-terrain');
-		expect(attr).toContain('Stadia Maps');
-		expect(attr).toContain('Stamen Design');
-	});
-
-	it('returns Stadia attribution for satellite style', () => {
-		const attr = getAttributionForStyle('alidade-satellite');
-		expect(attr).toContain('Stadia Maps');
-		expect(attr).toContain('CNES');
 	});
 });
 

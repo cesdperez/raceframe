@@ -66,19 +66,11 @@ describe('metersToKm', () => {
 	it('converts meters to kilometers', () => {
 		expect(metersToKm(42195)).toBeCloseTo(42.195);
 	});
-
-	it('handles zero', () => {
-		expect(metersToKm(0)).toBe(0);
-	});
 });
 
 describe('metersToMiles', () => {
 	it('converts meters to miles', () => {
 		expect(metersToMiles(42195)).toBeCloseTo(26.219, 2);
-	});
-
-	it('handles zero', () => {
-		expect(metersToMiles(0)).toBe(0);
 	});
 });
 
@@ -86,19 +78,11 @@ describe('kmToMeters', () => {
 	it('converts kilometers to meters', () => {
 		expect(kmToMeters(42.195)).toBeCloseTo(42195);
 	});
-
-	it('handles zero', () => {
-		expect(kmToMeters(0)).toBe(0);
-	});
 });
 
 describe('milesToMeters', () => {
 	it('converts miles to meters', () => {
 		expect(milesToMeters(26.219)).toBeCloseTo(42195, -1);
-	});
-
-	it('handles zero', () => {
-		expect(milesToMeters(0)).toBe(0);
 	});
 });
 

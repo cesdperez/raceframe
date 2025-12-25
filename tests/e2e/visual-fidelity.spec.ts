@@ -23,9 +23,6 @@ test.describe('Export Visual Fidelity', () => {
 
 		// Wait for map tiles to load (loading overlay should disappear)
 		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
-
-		// Extra wait for map to stabilize
-		await page.waitForTimeout(500);
 	});
 
 	test('exported PNG matches preview - classic layout', async ({ page }) => {
@@ -37,8 +34,8 @@ test.describe('Export Visual Fidelity', () => {
 			scaleWrapper.style.transformOrigin = 'top left';
 		});
 
-		// Wait for repaint
-		await page.waitForTimeout(100);
+		// Wait for layout to stabilize after transform change
+		await expect(page.locator('[data-poster-export]')).toBeVisible();
 
 		const poster = page.locator('[data-poster-export]');
 		const previewScreenshot = await poster.screenshot();
@@ -85,9 +82,6 @@ test.describe('Export Visual Fidelity', () => {
 	test('exported PNG matches preview - medal-right layout', async ({ page }) => {
 		// Switch to medal-right layout
 		await page.getByRole('radio', { name: /Medal Right/i }).click();
-		await page.waitForTimeout(500);
-
-		// Wait for map tiles to reload
 		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		// Remove scale transform
@@ -95,7 +89,7 @@ test.describe('Export Visual Fidelity', () => {
 			const scaleWrapper = document.querySelector('.poster-scale-wrapper') as HTMLElement;
 			scaleWrapper.style.transform = 'none';
 		});
-		await page.waitForTimeout(100);
+		await expect(page.locator('[data-poster-export]')).toBeVisible();
 
 		const poster = page.locator('[data-poster-export]');
 		const previewScreenshot = await poster.screenshot();
@@ -167,10 +161,7 @@ test.describe('Export Visual Fidelity', () => {
 		const qrInput = page.getByLabel(/Activity URL/i);
 		await qrInput.fill('https://strava.com/activities/12345');
 
-		// Wait for debounce + render
-		await page.waitForTimeout(800);
-
-		// Verify QR code is visible in preview
+		// Verify QR code is visible in preview (implicitly waits for debounce + render)
 		await expect(page.locator('.qr-code-container canvas')).toBeVisible({ timeout: 5000 });
 
 		// Export with QR code
@@ -192,7 +183,6 @@ test.describe('Export Visual Fidelity', () => {
 		for (const theme of themeNames) {
 			// Select theme preset
 			await page.getByRole('radio', { name: theme, exact: true }).click();
-			await page.waitForTimeout(300);
 
 			// Wait for map tiles to potentially reload
 			await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
@@ -250,7 +240,6 @@ test.describe('Aspect Ratio Options', () => {
 	test.beforeEach(async ({ editorPage, page }) => {
 		await page.waitForFunction(() => document.fonts.ready);
 		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
-		await page.waitForTimeout(500);
 	});
 
 	test('displays all portrait aspect ratio options for classic layout', async ({ page }) => {
@@ -264,7 +253,7 @@ test.describe('Aspect Ratio Options', () => {
 
 	test('displays all landscape aspect ratio options for medal-right layout', async ({ page }) => {
 		await page.getByRole('radio', { name: /Medal Right/i }).click();
-		await page.waitForTimeout(300);
+		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		const aspectRatioSection = page.locator('section', { has: page.getByText('Aspect Ratio') });
 
@@ -276,7 +265,6 @@ test.describe('Aspect Ratio Options', () => {
 
 	test('exports correct dimensions for portrait 5:7 ratio', async ({ page }) => {
 		await page.getByRole('radio', { name: /Portrait Frame/i }).click();
-		await page.waitForTimeout(300);
 		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		const downloadPromise = page.waitForEvent('download');
@@ -293,7 +281,6 @@ test.describe('Aspect Ratio Options', () => {
 
 	test('exports correct dimensions for portrait ISO A ratio', async ({ page }) => {
 		await page.getByRole('radio', { name: /A4.*A3.*A2/i }).click();
-		await page.waitForTimeout(300);
 		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		const downloadPromise = page.waitForEvent('download');
@@ -310,10 +297,9 @@ test.describe('Aspect Ratio Options', () => {
 
 	test('exports correct dimensions for landscape 7:5 ratio', async ({ page }) => {
 		await page.getByRole('radio', { name: /Medal Right/i }).click();
-		await page.waitForTimeout(300);
+		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		await page.getByRole('radio', { name: /Landscape Frame/i }).click();
-		await page.waitForTimeout(300);
 		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		const downloadPromise = page.waitForEvent('download');
@@ -330,10 +316,9 @@ test.describe('Aspect Ratio Options', () => {
 
 	test('exports correct dimensions for landscape ISO A ratio', async ({ page }) => {
 		await page.getByRole('radio', { name: /Medal Right/i }).click();
-		await page.waitForTimeout(300);
+		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		await page.getByRole('radio', { name: /A4.*A3.*A2/i }).click();
-		await page.waitForTimeout(300);
 		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		const downloadPromise = page.waitForEvent('download');
@@ -361,7 +346,6 @@ test.describe('Aspect Ratio Options', () => {
 		const initialRatio = initialPng.width / initialPng.height;
 
 		await page.getByRole('radio', { name: /Frame Standard/i }).click();
-		await page.waitForTimeout(300);
 		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
 
 		const updatedScreenshot = await poster.screenshot();
@@ -456,7 +440,6 @@ test.describe('Export Scale Fidelity', () => {
 	test.beforeEach(async ({ editorPage, page }) => {
 		await page.waitForFunction(() => document.fonts.ready);
 		await expect(page.locator('.loading-overlay')).toBeHidden({ timeout: 10000 });
-		await page.waitForTimeout(500);
 	});
 
 	test('Large export (2x) maintains visual fidelity with Standard (1x)', async ({ page }) => {
@@ -466,7 +449,7 @@ test.describe('Export Scale Fidelity', () => {
 		fs.mkdirSync(TEST_RESULTS_DIR, { recursive: true });
 		fs.writeFileSync(path.join(TEST_RESULTS_DIR, 'fidelity-1x.png'), standardBuffer);
 
-		await page.waitForTimeout(500);
+		await expect(getStandardExportButton(page)).toBeEnabled();
 
 		const largeBuffer = await exportAtScale(page, 2);
 		fs.writeFileSync(path.join(TEST_RESULTS_DIR, 'fidelity-2x.png'), largeBuffer);
@@ -490,7 +473,7 @@ test.describe('Export Scale Fidelity', () => {
 		fs.mkdirSync(TEST_RESULTS_DIR, { recursive: true });
 		fs.writeFileSync(path.join(TEST_RESULTS_DIR, 'fidelity-4x-baseline.png'), standardBuffer);
 
-		await page.waitForTimeout(500);
+		await expect(getStandardExportButton(page)).toBeEnabled();
 
 		const extraLargeBuffer = await exportAtScale(page, 4);
 		fs.writeFileSync(path.join(TEST_RESULTS_DIR, 'fidelity-4x.png'), extraLargeBuffer);
