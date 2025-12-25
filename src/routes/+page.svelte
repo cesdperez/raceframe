@@ -12,12 +12,53 @@
 	let uploadError = $state<UploadError | null>(null);
 	let statusMessage = $state('');
 
+	let showFooter = $state(false);
+	let isMobile = $state(false);
+	let footerElement = $state<HTMLElement | null>(null);
+
 	let editorHeading = $state<HTMLHeadingElement | null>(null);
 
 	const activities = ['running', 'cycling'];
 	let activityIndex = $state(0);
 
 	onMount(() => {
+		// Initialize mobile detection
+		isMobile = window.matchMedia('(max-width: 1023px)').matches;
+
+		// Set initial footer state
+		if (!isMobile) {
+			showFooter = true;
+		}
+
+		// Listen for resize
+		const resizeMedia = window.matchMedia('(max-width: 1023px)');
+		const handleResize = (e: MediaQueryListEvent) => {
+			isMobile = e.matches;
+			if (!isMobile) showFooter = true;
+		};
+		resizeMedia.addEventListener('change', handleResize);
+
+		// Use Intersection Observer for footer visibility on mobile
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (isMobile) {
+						// Show footer when it enters viewport
+						showFooter = entry.isIntersecting;
+					}
+				});
+			},
+			{ threshold: 0 }
+		);
+
+		// Observe footer when available
+		const checkFooter = setInterval(() => {
+			if (footerElement) {
+				observer.observe(footerElement);
+				clearInterval(checkFooter);
+			}
+		}, 50);
+
 		const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 		if (mediaQuery.matches) return;
 
@@ -31,7 +72,12 @@
 			};
 		}, 2000);
 
-		return () => clearTimeout(timeout);
+		return () => {
+			clearTimeout(timeout);
+			resizeMedia.removeEventListener('change', handleResize);
+			observer.disconnect();
+			clearInterval(checkFooter);
+		};
 	});
 
 	async function handleUploadSuccess(gpxData: GPXData) {
@@ -76,7 +122,7 @@
 </div>
 
 <svelte:head>
-	{#if currentView === 'editor'}
+	{#if currentView === 'editor' && !isMobile}
 		<style>
 			html {
 				overflow: hidden !important;
@@ -90,7 +136,7 @@
 	{/if}
 </svelte:head>
 
-<div class="{currentView === 'editor' ? 'h-screen overflow-hidden' : 'min-h-screen'} flex flex-col">
+<div class="min-h-screen flex flex-col {currentView === 'editor' && !isMobile ? 'h-full' : ''}">
 	{#if currentView === 'landing'}
 		<main id="main-content" class="flex-1 flex flex-col items-center justify-center px-4 py-12 view-fade-in">
 			<div class="max-w-2xl mx-auto text-center">
@@ -189,7 +235,7 @@
 			</div>
 		</main>
 	{:else if currentView === 'editor'}
-		<main id="main-content" class="flex-1 flex flex-col lg:flex-row min-h-0 view-fade-in overflow-hidden">
+		<main id="main-content" class="flex-1 flex flex-col lg:flex-row min-h-0 view-fade-in overflow-hidden h-full">
 			<div class="flex-1 min-h-[50vh] md:min-h-[60vh] lg:min-h-0 bg-gray-100 relative overflow-hidden" style="contain: strict" role="img" aria-label="Poster preview showing your race route and details">
 				<PosterPreview />
 			</div>
@@ -206,10 +252,10 @@
 			</button>
 
 			<aside
-				class="w-full lg:w-80 xl:w-96 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0 flex flex-col max-h-[50vh] md:max-h-[40vh] lg:max-h-none overflow-hidden"
+				class="w-full lg:w-80 xl:w-96 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0 flex flex-col"
 				aria-label="Poster customization options"
 			>
-				<div class="p-3 md:p-4 border-b border-gray-200">
+				<div class="p-3 md:p-4 border-b border-gray-200 flex-shrink-0">
 					<h2
 						bind:this={editorHeading}
 						tabindex="-1"
@@ -226,11 +272,17 @@
 		</main>
 	{/if}
 
-	<footer class="py-6 text-center text-sm text-gray-400">
-		<a 
-			href="https://github.com/cesdperez/raceframe" 
-			target="_blank" 
-			rel="noopener noreferrer" 
+	<footer
+		bind:this={footerElement}
+		class="py-6 text-center text-sm text-gray-400 transition-opacity duration-300"
+		class:opacity-0={isMobile && !showFooter}
+		class:pointer-events-none={isMobile && !showFooter}
+		class:opacity-100={!isMobile || showFooter}
+	>
+		<a
+			href="https://github.com/cesdperez/raceframe"
+			target="_blank"
+			rel="noopener noreferrer"
 			class="inline-flex items-center gap-1.5 hover:text-gray-600 transition-colors"
 		>
 			<svg viewBox="0 0 24 24" class="w-4 h-4 fill-current" aria-hidden="true">
