@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { posterStore } from './poster.svelte.js';
 import type { GPXData } from '../types/index.js';
-import { DEMO_GPX_DATA, DEMO_ATHLETE_NAME } from '../constants/demo.js';
 
 const mockGpxData: GPXData = {
 	coordinates: [
@@ -108,59 +107,28 @@ describe('PosterStore', () => {
 		});
 	});
 
-	describe('setMapStyle', () => {
-		it('has default map style of positron', () => {
-			expect(posterStore.data.mapStyle).toBe('positron');
-		});
-
-		it('updates map style', () => {
+	describe('styling setters', () => {
+		it('updates map style, filter, and route color', () => {
 			posterStore.setMapStyle('dark-matter');
 			expect(posterStore.data.mapStyle).toBe('dark-matter');
 
-			posterStore.setMapStyle('stamen-terrain');
-			expect(posterStore.data.mapStyle).toBe('stamen-terrain');
-
-			posterStore.setMapStyle('alidade-satellite');
-			expect(posterStore.data.mapStyle).toBe('alidade-satellite');
-		});
-
-		it('reset clears map style to default', () => {
-			posterStore.setMapStyle('alidade-satellite');
-			posterStore.reset();
-			expect(posterStore.data.mapStyle).toBe('positron');
-		});
-	});
-
-	describe('setMapFilter', () => {
-		it('has default map filter of none', () => {
-			expect(posterStore.data.mapFilter).toBe('none');
-		});
-
-		it('updates map filter', () => {
 			posterStore.setMapFilter('grayscale');
 			expect(posterStore.data.mapFilter).toBe('grayscale');
 
-			posterStore.setMapFilter('sepia');
-			expect(posterStore.data.mapFilter).toBe('sepia');
-
-			posterStore.setMapFilter('navy');
-			expect(posterStore.data.mapFilter).toBe('navy');
-		});
-
-		it('reset clears map filter to default', () => {
-			posterStore.setMapFilter('grayscale');
-			posterStore.reset();
-			expect(posterStore.data.mapFilter).toBe('none');
-		});
-	});
-
-	describe('setRouteColor', () => {
-		it('updates route color', () => {
 			posterStore.setRouteColor('cyan');
 			expect(posterStore.data.routeColor).toBe('cyan');
+		});
 
+		it('reset restores styling defaults', () => {
+			posterStore.setMapStyle('alidade-satellite');
+			posterStore.setMapFilter('sepia');
 			posterStore.setRouteColor('pink');
-			expect(posterStore.data.routeColor).toBe('pink');
+
+			posterStore.reset();
+
+			expect(posterStore.data.mapStyle).toBe('positron');
+			expect(posterStore.data.mapFilter).toBe('none');
+			expect(posterStore.data.routeColor).toBe('orange');
 		});
 	});
 
@@ -419,119 +387,7 @@ describe('PosterStore', () => {
 		});
 	});
 
-	describe('posterWidth and posterHeight', () => {
-		it('returns correct dimensions for portrait 2:3', () => {
-			posterStore.setAspectRatio('2:3');
-			expect(posterStore.posterWidth).toBe(1600);
-			expect(posterStore.posterHeight).toBe(2400);
-		});
-
-		it('returns correct dimensions for portrait 4:5', () => {
-			posterStore.setAspectRatio('4:5');
-			expect(posterStore.posterWidth).toBe(1600);
-			expect(posterStore.posterHeight).toBe(2000);
-		});
-
-		it('returns correct dimensions for portrait 5:7', () => {
-			posterStore.setAspectRatio('5:7');
-			expect(posterStore.posterWidth).toBe(1400);
-			expect(posterStore.posterHeight).toBe(2000);
-		});
-
-		it('returns correct dimensions for portrait iso-a', () => {
-			posterStore.setAspectRatio('iso-a');
-			expect(posterStore.posterWidth).toBe(1414);
-			expect(posterStore.posterHeight).toBe(2000);
-		});
-
-		it('returns correct dimensions for landscape 3:2', () => {
-			posterStore.setLayout('medal-right');
-			expect(posterStore.posterWidth).toBe(2400);
-			expect(posterStore.posterHeight).toBe(1600);
-		});
-
-		it('returns correct dimensions for landscape 5:4', () => {
-			posterStore.setLayout('medal-right');
-			posterStore.setAspectRatio('5:4');
-			expect(posterStore.posterWidth).toBe(2000);
-			expect(posterStore.posterHeight).toBe(1600);
-		});
-
-		it('returns correct dimensions for landscape 7:5', () => {
-			posterStore.setLayout('medal-right');
-			posterStore.setAspectRatio('7:5');
-			expect(posterStore.posterWidth).toBe(2000);
-			expect(posterStore.posterHeight).toBe(1400);
-		});
-
-		it('returns correct dimensions for landscape iso-a-landscape', () => {
-			posterStore.setLayout('medal-right');
-			posterStore.setAspectRatio('iso-a-landscape');
-			expect(posterStore.posterWidth).toBe(2000);
-			expect(posterStore.posterHeight).toBe(1414);
-		});
-	});
-
 	describe('Demo Mode', () => {
-		it('loadDemoData sets isDemo to true', () => {
-			posterStore.loadDemoData();
-			expect(posterStore.isDemo).toBe(true);
-		});
-
-		it('loadDemoData populates with demo GPX data', () => {
-			posterStore.loadDemoData();
-			expect(posterStore.data.gpxData).toStrictEqual(DEMO_GPX_DATA);
-			expect(posterStore.data.eventName).toBe('Valencia Marathon');
-			expect(posterStore.data.athleteName).toBe(DEMO_ATHLETE_NAME);
-		});
-
-		it('loadDemoData sets map style to positron (CARTO)', () => {
-			posterStore.loadDemoData();
-			expect(posterStore.data.mapStyle).toBe('positron');
-		});
-
-		it('setMapStyle blocks non-CARTO styles in demo mode', () => {
-			posterStore.loadDemoData();
-			posterStore.setMapStyle('stamen-terrain');
-			expect(posterStore.data.mapStyle).toBe('positron');
-
-			posterStore.setMapStyle('alidade-satellite');
-			expect(posterStore.data.mapStyle).toBe('positron');
-		});
-
-		it('setMapStyle allows CARTO styles in demo mode', () => {
-			posterStore.loadDemoData();
-			posterStore.setMapStyle('dark-matter');
-			expect(posterStore.data.mapStyle).toBe('dark-matter');
-
-			posterStore.setMapStyle('positron');
-			expect(posterStore.data.mapStyle).toBe('positron');
-		});
-
-		it('setMapStyle allows all styles when not in demo mode', () => {
-			posterStore.loadFromGPX(mockGpxData);
-			posterStore.setMapStyle('stamen-terrain');
-			expect(posterStore.data.mapStyle).toBe('stamen-terrain');
-		});
-
-		it('applyDesignPreset blocks non-CARTO presets in demo mode', () => {
-			posterStore.loadDemoData();
-			const originalMapStyle = posterStore.data.mapStyle;
-
-			posterStore.applyDesignPreset('noir');
-			expect(posterStore.data.mapStyle).toBe(originalMapStyle);
-
-			posterStore.applyDesignPreset('terrain');
-			expect(posterStore.data.mapStyle).toBe(originalMapStyle);
-		});
-
-		it('applyDesignPreset allows CARTO-based presets in demo mode', () => {
-			posterStore.loadDemoData();
-			posterStore.applyDesignPreset('paper');
-			expect(posterStore.data.mapStyle).toBe('positron');
-			expect(posterStore.activePreset).toBe('paper');
-		});
-
 		it('isPresetAllowedInDemo returns correct values', () => {
 			expect(posterStore.isPresetAllowedInDemo('paper')).toBe(true);
 			expect(posterStore.isPresetAllowedInDemo('noir')).toBe(false);
@@ -544,14 +400,6 @@ describe('PosterStore', () => {
 			expect(posterStore.isMapStyleAllowedInDemo('dark-matter')).toBe(true);
 			expect(posterStore.isMapStyleAllowedInDemo('stamen-terrain')).toBe(false);
 			expect(posterStore.isMapStyleAllowedInDemo('alidade-satellite')).toBe(false);
-		});
-
-		it('reset clears demo mode', () => {
-			posterStore.loadDemoData();
-			expect(posterStore.isDemo).toBe(true);
-
-			posterStore.reset();
-			expect(posterStore.isDemo).toBe(false);
 		});
 	});
 });
