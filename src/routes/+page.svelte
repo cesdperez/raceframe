@@ -13,36 +13,49 @@
 	let statusMessage = $state('');
 
 	let showFooter = $state(false);
-	let isMobile = $state(false);
+	let isMobileRaw = $state(false);
+	let isPreviewEnlarged = $state(false);
 	let footerElement = $state<HTMLElement | null>(null);
 
+	let isMobile = $derived(isMobileRaw);
 	let editorHeading = $state<HTMLHeadingElement | null>(null);
+
+	function checkIsMobile() {
+		isMobileRaw = window.innerWidth < 1024;
+	}
 
 	const activities = ['running', 'cycling'];
 	let activityIndex = $state(0);
 
 	onMount(() => {
 		// Initialize mobile detection
-		isMobile = window.matchMedia('(max-width: 1023px)').matches;
+		checkIsMobile();
 
 		// Set initial footer state
-		if (!isMobile) {
+		if (!isMobileRaw) {
 			showFooter = true;
 		}
 
-		// Listen for resize
+		// Listen for resize with multiple approaches for better compatibility
 		const resizeMedia = window.matchMedia('(max-width: 1023px)');
 		const handleResize = (e: MediaQueryListEvent) => {
-			isMobile = e.matches;
-			if (!isMobile) showFooter = true;
+			checkIsMobile();
+			if (!isMobileRaw) showFooter = true;
 		};
 		resizeMedia.addEventListener('change', handleResize);
+
+		// Also listen to window resize for better compatibility
+		const handleWindowResize = () => {
+			checkIsMobile();
+			if (!isMobileRaw) showFooter = true;
+		};
+		window.addEventListener('resize', handleWindowResize);
 
 		// Use Intersection Observer for footer visibility on mobile
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
-					if (isMobile) {
+					if (isMobileRaw) {
 						// Show footer when it enters viewport
 						showFooter = entry.isIntersecting;
 					}
@@ -75,6 +88,7 @@
 		return () => {
 			clearTimeout(timeout);
 			resizeMedia.removeEventListener('change', handleResize);
+			window.removeEventListener('resize', handleWindowResize);
 			observer.disconnect();
 			clearInterval(checkFooter);
 		};
@@ -112,6 +126,10 @@
 		statusMessage = 'Demo mode loaded. Some features are limited.';
 		await tick();
 		editorHeading?.focus();
+	}
+
+	function togglePreviewEnlarged() {
+		isPreviewEnlarged = !isPreviewEnlarged;
 	}
 </script>
 
@@ -236,8 +254,12 @@
 		</main>
 	{:else if currentView === 'editor'}
 		<main id="main-content" class="flex-1 flex flex-col lg:flex-row min-h-0 view-fade-in overflow-hidden h-full">
-			<div class="flex-1 min-h-[50vh] md:min-h-[60vh] lg:min-h-0 bg-gray-100 relative overflow-hidden" style="contain: strict" role="img" aria-label="Poster preview showing your race route and details">
-				<PosterPreview />
+			<div
+				class="{isMobile ? (isPreviewEnlarged ? 'h-[85vh]' : 'h-[50vh] md:h-[60vh]') : 'flex-1 lg:min-h-0'} bg-gray-100 relative overflow-hidden"
+				role="img"
+				aria-label="Poster preview showing your race route and details"
+			>
+				<PosterPreview {isMobile} {isPreviewEnlarged} onToggleEnlarged={togglePreviewEnlarged} />
 			</div>
 
 			<button
@@ -252,7 +274,7 @@
 			</button>
 
 			<aside
-				class="w-full lg:w-80 xl:w-96 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0 flex flex-col"
+				class="w-full lg:w-80 xl:w-96 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0 flex flex-col {isMobile ? (isPreviewEnlarged ? 'h-0 border-t-0 opacity-0 overflow-hidden' : 'h-auto opacity-100') : ''}"
 				aria-label="Poster customization options"
 			>
 				<div class="p-3 md:p-4 border-b border-gray-200 flex-shrink-0">
