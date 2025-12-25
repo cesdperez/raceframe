@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { tick, onMount } from 'svelte';
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import type { AppView, UploadError, GPXData } from '$lib/types/index.js';
 	import { posterStore } from '$lib/stores/poster.svelte.js';
 	import FileUpload from '$lib/components/FileUpload.svelte';

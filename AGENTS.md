@@ -30,3 +30,6 @@ Cloudflare Pages auto-deploys on push to `main`. Do not push unless explicitly r
 
 ## Context
 Refer to `docs/PRD.md` for product requirements when relevant to the task.
+
+## Git
+- **Commit messages**: Do not include AI attribution marks (e.g., "🤖 Generated with Claude Code").

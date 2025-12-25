@@ -14,6 +14,7 @@
 	let { url, size = 120, color = '#000000', dotStyle = 'rounded', gradientEnabled = false }: Props = $props();
 
 	let containerEl: HTMLDivElement;
+	let isMounted = false;
 
 	function lightenColor(hex: string, percent: number): string {
 		const num = parseInt(hex.replace('#', ''), 16);
@@ -24,9 +25,12 @@
 	}
 
 	onMount(() => {
+		isMounted = true;
 		exportReadyStore.setQrCodeReady(false);
 
 		import('qr-code-styling').then(({ default: QRCodeStyling }) => {
+			if (!isMounted || !containerEl) return;
+
 			const dotsOptions: Record<string, unknown> = {
 				type: dotStyle
 			};
@@ -72,6 +76,7 @@
 	});
 
 	onDestroy(() => {
+		isMounted = false;
 		if (containerEl) {
 			containerEl.innerHTML = '';
 		}

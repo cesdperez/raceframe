@@ -47,11 +47,7 @@
 	const formattedDistance = $derived(posterStore.formattedDistance);
 	const finishTime = $derived(posterStore.data.finishTime || "--:--'--\"");
 	const activityType = $derived(posterStore.data.activityType);
-	const formattedPace = $derived(posterStore.formattedPace);
-	const formattedSpeed = $derived(posterStore.formattedSpeed);
 	const unit = $derived(posterStore.data.unit);
-	const paceLabel = $derived(posterStore.paceLabel);
-	const speedLabel = $derived(posterStore.speedLabel);
 	const theme = $derived(posterStore.data.theme);
 	const customBgColor = $derived(posterStore.data.customBgColor);
 	const customTextColor = $derived(posterStore.data.customTextColor);

@@ -20,6 +20,9 @@
 		{ value: 'orange', label: 'Orange', color: ROUTE_COLORS.orange },
 		{ value: 'blue', label: 'Blue', color: ROUTE_COLORS.blue },
 		{ value: 'yellow', label: 'Yellow', color: ROUTE_COLORS.yellow },
+		{ value: 'cyan', label: 'Cyan', color: ROUTE_COLORS.cyan },
+		{ value: 'pink', label: 'Pink', color: ROUTE_COLORS.pink },
+		{ value: 'red', label: 'Red', color: ROUTE_COLORS.red },
 		{ value: 'black', label: 'Black', color: ROUTE_COLORS.black },
 		{ value: 'white', label: 'White', color: ROUTE_COLORS.white }
 	];
@@ -42,7 +45,9 @@
 		{ value: 'rounded', label: 'Rounded' },
 		{ value: 'dots', label: 'Dots' },
 		{ value: 'classy', label: 'Classy' },
-		{ value: 'square', label: 'Square' }
+		{ value: 'classy-rounded', label: 'Classy Rounded' },
+		{ value: 'square', label: 'Square' },
+		{ value: 'extra-rounded', label: 'Extra Rounded' }
 	] as const;
 
 	onDestroy(() => {
