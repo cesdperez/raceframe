@@ -55,15 +55,16 @@ test.describe('Mobile Responsive Behavior', () => {
 		const preview = page.getByRole('img', { name: /poster preview/i });
 		await expect(preview).toBeVisible();
 
-		const previewToggle = page.locator('.preview-toggle-btn');
+		const previewToggle = page.getByRole('button', { name: /enlarge preview/i });
 		await expect(previewToggle).toBeVisible();
 
 		await previewToggle.click({ force: true });
 
-		await expect(previewToggle).toHaveAttribute('aria-label', /show editor panel/i);
-
 		const editorPanel = page.getByRole('complementary', { name: /poster customization options/i });
 		await expect(editorPanel).toBeHidden();
+
+		const collapsedToggle = page.getByRole('button', { name: /show editor panel/i });
+		await expect(collapsedToggle).toBeVisible();
 	});
 
 	test('mobile preview collapse shows editor panel again', async ({ page }) => {
@@ -73,16 +74,19 @@ test.describe('Mobile Responsive Behavior', () => {
 		await fileInput.waitFor({ state: 'attached' });
 		await fileInput.setInputFiles(FIXTURE_PATH);
 
-		const previewToggle = page.locator('.preview-toggle-btn');
-		await previewToggle.click({ force: true });
+		const enlargeToggle = page.getByRole('button', { name: /enlarge preview/i });
+		await enlargeToggle.click({ force: true });
 
 		const editorPanel = page.getByRole('complementary', { name: /poster customization options/i });
 		await expect(editorPanel).toBeHidden();
 
-		await previewToggle.click({ force: true });
+		const collapseToggle = page.getByRole('button', { name: /show editor panel/i });
+		await expect(collapseToggle).toBeVisible();
 
-		await expect(previewToggle).toHaveAttribute('aria-label', /enlarge preview/i);
+		await collapseToggle.click({ force: true });
+
 		await expect(editorPanel).toBeVisible();
+		await expect(enlargeToggle).toBeVisible();
 	});
 
 	test('maximize button only visible on mobile', async ({ page }) => {

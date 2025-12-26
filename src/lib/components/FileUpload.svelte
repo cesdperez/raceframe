@@ -86,7 +86,7 @@
 	tabindex="0"
 	aria-label="Upload GPX file. Drop your file here or press Enter to browse"
 	aria-busy={isLoading}
-	class="border-2 border-dashed rounded-xl p-6 md:p-12 transition-all duration-200 cursor-pointer min-h-[260px] md:min-h-[180px] flex flex-col items-center justify-center active:scale-[0.98]
+	class="border-2 border-dashed rounded-xl p-4 md:p-12 transition-all duration-200 cursor-pointer min-h-[180px] md:min-h-[180px] flex flex-col items-center justify-center active:scale-[0.98]
 		{isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50 hover:border-gray-400 active:bg-gray-100'}
 		{isLoading ? 'opacity-60 cursor-wait' : ''}"
 	ondrop={handleDrop}
@@ -101,8 +101,8 @@
 		</div>
 		<p class="text-gray-600 font-medium">Processing GPX file...</p>
 	{:else}
-		<div class="text-gray-400 mb-4">
-			<svg class="w-14 h-14 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+		<div class="text-gray-400 mb-3">
+			<svg class="w-12 h-12 mx-auto md:w-14 md:h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path
 					stroke-linecap="round"
 					stroke-linejoin="round"

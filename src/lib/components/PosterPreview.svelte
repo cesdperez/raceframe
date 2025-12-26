@@ -195,24 +195,7 @@
 		{/if}
 	</div>
 
-	{#if isMobile}
-		<button
-			onclick={onToggleEnlarged}
-			class="preview-toggle-btn"
-			aria-label={isPreviewEnlarged ? 'Show editor panel' : 'Enlarge preview'}
-			title={isPreviewEnlarged ? 'Show editor panel' : 'Enlarge preview'}
-		>
-			{#if isPreviewEnlarged}
-				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
-				</svg>
-			{:else}
-				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
-				</svg>
-			{/if}
-		</button>
-	{/if}
+
 </div>
 
 <style>
@@ -483,42 +466,5 @@
 		margin-top: 8px;
 	}
 
-	.qr-code-container-landscape {
-		display: flex;
-		justify-content: center;
-	}
 
-	.preview-toggle-btn {
-		position: absolute;
-		bottom: 16px;
-		right: 16px;
-		width: 48px;
-		height: 48px;
-		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.95);
-		backdrop-filter: blur(8px);
-		border: 1px solid rgba(0, 0, 0, 0.1);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-		z-index: 10;
-	}
-
-	.preview-toggle-btn:hover {
-		transform: scale(1.05);
-		box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-	}
-
-	.preview-toggle-btn:active {
-		transform: scale(0.95);
-	}
-
-	.preview-toggle-btn svg {
-		width: 24px;
-		height: 24px;
-		color: #374151;
-	}
 </style>
