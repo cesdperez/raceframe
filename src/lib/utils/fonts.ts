@@ -7,14 +7,16 @@ export interface FontSpec {
 }
 
 export const REQUIRED_FONTS: FontSpec[] = [
-	{ family: 'Oswald', weight: '400' },
-	{ family: 'Oswald', weight: '500' },
-	{ family: 'Oswald', weight: '600' },
-	{ family: 'Inter', weight: '400' }
+	{ family: 'Barlow Condensed', weight: '600' },
+	{ family: 'Barlow Condensed', weight: '700' },
+	{ family: 'Barlow Condensed', weight: '800' },
+	{ family: 'Plus Jakarta Sans', weight: '400' },
+	{ family: 'Plus Jakarta Sans', weight: '500' },
+	{ family: 'Plus Jakarta Sans', weight: '600' }
 ];
 
 const GOOGLE_FONTS_CSS_URL =
-	'https://fonts.googleapis.com/css2?family=Inter:wght@400&family=Oswald:wght@400;500;600&display=swap';
+	'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap';
 
 let cachedFontCss: string | null = null;
 

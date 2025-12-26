@@ -101,97 +101,111 @@
 
 <div class="min-h-screen flex flex-col">
 	{#if currentView === 'landing'}
-		<main id="main-content" class="flex-1 flex flex-col items-center justify-center px-4 py-12 view-fade-in">
-			<div class="max-w-2xl mx-auto text-center">
+		<main id="main-content" class="landing-main flex-1 flex flex-col items-center justify-center px-5 py-12 relative overflow-hidden">
+			<!-- Decorative background elements -->
+			<div class="landing-bg-pattern" aria-hidden="true"></div>
+			<div class="landing-gradient-orb landing-gradient-orb-1" aria-hidden="true"></div>
+			<div class="landing-gradient-orb landing-gradient-orb-2" aria-hidden="true"></div>
+
+			<div class="max-w-2xl mx-auto text-center relative z-10">
+				<!-- Hero Title -->
 				<h1
-					class="text-5xl md:text-6xl font-semibold tracking-tight mb-4"
-					style="font-family: var(--font-heading);"
+					class="animate-stagger-1 text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6"
+					style="font-family: var(--font-heading); letter-spacing: -0.02em;"
 				>
-					RaceFrame
+					<span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--brand-primary)] via-[var(--accent-gold)] to-[var(--brand-primary)]">
+						RaceFrame
+					</span>
 				</h1>
-				<p class="text-lg md:text-2xl text-gray-600 mb-8 min-h-[1.5em] text-center leading-relaxed">
+
+				<!-- Tagline with animated activity word -->
+				<p class="animate-stagger-2 text-xl md:text-2xl lg:text-3xl text-gray-700 mb-6 min-h-[1.5em] text-center leading-relaxed font-medium">
 					Create beautiful
-					<span class="relative inline-flex flex-col items-center text-blue-600">
+					<span class="activity-word-container">
 						<span class="sr-only">running and cycling</span>
 						{#key activityIndex}
 							<span
-								in:fly={{ y: 12, duration: 400, delay: 100 }}
-								out:fly={{ y: -12, duration: 400 }}
-								class="absolute font-semibold italic"
+								in:fly={{ y: 20, duration: 500, delay: 150 }}
+								out:fly={{ y: -20, duration: 400 }}
+								class="activity-word"
 								aria-hidden="true"
 							>
 								{activities[activityIndex]}
 							</span>
 						{/key}
-						<span class="invisible font-semibold italic" aria-hidden="true">running</span>
+						<span class="invisible font-bold" aria-hidden="true">running</span>
 					</span>
-					posters from your GPX files
-				</p>
-				<p class="text-gray-500 mb-12 max-w-lg mx-auto">
-					Upload your race data, customize the design, and download a high-resolution image ready
-					for printing. Free, private, and works with any GPX source.
+					posters
 				</p>
 
-				<div class="mb-4 md:mb-6">
+				<p class="animate-stagger-3 text-gray-500 mb-10 max-w-lg mx-auto text-base md:text-lg leading-relaxed">
+					Upload your race data, customize the design, and download a print-ready poster.
+					<span class="text-gray-400">Free, private, works with any GPX source.</span>
+				</p>
+
+				<!-- File Upload -->
+				<div class="animate-stagger-4 mb-5 md:mb-6">
 					<FileUpload onSuccess={handleUploadSuccess} onError={handleUploadError} />
 				</div>
 
+				<!-- Demo Mode Button -->
 				<button
 					onclick={handleDemoMode}
-					class="group inline-flex items-center gap-1.5 px-4 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-600 hover:text-gray-800 transition-all active:scale-[0.97]"
+					class="animate-stagger-4 group inline-flex items-center gap-2 px-5 py-2.5 bg-white/80 hover:bg-white border border-gray-200/80 rounded-full text-sm font-medium text-gray-600 hover:text-[var(--brand-primary)] transition-all duration-300 active:scale-[0.97] shadow-sm hover:shadow-md hover:border-[var(--brand-primary)]/30"
 				>
-					<svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<svg class="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
 					</svg>
-					No GPX file? Explore the editor
-					<svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<span>No GPX? Explore the editor</span>
+					<svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
 					</svg>
 				</button>
 
 				{#if uploadError}
-					<div class="mb-8 max-w-md mx-auto">
+					<div class="mb-8 max-w-md mx-auto mt-4">
 						<ErrorMessage error={uploadError} onDismiss={handleDismissError} />
 					</div>
 				{/if}
 
-				<div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left mt-12">
-					<div class="flex gap-4">
-						<div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+				<!-- Feature Cards -->
+				<div class="animate-stagger-5 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-left mt-14">
+					<div class="feature-card group">
+						<div class="feature-icon feature-icon-upload">
 							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
 							</svg>
 						</div>
 						<div>
-							<h3 class="font-medium mb-1" style="font-family: var(--font-heading);">Upload</h3>
-							<p class="text-sm text-gray-500">
+							<h3 class="feature-title" style="font-family: var(--font-heading);">Upload</h3>
+							<p class="feature-description">
 								Drop your GPX file from Strava, Garmin, or any GPS device
 							</p>
 						</div>
 					</div>
-					<div class="flex gap-4">
-						<div class="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center">
+					<div class="feature-card group">
+						<div class="feature-icon feature-icon-customize">
 							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
 							</svg>
 						</div>
 						<div>
-							<h3 class="font-medium mb-1" style="font-family: var(--font-heading);">Customize</h3>
-							<p class="text-sm text-gray-500">
+							<h3 class="feature-title" style="font-family: var(--font-heading);">Customize</h3>
+							<p class="feature-description">
 								Edit details, choose themes, and personalize your poster
 							</p>
 						</div>
 					</div>
-					<div class="flex gap-4">
-						<div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+					<div class="feature-card group">
+						<div class="feature-icon feature-icon-download">
 							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
 							</svg>
 						</div>
 						<div>
-							<h3 class="font-medium mb-1" style="font-family: var(--font-heading);">Download</h3>
-							<p class="text-sm text-gray-500">Export print-ready PNG at 300 DPI for perfect prints</p>
+							<h3 class="feature-title" style="font-family: var(--font-heading);">Download</h3>
+							<p class="feature-description">Export print-ready PNG at 300 DPI for perfect prints</p>
 						</div>
 					</div>
 				</div>
@@ -279,6 +293,149 @@
 </div>
 
 <style>
+	/* Landing page styles */
+	.landing-main {
+		background: linear-gradient(180deg, #fffbf7 0%, #ffffff 60%, #fffaf5 100%);
+	}
+
+	.landing-bg-pattern {
+		position: absolute;
+		inset: 0;
+		background-image:
+			radial-gradient(circle at 20% 30%, rgba(255, 77, 0, 0.03) 0%, transparent 50%),
+			radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.04) 0%, transparent 50%);
+		pointer-events: none;
+	}
+
+	.landing-gradient-orb {
+		position: absolute;
+		border-radius: 50%;
+		filter: blur(80px);
+		pointer-events: none;
+		opacity: 0.5;
+	}
+
+	.landing-gradient-orb-1 {
+		width: 400px;
+		height: 400px;
+		top: -100px;
+		right: -100px;
+		background: radial-gradient(circle, rgba(255, 77, 0, 0.12) 0%, transparent 70%);
+	}
+
+	.landing-gradient-orb-2 {
+		width: 300px;
+		height: 300px;
+		bottom: 10%;
+		left: -50px;
+		background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+	}
+
+	/* Activity word animation */
+	.activity-word-container {
+		position: relative;
+		display: inline-flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.activity-word {
+		position: absolute;
+		font-weight: 700;
+		color: var(--brand-primary);
+		white-space: nowrap;
+	}
+
+	/* Feature cards */
+	.feature-card {
+		display: flex;
+		gap: 1rem;
+		padding: 1rem;
+		border-radius: 1rem;
+		transition: all 0.3s ease;
+	}
+
+	.feature-card:hover {
+		background: rgba(255, 255, 255, 0.8);
+		transform: translateY(-2px);
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+	}
+
+	.feature-icon {
+		flex-shrink: 0;
+		width: 48px;
+		height: 48px;
+		border-radius: 14px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.3s ease;
+	}
+
+	.feature-icon-upload {
+		background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+		color: var(--brand-primary);
+		box-shadow: 0 2px 8px rgba(255, 77, 0, 0.15);
+	}
+
+	.feature-icon-customize {
+		background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+		color: #ca8a04;
+		box-shadow: 0 2px 8px rgba(202, 138, 4, 0.15);
+	}
+
+	.feature-icon-download {
+		background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+		color: #059669;
+		box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15);
+	}
+
+	.group:hover .feature-icon {
+		transform: scale(1.05);
+	}
+
+	.feature-title {
+		font-size: 1.125rem;
+		font-weight: 700;
+		margin-bottom: 0.25rem;
+		color: #1f2937;
+		letter-spacing: 0.02em;
+	}
+
+	.feature-description {
+		font-size: 0.875rem;
+		color: #6b7280;
+		line-height: 1.5;
+	}
+
+	/* Mobile adjustments */
+	@media (max-width: 767px) {
+		.landing-gradient-orb-1 {
+			width: 250px;
+			height: 250px;
+			top: -50px;
+			right: -80px;
+		}
+
+		.landing-gradient-orb-2 {
+			width: 200px;
+			height: 200px;
+			bottom: 5%;
+			left: -60px;
+		}
+
+		.feature-card {
+			padding: 0.75rem;
+		}
+
+		.feature-icon {
+			width: 44px;
+			height: 44px;
+			border-radius: 12px;
+		}
+	}
+
+	/* Editor styles */
 	.preview-container {
 		flex: 1;
 		min-height: 400px;

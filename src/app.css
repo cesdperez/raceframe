@@ -2,8 +2,25 @@
 @import 'leaflet/dist/leaflet.css';
 
 :root {
-	--font-heading: 'Oswald', sans-serif;
-	--font-body: 'Inter', sans-serif;
+	--font-heading: 'Barlow Condensed', sans-serif;
+	--font-body: 'Plus Jakarta Sans', sans-serif;
+
+	/* Athletic brand palette */
+	--brand-primary: #ff4d00;
+	--brand-primary-dark: #e64500;
+	--brand-secondary: #1a1a2e;
+	--accent-gold: #ffd700;
+	--accent-gold-dark: #e6c200;
+	--accent-bronze: #cd7f32;
+
+	/* Semantic colors */
+	--success: #10b981;
+	--warning: #f59e0b;
+	--error: #ef4444;
+
+	/* Surface gradients */
+	--surface-warm: linear-gradient(135deg, #fffbf5 0%, #fff7ed 50%, #fef3e2 100%);
+	--surface-hero: linear-gradient(180deg, #fffbf5 0%, #fff 100%);
 }
 
 [data-theme='light'] {
@@ -50,20 +67,20 @@ h6 {
 
 /* Focus indicators for accessibility */
 :focus-visible {
-	outline: 2px solid #3b82f6;
+	outline: 2px solid var(--brand-primary);
 	outline-offset: 2px;
 }
 
 button:focus-visible,
 [role='button']:focus-visible {
-	outline: 2px solid #3b82f6;
+	outline: 2px solid var(--brand-primary);
 	outline-offset: 2px;
 }
 
 input:focus-visible {
 	outline: none;
-	border-color: #3b82f6;
-	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+	border-color: var(--brand-primary);
+	box-shadow: 0 0 0 3px rgba(255, 77, 0, 0.2);
 }
 
 /* Skip to content link */
@@ -151,4 +168,73 @@ input:focus-visible {
 .btn-export:disabled {
 	cursor: not-allowed;
 	opacity: 0.5;
+}
+
+/* Landing page animations */
+@keyframes staggerFadeUp {
+	from {
+		opacity: 0;
+		transform: translateY(24px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes slideInScale {
+	from {
+		opacity: 0;
+		transform: translateY(16px) scale(0.96);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+@keyframes subtlePulse {
+	0%, 100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.7;
+	}
+}
+
+@keyframes shimmer {
+	0% {
+		background-position: -200% 0;
+	}
+	100% {
+		background-position: 200% 0;
+	}
+}
+
+@keyframes borderGlow {
+	0%, 100% {
+		box-shadow: 0 0 20px rgba(255, 77, 0, 0.15), 0 0 40px rgba(255, 215, 0, 0.1);
+	}
+	50% {
+		box-shadow: 0 0 30px rgba(255, 77, 0, 0.25), 0 0 60px rgba(255, 215, 0, 0.15);
+	}
+}
+
+@keyframes drawPath {
+	from {
+		stroke-dashoffset: 1000;
+	}
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+.animate-stagger-1 { animation: staggerFadeUp 0.6s ease-out 0.1s both; }
+.animate-stagger-2 { animation: staggerFadeUp 0.6s ease-out 0.2s both; }
+.animate-stagger-3 { animation: staggerFadeUp 0.6s ease-out 0.3s both; }
+.animate-stagger-4 { animation: staggerFadeUp 0.6s ease-out 0.4s both; }
+.animate-stagger-5 { animation: staggerFadeUp 0.6s ease-out 0.5s both; }
+
+.animate-slide-in {
+	animation: slideInScale 0.5s ease-out both;
 }
