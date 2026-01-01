@@ -27,10 +27,10 @@
 	const hint = $derived(getErrorHint(error.type));
 </script>
 
-<div class="px-4 py-3 bg-red-50 border border-red-200 rounded-lg" role="alert">
+<div class="px-4 py-3 bg-error-surface border border-error-border rounded-lg" role="alert">
 	<div class="flex items-start gap-3">
 		<svg
-			class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"
+			class="w-5 h-5 text-error flex-shrink-0 mt-0.5"
 			fill="none"
 			stroke="currentColor"
 			viewBox="0 0 24 24"
@@ -44,15 +44,15 @@
 			/>
 		</svg>
 		<div class="flex-1">
-			<p class="text-red-700 text-sm font-medium">{error.message}</p>
+			<p class="text-error-text text-sm font-medium">{error.message}</p>
 			{#if hint}
-				<p class="text-red-600 text-xs mt-1">{hint}</p>
+				<p class="text-error-text/80 text-xs mt-1">{hint}</p>
 			{/if}
 		</div>
 		{#if onDismiss}
 			<button
 				onclick={onDismiss}
-				class="text-red-400 hover:text-red-600 transition-colors flex-shrink-0"
+				class="text-error-text-muted hover:text-error transition-colors flex-shrink-0"
 				aria-label="Dismiss error"
 			>
 				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -70,7 +70,7 @@
 		<div class="mt-3 flex justify-end">
 			<button
 				onclick={onRetry}
-				class="text-sm font-medium text-red-600 hover:text-red-800 transition-colors"
+				class="text-sm font-medium text-error hover:text-error-text transition-colors"
 			>
 				Try again
 			</button>

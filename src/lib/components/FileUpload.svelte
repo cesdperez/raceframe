@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import type { GPXData, UploadError } from '$lib/types/index.js';
-	import { parseGPX } from '$lib/utils/gpx.js';
-	import { validateGpxFile } from '$lib/utils/validation.js';
-	import LoadingSpinner from './LoadingSpinner.svelte';
+	import { onMount } from "svelte";
+	import type { GPXData, UploadError } from "$lib/types/index.js";
+	import { parseGPX } from "$lib/utils/gpx.js";
+	import { validateGpxFile } from "$lib/utils/validation.js";
+	import LoadingSpinner from "./LoadingSpinner.svelte";
 
 	let {
 		onSuccess,
-		onError
+		onError,
 	}: {
 		onSuccess: (gpxData: GPXData) => void;
 		onError: (error: UploadError) => void;
@@ -36,8 +36,9 @@
 			onSuccess(gpxData);
 		} catch (e) {
 			onError({
-				message: e instanceof Error ? e.message : 'Failed to parse GPX file',
-				type: 'parse-error'
+				message:
+					e instanceof Error ? e.message : "Failed to parse GPX file",
+				type: "parse-error",
 			});
 		} finally {
 			isLoading = false;
@@ -66,7 +67,7 @@
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
-		if (e.key === 'Enter' || e.key === ' ') {
+		if (e.key === "Enter" || e.key === " ") {
 			e.preventDefault();
 			handleClick();
 		}
@@ -76,7 +77,7 @@
 		const input = e.target as HTMLInputElement;
 		const file = input.files?.[0];
 		if (file) processFile(file);
-		input.value = '';
+		input.value = "";
 	}
 </script>
 
@@ -95,7 +96,12 @@
 	onkeydown={handleKeyDown}
 >
 	<!-- Animated route path background -->
-	<svg class="upload-bg-pattern" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+	<svg
+		class="upload-bg-pattern"
+		viewBox="0 0 400 200"
+		preserveAspectRatio="xMidYMid slice"
+		aria-hidden="true"
+	>
 		<path
 			class="route-path"
 			d="M20,100 Q60,40 100,80 T180,60 T260,100 T340,80 T380,100"
@@ -122,7 +128,11 @@
 			<p class="upload-text-primary">Processing your race...</p>
 		{:else}
 			<div class="upload-icon" class:upload-icon-drag={isDragging}>
-				<svg class="w-8 h-8 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24">
+				<svg
+					class="w-8 h-8 md:w-10 md:h-10"
+					fill="none"
+					viewBox="0 0 24 24"
+				>
 					<path
 						stroke="currentColor"
 						stroke-linecap="round"
@@ -141,12 +151,22 @@
 				</svg>
 			</div>
 			<p class="upload-text-primary">
-				{isDragging ? 'Drop it!' : 'Drop your race here'}
+				{isDragging ? "Drop it!" : "Drop your race here"}
 			</p>
 			<p class="upload-text-secondary">or click to browse</p>
 			<div class="upload-badge">
-				<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+				<svg
+					class="w-3 h-3"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+					/>
 				</svg>
 				<span>Your data stays private</span>
 			</div>
@@ -180,7 +200,13 @@
 		/* Gradient border effect */
 		background:
 			linear-gradient(#fff, #fff) padding-box,
-			linear-gradient(135deg, var(--brand-primary) 0%, var(--accent-gold) 50%, var(--brand-primary) 100%) border-box;
+			linear-gradient(
+					135deg,
+					var(--brand-primary) 0%,
+					var(--accent-gold) 50%,
+					var(--brand-primary) 100%
+				)
+				border-box;
 		border: 2px solid transparent;
 		box-shadow:
 			0 4px 20px rgba(255, 77, 0, 0.08),
@@ -201,7 +227,12 @@
 	.upload-zone-dragging {
 		background:
 			linear-gradient(#fffbf5, #fff7ed) padding-box,
-			linear-gradient(135deg, var(--brand-primary) 0%, var(--accent-gold) 100%) border-box;
+			linear-gradient(
+					135deg,
+					var(--brand-primary) 0%,
+					var(--accent-gold) 100%
+				)
+				border-box;
 		border-width: 3px;
 		box-shadow:
 			0 0 0 4px rgba(255, 77, 0, 0.1),
@@ -290,25 +321,25 @@
 	.upload-text-primary {
 		font-size: 1rem;
 		font-weight: 600;
-		color: #374151;
+		color: var(--text-primary);
 		margin-bottom: 0.25rem;
 	}
 
 	.upload-text-secondary {
 		font-size: 0.875rem;
-		color: #9ca3af;
+		color: var(--text-muted);
 	}
 
 	.upload-badge {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.375rem;
+		gap: 0.5rem;
 		margin-top: 0.75rem;
 		padding: 0.25rem 0.625rem;
 		background: rgba(255, 77, 0, 0.06);
 		border-radius: 9999px;
 		font-size: 0.75rem;
-		color: #9ca3af;
+		color: var(--text-muted);
 	}
 
 	.upload-badge svg {

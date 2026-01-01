@@ -5,7 +5,7 @@ test.describe('Landing Page', () => {
 		await page.goto('/');
 
 		await expect(page.getByRole('heading', { name: 'RaceFrame' })).toBeVisible();
-		await expect(page.getByText('Drop your GPX file here')).toBeVisible();
+		await expect(page.getByText('Drop your race here')).toBeVisible();
 		await expect(page.getByRole('button', { name: /upload gpx file/i })).toBeVisible();
 	});
 
@@ -65,11 +65,11 @@ test.describe('Editor', () => {
 	test('can switch distance units', async ({ page }) => {
 		const milesButton = page.getByRole('button', { name: 'MI', exact: true });
 		await milesButton.click();
-		await expect(milesButton).toHaveClass(/bg-blue-600/);
+		await expect(milesButton).toHaveClass(/bg-brand-primary/);
 
 		const kmButton = page.getByRole('button', { name: 'KM', exact: true });
 		await kmButton.click();
-		await expect(kmButton).toHaveClass(/bg-blue-600/);
+		await expect(kmButton).toHaveClass(/bg-brand-primary/);
 	});
 
 	test('can edit distance manually and see it in preview', async ({ page }) => {
@@ -99,6 +99,6 @@ test.describe('Editor', () => {
 		const backButton = page.getByRole('button', { name: /go back to upload/i });
 		await backButton.click();
 
-		await expect(page.getByText('Drop your GPX file here')).toBeVisible();
+		await expect(page.getByText('Drop your race here')).toBeVisible();
 	});
 });

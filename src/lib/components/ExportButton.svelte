@@ -104,11 +104,11 @@
 	</div>
 
 	{#if disabled && disabledReason}
-		<p class="text-center text-xs text-amber-600">{disabledReason}</p>
+		<p class="text-center text-xs text-warning">{disabledReason}</p>
 	{/if}
 
 	<div class="relative">
-		<h3 class="mb-2 text-sm font-bold text-blue-600">Export PNG</h3>
+		<h3 class="mb-2 text-sm font-bold text-brand-primary">Export PNG</h3>
 
 		<div class="relative">
 			{#if showLoadingOverlay}
@@ -127,16 +127,16 @@
 						aria-label="Download {scaleConfig.label} PNG at {getPixelDimensions(scaleConfig.value)} pixels, recommended for {scaleConfig.printGuidance}"
 						class="btn-export group"
 					>
-						<span class="text-xs font-bold text-gray-700 group-hover:text-blue-700">{scaleConfig.label}</span>
-						<span class="text-[10px] font-medium text-gray-500 group-hover:text-blue-600">{getPixelDimensions(scaleConfig.value)}</span>
-						<span class="text-[9px] text-gray-400 group-hover:text-blue-500">{scaleConfig.printGuidance}</span>
+						<span class="text-xs font-bold text-gray-700 group-hover:text-brand-primary-dark">{scaleConfig.label}</span>
+						<span class="text-xs font-medium text-gray-500 group-hover:text-brand-primary">{getPixelDimensions(scaleConfig.value)}</span>
+						<span class="text-xs text-gray-400 group-hover:text-brand-primary/80">{scaleConfig.printGuidance}</span>
 					</button>
 				{/each}
 			</div>
 		</div>
 	</div>
 
-	{#if error}
-		<p class="text-center text-sm text-red-500" role="alert">{error}</p>
+		{#if error}
+		<p class="text-center text-sm text-error" role="alert">{error}</p>
 	{/if}
 </div>

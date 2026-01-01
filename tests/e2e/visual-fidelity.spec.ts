@@ -131,17 +131,16 @@ test.describe('Export Visual Fidelity', () => {
 		// Verify fonts are actually loaded in the browser
 		const fontsLoaded = await page.evaluate(() => {
 			return {
-				oswald600: document.fonts.check('600 72px "Oswald"'),
-				oswald500: document.fonts.check('500 44px "Oswald"'),
-				oswald400: document.fonts.check('400 32px "Oswald"'),
-				inter400: document.fonts.check('400 16px "Inter"')
+				barlowCondensed700: document.fonts.check('700 72px "Barlow Condensed"'),
+				barlowCondensed600: document.fonts.check('600 44px "Barlow Condensed"'),
+				plusJakartaSans400: document.fonts.check('400 16px "Plus Jakarta Sans"')
 			};
 		});
 
 		// All fonts should be loaded
-		expect(fontsLoaded.oswald600).toBe(true);
-		expect(fontsLoaded.oswald500).toBe(true);
-		expect(fontsLoaded.inter400).toBe(true);
+		expect(fontsLoaded.barlowCondensed700).toBe(true);
+		expect(fontsLoaded.barlowCondensed600).toBe(true);
+		expect(fontsLoaded.plusJakartaSans400).toBe(true);
 
 		// Export the poster
 		const downloadPromise = page.waitForEvent('download');

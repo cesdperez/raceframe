@@ -29,7 +29,8 @@ pnpm check                             # TypeScript type checking
 Cloudflare Pages auto-deploys on push to `main`. Do not push unless explicitly requested.
 
 ## Context
-Refer to `docs/PRD.md` for product requirements when relevant to the task.
+- Refer to `docs/prd.md` for product requirements when relevant to the task.
+- Refer to `docs/design_guidelines.md` when making any UI changes (components, layouts, text, colors, animations).
 
 ## Git
 - **Commit messages**: Do not include AI attribution marks (e.g., "🤖 Generated with Claude Code").

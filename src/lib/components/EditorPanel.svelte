@@ -104,13 +104,13 @@
 
 	<!-- DATA SECTION -->
 	<div class="mb-5">
-		<h2 class="mb-3 text-sm font-bold text-gray-800">Data</h2>
+		<h2 class="mb-3 text-sm font-bold text-text-primary">Data</h2>
 
 		<section class="mb-4">
-			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Event Details</h3>
+			<h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">Event Details</h3>
 			<div class="space-y-2">
 				<div>
-					<label for="activityType" class="mb-0.5 block text-xs text-gray-500">Activity Type</label>
+					<label for="activityType" class="mb-0.5 block text-xs text-text-secondary">Activity Type</label>
 					<Dropdown
 						id="activityType"
 						options={ACTIVITY_TYPES}
@@ -119,73 +119,73 @@
 					/>
 				</div>
 				<div>
-					<label for="eventName" class="mb-0.5 block text-xs text-gray-500">Event Name</label>
+					<label for="eventName" class="mb-0.5 block text-xs text-text-secondary">Event Name</label>
 					<input
 						type="text"
 						id="eventName"
 						value={posterStore.data.eventName}
 						oninput={(e) => posterStore.setEventName((e.target as HTMLInputElement).value)}
 						placeholder="e.g. Berlin Marathon"
-						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-brand-primary focus:ring-1 focus:ring-brand-primary focus:outline-none"
 					/>
 				</div>
 				<div>
-					<label for="date" class="mb-0.5 block text-xs text-gray-500">Date</label>
+					<label for="date" class="mb-0.5 block text-xs text-text-secondary">Date</label>
 					<input
 						type="date"
 						id="date"
 						value={formatDateForInput(posterStore.data.date)}
 						onchange={handleDateChange}
-						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-brand-primary focus:ring-1 focus:ring-brand-primary focus:outline-none"
 					/>
 				</div>
 			</div>
 		</section>
 
 		<section class="mb-4">
-			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Athlete Info</h3>
+			<h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">Athlete Info</h3>
 			<div class="grid grid-cols-2 gap-2">
 				<div>
-					<label for="athleteName" class="mb-0.5 block text-xs text-gray-500">Name</label>
+					<label for="athleteName" class="mb-0.5 block text-xs text-text-secondary">Name</label>
 					<input
 						type="text"
 						id="athleteName"
 						value={posterStore.data.athleteName}
 						oninput={(e) => posterStore.setAthleteName((e.target as HTMLInputElement).value)}
 						placeholder="John Doe"
-						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-brand-primary focus:ring-1 focus:ring-brand-primary focus:outline-none"
 					/>
 				</div>
 				<div>
-					<label for="bibNumber" class="mb-0.5 block text-xs text-gray-500">Bib</label>
+					<label for="bibNumber" class="mb-0.5 block text-xs text-text-secondary">Bib</label>
 					<input
 						type="text"
 						id="bibNumber"
 						value={posterStore.data.bibNumber}
 						oninput={(e) => posterStore.setBibNumber((e.target as HTMLInputElement).value)}
 						placeholder="12345"
-						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-brand-primary focus:ring-1 focus:ring-brand-primary focus:outline-none"
 					/>
 				</div>
 			</div>
 		</section>
 
 		<section class="mb-4">
-			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Performance</h3>
+			<h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">Performance</h3>
 			<div class="space-y-2">
 				<div>
-					<label for="finishTime" class="mb-0.5 block text-xs text-gray-500">Finish Time</label>
+					<label for="finishTime" class="mb-0.5 block text-xs text-text-secondary">Finish Time</label>
 					<input
 						type="text"
 						id="finishTime"
 						value={posterStore.data.finishTime}
 						oninput={(e) => posterStore.setFinishTime((e.target as HTMLInputElement).value)}
 						placeholder="e.g. 3:45'22&quot;"
-						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-brand-primary focus:ring-1 focus:ring-brand-primary focus:outline-none"
 					/>
 				</div>
 				<div>
-					<label for="distance" class="mb-0.5 block text-xs text-gray-500">Distance</label>
+					<label for="distance" class="mb-0.5 block text-xs text-text-secondary">Distance</label>
 					<div class="flex gap-2">
 						<input
 							type="number"
@@ -194,15 +194,15 @@
 							oninput={handleDistanceChange}
 							step="0.1"
 							min="0"
-							class="flex-1 rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+							class="flex-1 rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-brand-primary focus:ring-1 focus:ring-brand-primary focus:outline-none"
 						/>
 						<div class="flex rounded border border-gray-300">
 							<button
 								type="button"
 								onclick={() => posterStore.setUnit('km')}
 								class="px-2.5 py-1.5 text-xs font-bold transition-colors {posterStore.data.unit === 'km'
-									? 'bg-blue-600 text-white'
-									: 'bg-white text-gray-700 hover:bg-gray-50'} rounded-l"
+									? 'bg-brand-primary text-white'
+									: 'bg-white text-text-secondary hover:bg-gray-50'} rounded-l"
 								aria-pressed={posterStore.data.unit === 'km'}
 							>
 								KM
@@ -211,8 +211,8 @@
 								type="button"
 								onclick={() => posterStore.setUnit('miles')}
 								class="px-2.5 py-1.5 text-xs font-bold transition-colors {posterStore.data.unit === 'miles'
-									? 'bg-blue-600 text-white'
-									: 'bg-white text-gray-700 hover:bg-gray-50'} rounded-r border-l border-gray-300"
+									? 'bg-brand-primary text-white'
+									: 'bg-white text-text-secondary hover:bg-gray-50'} rounded-r border-l border-gray-300"
 								aria-pressed={posterStore.data.unit === 'miles'}
 							>
 								MI
@@ -224,22 +224,22 @@
 		</section>
 
 		<section>
-			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">QR Code</h3>
+			<h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">QR Code</h3>
 			<div class="space-y-2">
 				<div>
-					<label for="qrCodeUrl" class="mb-0.5 block text-xs text-gray-500">Activity URL</label>
+					<label for="qrCodeUrl" class="mb-0.5 block text-xs text-text-secondary">Activity URL</label>
 					<input
 						type="url"
 						id="qrCodeUrl"
 						value={qrCodeInputValue}
 						oninput={handleQrCodeUrlChange}
 						placeholder="Strava link..."
-						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+						class="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-brand-primary focus:ring-1 focus:ring-brand-primary focus:outline-none"
 					/>
 				</div>
 				<div class="flex items-center gap-3">
 					<div class="flex-1">
-						<label for="qr-style-select" class="mb-0.5 block text-xs text-gray-500">Style</label>
+						<label for="qr-style-select" class="mb-0.5 block text-xs text-text-secondary">Style</label>
 						<Dropdown
 							id="qr-style-select"
 							options={QR_STYLES}
@@ -248,12 +248,12 @@
 						/>
 					</div>
 					<div class="pt-4">
-						<label class="flex cursor-pointer items-center gap-1.5 text-xs text-gray-600">
+						<label class="flex cursor-pointer items-center gap-1.5 text-xs text-text-secondary">
 							<input
 								type="checkbox"
 								checked={posterStore.data.qrGradientEnabled}
 								onchange={(e) => posterStore.setQrGradientEnabled((e.target as HTMLInputElement).checked)}
-								class="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+								class="h-3.5 w-3.5 rounded border-gray-300 text-brand-primary focus:ring-brand-primary"
 							/>
 							Gradient
 						</label>
@@ -265,10 +265,10 @@
 
 	<!-- DESIGN SECTION -->
 	<div class="mb-5">
-		<h2 class="mb-3 text-sm font-bold text-gray-800">Design</h2>
+		<h2 class="mb-3 text-sm font-bold text-text-primary">Design</h2>
 
 		<section class="mb-3">
-			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Presets</h3>
+			<h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">Presets</h3>
 			<div class="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Design Presets">
 				{#each DESIGN_PRESETS as preset}
 					{@const isDisabled = posterStore.isDemo && !posterStore.isPresetAllowedInDemo(preset.value)}
@@ -276,7 +276,7 @@
 						type="button"
 						onclick={() => selectPreset(preset.value)}
 						disabled={isDisabled}
-						class="group relative flex flex-col items-center gap-1 rounded border-2 p-1.5 transition-all {posterStore.activePreset === preset.value ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white hover:border-gray-300'} {isDisabled ? 'cursor-not-allowed opacity-50' : ''}"
+						class="group relative flex flex-col items-center gap-1 rounded border-2 p-1.5 transition-all {posterStore.activePreset === preset.value ? 'border-brand-primary bg-brand-primary/10' : 'border-gray-200 bg-white hover:border-gray-300'} {isDisabled ? 'cursor-not-allowed opacity-50' : ''}"
 						role="radio"
 						aria-checked={posterStore.activePreset === preset.value}
 						aria-label={preset.label}
@@ -291,9 +291,9 @@
 								<rect x="3" y="34" width="8" height="1.5" rx="0.75" fill="{preset.textColor}" opacity="0.4" />
 							</svg>
 						</div>
-						<span class="text-[9px] font-semibold uppercase {posterStore.activePreset === preset.value ? 'text-blue-700' : 'text-gray-500'}">{preset.label}</span>
+						<span class="text-xs font-semibold uppercase {posterStore.activePreset === preset.value ? 'text-brand-primary' : 'text-text-secondary'}">{preset.label}</span>
 						{#if posterStore.activePreset === preset.value}
-							<div class="absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-blue-600 text-[8px] text-white">✓</div>
+							<div class="absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-brand-primary text-[8px] text-white">✓</div>
 						{/if}
 					</button>
 				{/each}
@@ -301,11 +301,11 @@
 		</section>
 
 		<section>
-			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Advanced</h3>
+			<h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">Advanced</h3>
 			<div class="space-y-3">
 				<div class="grid grid-cols-2 gap-2">
 					<div>
-						<label for="map-style-select" class="mb-0.5 block text-xs text-gray-500">
+						<label for="map-style-select" class="mb-0.5 block text-xs text-text-secondary">
 							Map Style
 							{#if posterStore.isDemo}
 								<span class="text-amber-600">(limited)</span>
@@ -319,7 +319,7 @@
 						/>
 					</div>
 					<div>
-						<label for="map-filter-select" class="mb-0.5 block text-xs text-gray-500">Map Filter</label>
+						<label for="map-filter-select" class="mb-0.5 block text-xs text-text-secondary">Map Filter</label>
 						<Dropdown
 							id="map-filter-select"
 							options={MAP_FILTERS}
@@ -330,66 +330,72 @@
 				</div>
 
 				<div>
-					<span class="mb-1.5 block text-xs text-gray-500">Background</span>
+					<span class="mb-1.5 block text-xs text-text-secondary">Background</span>
 					<div class="flex flex-wrap items-center gap-1.5">
 						{#each BW_COLOR_PRESETS as bgPreset}
 							<button
 								type="button"
 								onclick={() => posterStore.setCustomBgColor(bgPreset.color)}
-								class="h-6 w-6 rounded-full border-2 transition-transform hover:scale-110 {posterStore.data.customBgColor === bgPreset.color ? 'border-blue-600 ring-2 ring-blue-200' : 'border-gray-300'}"
+								class="h-6 w-6 min-h-[44px] min-w-[44px] rounded-full border-2 transition-transform hover:scale-110 {posterStore.data.customBgColor === bgPreset.color ? 'border-brand-primary ring-2 ring-brand-primary/20' : 'border-gray-300'}"
 								style="background-color: {bgPreset.color}"
 								title={bgPreset.label}
+								aria-label="Select {bgPreset.label} background color"
 							></button>
 						{/each}
-						<label class="color-picker-wrapper" title="Custom color">
+						<label class="color-picker-wrapper" title="Custom background color">
 							<input
 								type="color"
 								value={posterStore.effectiveBgColor}
 								oninput={(e) => posterStore.setCustomBgColor((e.target as HTMLInputElement).value)}
+								aria-label="Choose custom background color"
 							/>
 						</label>
 					</div>
 				</div>
 
 				<div>
-					<span class="mb-1.5 block text-xs text-gray-500">Text Color</span>
+					<span class="mb-1.5 block text-xs text-text-secondary">Text Color</span>
 					<div class="flex flex-wrap items-center gap-1.5">
 						{#each BW_COLOR_PRESETS as preset}
 							<button
 								type="button"
 								onclick={() => posterStore.setCustomTextColor(preset.color)}
-								class="h-6 w-6 rounded-full border-2 transition-transform hover:scale-110 {posterStore.data.customTextColor === preset.color ? 'border-blue-600 ring-2 ring-blue-200' : 'border-gray-300'}"
+								class="h-6 w-6 min-h-[44px] min-w-[44px] rounded-full border-2 transition-transform hover:scale-110 {posterStore.data.customTextColor === preset.color ? 'border-brand-primary ring-2 ring-brand-primary/20' : 'border-gray-300'}"
 								style="background-color: {preset.color}"
 								title={preset.label}
+								aria-label="Select {preset.label} text color"
 							></button>
 						{/each}
-						<label class="color-picker-wrapper" title="Custom color">
+						<label class="color-picker-wrapper" title="Custom text color">
 							<input
 								type="color"
 								value={posterStore.effectiveTextColor}
 								oninput={(e) => posterStore.setCustomTextColor((e.target as HTMLInputElement).value)}
+								aria-label="Choose custom text color"
 							/>
 						</label>
 					</div>
 				</div>
 
 				<div>
-					<span class="mb-1.5 block text-xs text-gray-500">Route Color</span>
+					<span class="mb-1.5 block text-xs text-text-secondary">Route Color</span>
 					<div class="flex flex-wrap items-center gap-1.5">
 						{#each ROUTE_COLOR_PRESETS as color}
 							<button
 								type="button"
 								onclick={() => { posterStore.setRouteColor(color.value); posterStore.setCustomRouteColor(null); }}
-								class="h-6 w-6 rounded-full border-2 transition-transform hover:scale-110 {posterStore.data.routeColor === color.value && !posterStore.data.customRouteColor ? 'border-blue-600 ring-2 ring-blue-200' : 'border-gray-300'}"
+								class="h-6 w-6 min-h-[44px] min-w-[44px] rounded-full border-2 transition-transform hover:scale-110 {posterStore.data.routeColor === color.value && !posterStore.data.customRouteColor ? 'border-brand-primary ring-2 ring-brand-primary/20' : 'border-gray-300'}"
 								style="background-color: {color.color}"
 								title={color.label}
+								aria-label="Select {color.label} route color"
 							></button>
 						{/each}
-						<label class="color-picker-wrapper" title="Custom color">
+						<label class="color-picker-wrapper" title="Custom route color">
 							<input
 								type="color"
 								value={posterStore.effectiveRouteColor}
 								oninput={(e) => posterStore.setCustomRouteColor((e.target as HTMLInputElement).value)}
+								aria-label="Choose custom route color"
 							/>
 						</label>
 					</div>
@@ -400,10 +406,10 @@
 
 	<!-- SIZE SECTION -->
 	<div class="mb-5">
-		<h2 class="mb-3 text-sm font-bold text-gray-800">Size & Ratio</h2>
+		<h2 class="mb-3 text-sm font-bold text-text-primary">Size & Ratio</h2>
 
 		<section class="mb-3">
-			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Layout</h3>
+			<h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">Layout</h3>
 			<div class="grid grid-cols-2 gap-1.5" role="radiogroup" aria-label="Layout">
 				{#each LAYOUTS as layout}
 					<Tooltip text={layout.tooltip}>
@@ -411,13 +417,13 @@
 							type="button"
 							onclick={() => posterStore.setLayout(layout.value)}
 							class="flex w-full flex-col items-center gap-0.5 rounded border-2 p-1.5 transition-colors {posterStore.data.layout === layout.value
-								? 'border-blue-600 bg-blue-50'
+								? 'border-brand-primary bg-brand-primary/10'
 								: 'border-gray-200 hover:border-gray-300'}"
 							role="radio"
 							aria-checked={posterStore.data.layout === layout.value}
 						>
-							<span class="text-xs font-semibold text-gray-700">{layout.label}</span>
-							<span class="text-[10px] text-gray-400">{layout.orientation}</span>
+							<span class="text-xs font-semibold text-text-secondary">{layout.label}</span>
+							<span class="text-[10px] text-text-muted">{layout.orientation}</span>
 						</button>
 					</Tooltip>
 				{/each}
@@ -425,7 +431,7 @@
 		</section>
 
 		<section>
-			<h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Aspect Ratio</h3>
+			<h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">Aspect Ratio</h3>
 			<div class="grid grid-cols-2 gap-1.5" role="radiogroup" aria-label="Aspect Ratio">
 				{#each currentAspectRatios as ratio}
 					<Tooltip text={ratio.tooltip}>
@@ -433,13 +439,13 @@
 							type="button"
 							onclick={() => posterStore.setAspectRatio(ratio.value)}
 							class="flex w-full flex-col items-center gap-0.5 rounded border-2 p-1.5 transition-colors {posterStore.data.aspectRatio === ratio.value
-								? 'border-blue-600 bg-blue-50'
+								? 'border-brand-primary bg-brand-primary/10'
 								: 'border-gray-200 hover:border-gray-300'}"
 							role="radio"
 							aria-checked={posterStore.data.aspectRatio === ratio.value}
 						>
-							<span class="text-xs font-semibold text-gray-700">{ratio.ratio}</span>
-							<span class="text-[10px] text-gray-400">{ratio.label}</span>
+							<span class="text-xs font-semibold text-text-secondary">{ratio.ratio}</span>
+							<span class="text-[10px] text-text-muted">{ratio.label}</span>
 						</button>
 					</Tooltip>
 				{/each}
@@ -448,7 +454,7 @@
 	</div>
 
 	<!-- EXPORT CTA -->
-	<section class="mt-auto border-t border-gray-100 bg-white pt-3">
+	<section class="mt-auto border-t border-border-default bg-white pt-3">
 		<ExportButton 
 			eventName={posterStore.data.eventName} 
 			date={posterStore.data.date}
@@ -476,7 +482,7 @@
 		);
 		cursor: pointer;
 		transition: transform 0.1s;
-		border: 2px solid #d1d5db;
+		border: 2px solid var(--border-default);
 	}
 
 	.color-picker-wrapper:hover {

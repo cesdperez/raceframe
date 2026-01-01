@@ -88,7 +88,7 @@
 		position: fixed;
 		transform: translateX(-50%) translateY(-100%);
 		padding: 6px 10px;
-		background: #1f2937;
+		background: var(--gray-800);
 		color: white;
 		font-size: 11px;
 		line-height: 1.4;
@@ -104,6 +104,6 @@
 		left: 50%;
 		transform: translateX(-50%);
 		border: 5px solid transparent;
-		border-top-color: #1f2937;
+		border-top-color: var(--gray-800);
 	}
 </style>

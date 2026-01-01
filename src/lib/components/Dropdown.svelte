@@ -28,13 +28,13 @@
 		type="button"
 		{id}
 		onclick={() => (open = !open)}
-		class="flex w-full items-center justify-between rounded border border-gray-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+		class="flex w-full items-center justify-between rounded border border-border-default bg-white px-2 py-1.5 text-sm focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 focus:outline-none"
 		aria-haspopup="listbox"
 		aria-expanded={open}
 	>
 		<span class="truncate text-sm">{selectedLabel}</span>
 		<svg
-			class="h-3.5 w-3.5 flex-shrink-0 text-gray-400"
+			class="h-3.5 w-3.5 flex-shrink-0 text-text-muted"
 			fill="none"
 			viewBox="0 0 24 24"
 			stroke="currentColor"
@@ -55,7 +55,7 @@
 						open = false;
 					}}
 					class="flex w-full items-center px-2 py-1.5 text-sm hover:bg-gray-50 {value === option.value
-						? 'bg-blue-50 text-blue-700'
+						? 'bg-brand-primary/10 text-brand-primary'
 						: ''}"
 					role="option"
 					aria-selected={value === option.value}

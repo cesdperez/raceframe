@@ -1,19 +1,28 @@
 import { test, expect } from '@playwright/test';
 
+async function clickDemoButton(page: import('@playwright/test').Page) {
+	// Wait for page to be fully hydrated (file input indicates ready state)
+	await page.locator('input[type="file"][data-upload-ready]').waitFor({ state: 'attached' });
+	
+	const demoButton = page.getByRole('button', { name: /No GPX\? Explore the editor/i });
+	await demoButton.click();
+	// Wait for editor view to fully render (poster preview indicates we're in editor)
+	await expect(page.locator('[data-poster-export]')).toBeVisible({ timeout: 10000 });
+	await expect(page.getByRole('status')).toContainText('Demo Mode');
+}
+
 test.describe('Demo Mode', () => {
 	test('shows demo mode link on landing page', async ({ page }) => {
 		await page.goto('/');
 
 		await expect(
-			page.getByRole('button', { name: /No GPX file\? Explore the editor/i })
+			page.getByRole('button', { name: /No GPX\? Explore the editor/i })
 		).toBeVisible();
 	});
 
 	test('clicking demo link enters editor in demo mode', async ({ page }) => {
 		await page.goto('/');
-
-		const demoButton = page.getByRole('button', { name: /No GPX file\? Explore the editor/i });
-		await demoButton.click();
+		await clickDemoButton(page);
 
 		await expect(page.getByRole('heading', { name: 'Customize', exact: true })).toBeVisible();
 		await expect(page.getByText('Demo Mode', { exact: true })).toBeVisible();
@@ -21,9 +30,7 @@ test.describe('Demo Mode', () => {
 
 	test('demo mode shows Valencia Marathon data', async ({ page }) => {
 		await page.goto('/');
-
-		const demoButton = page.getByRole('button', { name: /No GPX file\? Explore the editor/i });
-		await demoButton.click();
+		await clickDemoButton(page);
 
 		const eventNameInput = page.getByLabel('Event Name');
 		await expect(eventNameInput).toHaveValue('Valencia Marathon');
@@ -34,9 +41,7 @@ test.describe('Demo Mode', () => {
 
 	test('demo mode shows limitation banner', async ({ page }) => {
 		await page.goto('/');
-
-		const demoButton = page.getByRole('button', { name: /No GPX file\? Explore the editor/i });
-		await demoButton.click();
+		await clickDemoButton(page);
 
 		await expect(page.getByRole('status')).toContainText('Demo Mode');
 		await expect(page.getByRole('status')).toContainText(
@@ -46,9 +51,7 @@ test.describe('Demo Mode', () => {
 
 	test('demo mode disables export buttons', async ({ page }) => {
 		await page.goto('/');
-
-		const demoButton = page.getByRole('button', { name: /No GPX file\? Explore the editor/i });
-		await demoButton.click();
+		await clickDemoButton(page);
 
 		await expect(page.getByText('Upload a GPX file to enable export')).toBeVisible();
 
@@ -61,18 +64,14 @@ test.describe('Demo Mode', () => {
 
 	test('demo mode shows limited map styles', async ({ page }) => {
 		await page.goto('/');
-
-		const demoButton = page.getByRole('button', { name: /No GPX file\? Explore the editor/i });
-		await demoButton.click();
+		await clickDemoButton(page);
 
 		await expect(page.locator('label[for="map-style-select"]')).toContainText('(limited)');
 	});
 
 	test('demo mode disables non-CARTO presets', async ({ page }) => {
 		await page.goto('/');
-
-		const demoButton = page.getByRole('button', { name: /No GPX file\? Explore the editor/i });
-		await demoButton.click();
+		await clickDemoButton(page);
 
 		const noirPreset = page.getByRole('radio', { name: /noir/i });
 		await expect(noirPreset).toBeDisabled();
@@ -86,9 +85,7 @@ test.describe('Demo Mode', () => {
 
 	test('demo mode allows editing all data fields', async ({ page }) => {
 		await page.goto('/');
-
-		const demoButton = page.getByRole('button', { name: /No GPX file\? Explore the editor/i });
-		await demoButton.click();
+		await clickDemoButton(page);
 
 		const eventNameInput = page.getByLabel('Event Name');
 		await eventNameInput.fill('My Custom Race');
@@ -101,15 +98,11 @@ test.describe('Demo Mode', () => {
 
 	test('back button from demo mode returns to landing', async ({ page }) => {
 		await page.goto('/');
-
-		const demoButton = page.getByRole('button', { name: /No GPX file\? Explore the editor/i });
-		await demoButton.click();
-
-		await expect(page.getByText('Demo Mode', { exact: true })).toBeVisible();
+		await clickDemoButton(page);
 
 		const backButton = page.getByRole('button', { name: /go back to upload/i });
 		await backButton.click();
 
-		await expect(page.getByText('Drop your GPX file here')).toBeVisible();
+		await expect(page.getByText('Drop your race here')).toBeVisible();
 	});
 });
